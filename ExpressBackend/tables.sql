@@ -1,0 +1,67 @@
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(100) NOT NULL,
+  email VARCHAR(150) UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE salons (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  email VARCHAR(150) UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  is_approved BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE admins (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(100) UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE bookings (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
+  service VARCHAR(150) NOT NULL,
+  booking_date DATE NOT NULL,
+  booking_time TIME NOT NULL,
+  status VARCHAR(50) DEFAULT 'pending'
+);
+CREATE TABLE favorites (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
+  UNIQUE(user_id, salon_id)
+);
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
+  name VARCHAR(100) NOT NULL,
+  description TEXT,
+  price DECIMAL(10, 2) NOT NULL
+);
+CREATE TABLE packages (
+  id SERIAL PRIMARY KEY,
+  salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
+  title VARCHAR(150) NOT NULL,
+  description TEXT,
+  price DECIMAL(10, 2) NOT NULL
+);
+CREATE TABLE types (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE salon_type_map (
+  id SERIAL PRIMARY KEY,
+  salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
+  type_id INTEGER REFERENCES types(id) ON DELETE CASCADE,
+  UNIQUE(salon_id, type_id)
+);
+CREATE TABLE approvals (
+  id SERIAL PRIMARY KEY,
+  admin_id INTEGER REFERENCES admins(id),
+  salon_id INTEGER REFERENCES salons(id),
+  approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
