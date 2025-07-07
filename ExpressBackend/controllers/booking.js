@@ -39,70 +39,86 @@ const getBookingById = async (req, res) => {
   try {
     const { id } = req.params
 
-    const result = await pool.query(
+    // Fetch booking details
+    const bookingResult = await pool.query(
       `
       SELECT 
-        bookings.id,
-        bookings.user_id,
-        bookings.salon_id,
-        bookings.service,
-        bookings.booking_date,
-        bookings.booking_time
-      FROM bookings
-      WHERE bookings.id = $1
+        b.id,
+        b.user_id,
+        b.salon_id,
+        s.name AS salon_name,
+        COALESCE(b.status, 'Pending') AS status,
+        COALESCE(b.total, 0) AS total,
+        b.booking_date,
+        b.booking_time,
+        b.service
+      FROM bookings b
+      JOIN salons s ON b.salon_id = s.id
+      WHERE b.id = $1
       `,
       [id]
     )
 
-    if (result.rowCount === 0) {
+    if (bookingResult.rowCount === 0) {
       return res.status(404).json({ message: 'Booking not found' })
     }
 
-    res.json(result.rows[0])
+    const booking = bookingResult.rows[0]
+
+    // Convert service IDs string to array of integers
+    const serviceIds = booking.service
+      ? booking.service.split(',').map((id) => parseInt(id.trim()))
+      : []
+
+    // Fetch service names
+    let serviceNames = []
+    if (serviceIds.length > 0) {
+      const servicesResult = await pool.query(
+        `SELECT name FROM services WHERE id = ANY($1::int[])`,
+        [serviceIds]
+      )
+      serviceNames = servicesResult.rows.map((row) => row.name)
+    }
+
+    // Return booking with service names
+    res.json({
+      ...booking,
+      service_name: serviceNames.join(', ')
+    })
   } catch (err) {
-    console.error(err)
+    console.error('getBookingById error:', err)
     res.status(500).send('Server Error')
   }
 }
 
 const addBooking = async (req, res) => {
   try {
-    const { user_id, salon_id, service, booking_date, booking_time, notes } =
-      req.body
+    const {
+      user_id,
+      salon_id,
+      service,
+      booking_date,
+      booking_time,
+      notes,
+      amount,
+      duration
+    } = req.body
 
-    if (!service) {
-      return res.status(400).json({ error: 'Service is required' })
+    if (
+      !user_id ||
+      !salon_id ||
+      !service ||
+      !booking_date ||
+      !booking_time ||
+      !amount
+    ) {
+      return res.status(400).json({ error: 'Missing fields' })
     }
-
-    const serviceIds = service.split(',').map((id) => id.trim())
-
-    // Validate user and salon
-    const userCheck = await pool.query('SELECT id FROM users WHERE id = $1', [
-      user_id
-    ])
-    if (userCheck.rowCount === 0)
-      return res.status(404).json({ error: 'User not found' })
-
-    const salonCheck = await pool.query('SELECT id FROM salons WHERE id = $1', [
-      salon_id
-    ])
-    if (salonCheck.rowCount === 0)
-      return res.status(404).json({ error: 'Salon not found' })
-
-    // Fetch total price
-    const priceQuery = await pool.query(
-      `SELECT SUM(price) AS total 
-       FROM services 
-       WHERE id = ANY($1::int[])`,
-      [serviceIds]
-    )
-
-    const total = priceQuery.rows[0]?.total || 0
 
     const result = await pool.query(
       `INSERT INTO bookings 
-        (user_id, salon_id, service, booking_date, booking_time, notes, total, status) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+        (user_id, salon_id, service, booking_date, booking_time, notes, total, duration, status) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'active') 
        RETURNING *`,
       [
         user_id,
@@ -111,15 +127,15 @@ const addBooking = async (req, res) => {
         booking_date,
         booking_time,
         notes,
-        total, // ✅ Correct value
-        'active'
+        amount,
+        duration
       ]
     )
 
     res.status(201).json(result.rows[0])
   } catch (err) {
-    console.error(err)
-    res.status(500).send('Server Error')
+    console.error('Error adding booking:', err)
+    res.status(500).json({ error: 'Server error' })
   }
 }
 
@@ -176,12 +192,13 @@ const editBooking = async (req, res) => {
   }
 }
 
+// PATCH /bookings/:id/cancel
 const cancelBooking = async (req, res) => {
-  try {
-    const { id } = req.params
+  const { id } = req.params
 
+  try {
     const result = await pool.query(
-      `UPDATE bookings SET status = 'Cancelled' WHERE id = $1 RETURNING *`,
+      `UPDATE bookings SET status = 'Cancelled' WHERE id = $1 RETURNING status`,
       [id]
     )
 
@@ -189,10 +206,10 @@ const cancelBooking = async (req, res) => {
       return res.status(404).json({ message: 'Booking not found' })
     }
 
-    res.json({ message: 'Booking cancelled', booking: result.rows[0] })
+    res.json({ message: 'Booking cancelled', status: 'Cancelled' })
   } catch (err) {
-    console.error(err)
-    res.status(500).send('Error cancelling booking')
+    console.error('Cancel booking error:', err)
+    res.status(500).json({ message: 'Server error' })
   }
 }
 
@@ -274,11 +291,40 @@ const createCheckoutSession = async (req, res) => {
   }
 }
 
+// GET /bookings/:salonId/:date/slots
+const getBookedSlots = async (req, res) => {
+  const { salonId, date } = req.params
+
+  try {
+    const result = await pool.query(
+      `
+      SELECT booking_time AS start, duration,
+             (booking_time::time + (duration || ' minutes')::interval)::time AS end
+      FROM bookings
+      WHERE salon_id = $1 AND booking_date = $2 AND status != 'Cancelled'
+      `,
+      [salonId, date]
+    )
+
+    const bookedTimes = result.rows.map((row) => ({
+      start: row.start,
+      end: row.end,
+      duration: row.duration
+    }))
+
+    res.json(bookedTimes)
+  } catch (err) {
+    console.error('getBookedSlots error:', err)
+    res.status(500).json({ message: 'Server error' })
+  }
+}
+
 module.exports = {
   getBookings,
   getBookingById,
   addBooking,
   cancelBooking,
   editBooking,
-  createCheckoutSession
+  createCheckoutSession,
+  getBookedSlots
 }

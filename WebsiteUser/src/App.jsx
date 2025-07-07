@@ -1,25 +1,39 @@
 import React, { useState, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
-import Navbar from './components/Navbar'
-import SignIn from './components/Signin'
-import SignUp from './components/Signup'
-import NearestSalon from './components/NearestSalon'
-import SalonDetails from './components/SalonDetails'
-import SalonBooking from './components/SalonBooking'
-import MyBookings from './components/MyBookings'
-import Products from './components/Products'
-import Packages from './components/Packages'
-import Favorites from './components/Favorites'
-import Training from './components/Training'
-import Account from './components/Account'
-import Home from './components/Home'
-import EditProfile from './components/EditProfile'
-import ChangePassword from './components/ChangePassword'
+// Layout
+import Navbar from './components/layout/Navbar'
+
+// Auth
+import SignIn from './components/auth/Signin'
+import SignUp from './components/auth/Signup'
+import Account from './components/auth/Account'
+import EditProfile from './components/auth/EditProfile'
+import ChangePassword from './components/auth/ChangePassword'
+
+// Salons
+import NearestSalon from './components/salons/NearestSalon'
+import SalonDetails from './components/salons/SalonDetails'
+
+// Orders & Bookings
+import SalonBooking from './components/orders/SalonBooking'
+import MyBookings from './components/orders/MyBookings'
+import BookingDetailsPage from './components/orders/BookingDetailsPage'
+import OrderDetailsPage from './components/orders/OrderDetailsPage'
+
+// Products & Packages
+import Products from './components/products/Products'
+import Packages from './components/products/Packages'
+import Favorites from './components/products/Favorites'
+import Training from './components/products/Training'
+
+// Cart & Checkout
+import Cart from './components/cart/Cart'
+import Checkout from './components/cart/Checkout'
+import AddressPage from './components/cart/AddressPage'
+import PaymentSuccess from './components/cart/PaymentSuccessful'
+
+// Misc
 import backgroundImage from './assets/Background.png'
-import Cart from './components/Cart'
-import Checkout from './components/Checkout'
-import AddressPage from './components/AddressPage'
-import PaymentSuccess from './components/PaymentSuccessful'
 
 const App = () => {
   const location = useLocation()
@@ -27,9 +41,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [isUserLoaded, setIsUserLoaded] = useState(false)
 
-  const showNavbar = !['/signin', '/signup', '/home'].includes(
-    location.pathname
-  )
+  const showNavbar = !['/signin', '/signup'].includes(location.pathname)
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user')
@@ -87,12 +99,18 @@ const App = () => {
             element={<SalonBooking userId={userId} />}
           />
           <Route path="/bookings" element={<MyBookings />} />
+          <Route path="/bookings/:id" element={<BookingDetailsPage />} />
+          <Route path="/orders/:id" element={<OrderDetailsPage />} />
+
           <Route path="/products" element={<Products />} />
           <Route path="/packages" element={<Packages />} />
-          <Route path="/favorites" element={<Favorites userId={userId} />} />
+          <Route
+            path="/favorites"
+            element={<Favorites userId={userId} userType={userType} />}
+          />
           <Route path="/training" element={<Training />} />
           <Route path="/account" element={<Account user={user} />} />
-          <Route path="/home" element={<Home />} />
+
           <Route path="/signin" element={<SignIn setUser={setUser} />} />
           <Route path="/signup" element={<SignUp />} />
           <Route

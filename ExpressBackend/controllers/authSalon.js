@@ -9,7 +9,6 @@ const registerSalon = async (req, res) => {
   let location
   try {
     location = JSON.parse(req.body.location)
-
     if (location.lat && location.lng) {
       location.latitude = location.lat
       location.longitude = location.lng
@@ -18,7 +17,7 @@ const registerSalon = async (req, res) => {
     console.log('Failed to parse location:', req.body.location)
   }
 
-  const { name, email, password, rating } = req.body
+  const { name, email, password, rating, opening_time, closing_time } = req.body
   const file = req.file
 
   if (
@@ -29,12 +28,13 @@ const registerSalon = async (req, res) => {
     !location ||
     !location.latitude ||
     !location.longitude ||
-    !file
+    !file ||
+    !opening_time ||
+    !closing_time
   ) {
     console.log('Validation failed: Missing fields')
     return res.status(400).json({
-      message:
-        'All fields including password, image file, rating, and location are required'
+      message: 'All fields including opening and closing time are required'
     })
   }
 
@@ -47,15 +47,14 @@ const registerSalon = async (req, res) => {
     }
 
     const image_url = await uploadToAzure(file)
-
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const result = await pool.query(
       `INSERT INTO salons
-        (name, email, password, is_approved, image_url, rating, location)
+        (name, email, password, is_approved, image_url, rating, location, opening_time, closing_time)
        VALUES
-        ($1, $2, $3, false, $4, $5, ST_SetSRID(ST_MakePoint($6, $7), 4326)::geography)
-       RETURNING id, name, email, is_approved, image_url, rating, location,
+        ($1, $2, $3, false, $4, $5, ST_SetSRID(ST_MakePoint($6, $7), 4326)::geography, $8, $9)
+       RETURNING id, name, email, is_approved, image_url, rating, opening_time, closing_time,
                  ST_Y(location::geometry) AS latitude,
                  ST_X(location::geometry) AS longitude`,
       [
@@ -65,7 +64,9 @@ const registerSalon = async (req, res) => {
         image_url,
         rating,
         location.longitude,
-        location.latitude
+        location.latitude,
+        opening_time,
+        closing_time
       ]
     )
 
@@ -299,6 +300,7 @@ const getSalonById = async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT s.id, s.name, s.email, s.is_approved, s.image_url, s.rating,
+              s.opening_time, s.closing_time, -- add these two
               ST_X(s.location::geometry) AS longitude,
               ST_Y(s.location::geometry) AS latitude,
               COALESCE(

@@ -29,19 +29,33 @@ function SignupStep3() {
   const [latitude, setLatitude] = useState(null)
   const [longitude, setLongitude] = useState(null)
   const [image, setImage] = useState(null)
+  const [openingTime, setOpeningTime] = useState('')
+  const [closingTime, setClosingTime] = useState('')
   const navigate = useNavigate()
 
   const handleSubmit = async () => {
     const step1 = JSON.parse(localStorage.getItem('signupStep1'))
     const step2 = JSON.parse(localStorage.getItem('signupStep2'))
-    if (!step1 || !step2 || !image || !latitude || !longitude)
+
+    if (
+      !step1 ||
+      !step2 ||
+      !image ||
+      !latitude ||
+      !longitude ||
+      !openingTime ||
+      !closingTime
+    ) {
       return alert('Missing data')
+    }
 
     const formData = new FormData()
     formData.append('name', step2.name)
     formData.append('email', step1.email)
     formData.append('password', step1.password)
     formData.append('rating', 5)
+    formData.append('opening_time', openingTime)
+    formData.append('closing_time', closingTime)
     formData.append(
       'location',
       JSON.stringify({ lat: latitude, lng: longitude })
@@ -71,6 +85,7 @@ function SignupStep3() {
 
       navigate('/pending')
     } catch (err) {
+      console.error(err)
       alert('Signup failed')
     }
   }
@@ -109,6 +124,29 @@ function SignupStep3() {
               )}
             </MapContainer>
           </div>
+
+          <div className="mb-3">
+            <label className="form-label">Opening Time</label>
+            <input
+              type="time"
+              className="form-control"
+              required
+              value={openingTime}
+              onChange={(e) => setOpeningTime(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Closing Time</label>
+            <input
+              type="time"
+              className="form-control"
+              required
+              value={closingTime}
+              onChange={(e) => setClosingTime(e.target.value)}
+            />
+          </div>
+
           <div className="mb-4">
             <label className="form-label">Salon Image</label>
             <input
@@ -118,6 +156,7 @@ function SignupStep3() {
               onChange={(e) => setImage(e.target.files[0])}
             />
           </div>
+
           <div className="d-flex justify-content-between">
             <button type="submit" className="btn btn-success">
               Submit

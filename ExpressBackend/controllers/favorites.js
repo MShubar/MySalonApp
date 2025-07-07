@@ -1,8 +1,7 @@
 const pool = require('../models/pool')
 
 const toggleFavorite = async (req, res) => {
-  const { userId } = req.body
-  const { salonId } = req.params
+  const { userId, salonId } = req.params
 
   if (!userId || !salonId) {
     return res
@@ -52,12 +51,24 @@ const getFavorites = async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT s.id, s.name, s.image_url, s.rating, s.location
-       FROM favorites f
-       JOIN salons s ON f.salon_id = s.id
-       WHERE f.user_id = $1`,
+      `SELECT 
+        s.id, s.name, s.email, s.is_approved, s.image_url, s.rating,
+        ST_X(s.location::geometry) AS longitude,
+        ST_Y(s.location::geometry) AS latitude,
+        COALESCE(
+          json_agg(DISTINCT jsonb_build_object('id', sv.id, 'name', sv.name))
+          FILTER (WHERE sv.id IS NOT NULL),
+          '[]'
+        ) AS services
+      FROM favorites f
+      JOIN salons s ON f.salon_id = s.id
+      LEFT JOIN salon_services ss ON s.id = ss.salon_id
+      LEFT JOIN services sv ON ss.service_id = sv.id
+      WHERE f.user_id = $1
+      GROUP BY s.id`,
       [userId]
     )
+
     res.json(result.rows)
   } catch (err) {
     console.error('Get Favorites Error:', err.message)
