@@ -1,6 +1,7 @@
+process.env.NODE_ENV = 'test'
 const request = require('supertest')
 
-// Mock native modules that require binaries
+// Mock modules that rely on native bindings
 jest.mock('bcrypt', () => ({
   hash: jest.fn(),
   compare: jest.fn()
@@ -15,7 +16,7 @@ const app = require('../server')
 
 describe('Orders API', () => {
   beforeEach(() => {
-    pool.query.mockReset()
+    jest.clearAllMocks()
   })
 
   test('GET /orders/order/:orderId returns 404 for non-existent ID', async () => {
