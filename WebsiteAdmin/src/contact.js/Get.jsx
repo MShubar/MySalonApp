@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 
 function Get() {
-  const [packages, setPackages] = useState([])
+  const [contacts, setContacts] = useState([])
 
   useEffect(() => {
     fetch('http://localhost:5000/contacts')
       .then((res) => res.json())
       .then((data) => {
-        setPackages(data)
+        setContacts(data)
       })
       .catch((err) => console.error('Error:', err))
   }, [])
@@ -27,11 +27,11 @@ function Get() {
           </tr>
         </thead>
         <tbody>
-          {packages.map((packagew) => (
-            <tr key={packagew.id}>
-              <td>{packagew.name}</td>
-              <td>{packagew.email}</td>
-              <td>{packagew.comment}</td>
+          {contacts.map((contact) => (
+            <tr key={contact.id}>
+              <td>{contact.name}</td>
+              <td>{contact.email}</td>
+              <td>{contact.comment}</td>
             </tr>
           ))}
         </tbody>
