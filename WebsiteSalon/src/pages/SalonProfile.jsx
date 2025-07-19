@@ -13,9 +13,9 @@ export default function SalonProfile() {
   const [closingTime, setClosingTime] = useState('')
 
   useEffect(() => {
-    if (!auth?.token) return
+    if (!auth?.token || !auth?.id) return
     axios
-      .get(`${API_URL}/salons/me`, {
+      .get(`${API_URL}/salons/${auth.id}`, {
         headers: { Authorization: `Bearer ${auth.token}` }
       })
       .then((res) => {

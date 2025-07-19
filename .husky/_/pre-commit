@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/h"
+
+# Run lint in subprojects
+( cd WebsiteAdmin && npm run lint ) || exit 1
+( cd WebsiteSalon && npm run lint ) || exit 1
+( cd WebsiteUser && npm run lint ) || exit 1
