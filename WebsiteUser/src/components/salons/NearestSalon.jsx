@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet'
 import { useNavigate } from 'react-router-dom'
 import { motion as Motion } from 'framer-motion'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 import useNearestSalons from '../../functionality/salons/useNearestSalons'
 
 const Container = styled.div`
@@ -287,6 +288,11 @@ const NearestSalon = ({ userType, userId }) => {
       )}
     </Container>
   )
+}
+
+NearestSalon.propTypes = {
+  userType: PropTypes.string,
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 }
 
 export default NearestSalon
