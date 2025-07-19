@@ -1,11 +1,19 @@
 const pool = require('../models/pool')
 
+const redisClient = require('../models/redis')
+
 const uploadToAzure = require('../middleware/azureBlob')
 
 const getProducts = async (req, res) => {
   try {
+    const cacheKey = 'products'
+    if (redisClient.isOpen) {
+      const cached = await redisClient.get(cacheKey)
+      if (cached) return res.json(JSON.parse(cached))
+    }
+
     const result = await pool.query(`
-      SELECT 
+      SELECT
         products.id,
         products.name,
         products.description,
@@ -16,6 +24,10 @@ const getProducts = async (req, res) => {
       FROM products
       JOIN salons ON products.salon_id = salons.id
     `)
+    if (redisClient.isOpen) {
+      await redisClient.setEx(cacheKey, 3600, JSON.stringify(result.rows))
+    }
+
     res.json(result.rows)
   } catch (err) {
     console.error(err)

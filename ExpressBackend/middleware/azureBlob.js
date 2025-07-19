@@ -12,7 +12,13 @@ const { v4: uuidv4 } = require('uuid')
 const blobServiceClient = BlobServiceClient.fromConnectionString(
   AZURE_STORAGE_CONNECTION_STRING
 )
-const containerClient = blobServiceClient.getContainerClient('salons') // Ensure container name is correct
+
+const AZURE_CONTAINER_NAME = process.env.AZURE_CONTAINER_NAME
+if (!AZURE_CONTAINER_NAME) {
+  throw new Error('Azure Container name is not defined')
+}
+
+const containerClient = blobServiceClient.getContainerClient(AZURE_CONTAINER_NAME)
 
 const uploadToAzure = async (file) => {
   if (!file || !file.buffer || !file.originalname) {

@@ -20,7 +20,10 @@ const Sidebar = () => {
   const location = useLocation()
 
   const navItem = (label, icon, route) => {
-    const isActive = location.pathname === route
+    // Highlight the sidebar entry when the current path starts with the
+    // navigation route. This ensures that nested routes such as edit or
+    // create pages still highlight the parent section.
+    const isActive = location.pathname.startsWith(route)
     return (
       <div
         className={`sidebar-item ${isActive ? 'active' : ''}`}
