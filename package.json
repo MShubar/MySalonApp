@@ -1,0 +1,19 @@
+{
+  "name": "mysalonapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm run nodemon --prefix ExpressBackend\" \"npm run dev --prefix WebsiteUser\""
+    "prepare": "husky install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+    "husky": "^9.1.7"
+  }
+}
