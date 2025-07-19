@@ -2,6 +2,7 @@ const pool = require('../models/pool')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const uploadToAzure = require('../middleware/azureBlob')
+const redisClient = require('../models/redis')
 
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -139,6 +140,11 @@ const getAllSalons = async (req, res) => {
   const { userLat, userLng, type } = req.query
 
   try {
+    const cacheKey = `salons:${userLat || ''}:${userLng || ''}:${type || ''}`
+    if (redisClient.isOpen) {
+      const cached = await redisClient.get(cacheKey)
+      if (cached) return res.json(JSON.parse(cached))
+    }
     const lat = parseFloat(userLat)
     const lng = parseFloat(userLng)
     const useLocation = !isNaN(lat) && !isNaN(lng)
@@ -179,6 +185,10 @@ const getAllSalons = async (req, res) => {
       : []
 
     const result = await pool.query(query, params)
+
+    if (redisClient.isOpen) {
+      await redisClient.setEx(cacheKey, 3600, JSON.stringify(result.rows))
+    }
 
     res.json(result.rows)
   } catch (err) {

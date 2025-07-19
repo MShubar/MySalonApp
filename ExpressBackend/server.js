@@ -3,6 +3,7 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 require('dotenv').config()
+const redisClient = require('./models/redis')
 const app = express()
 app.use(cors())
 app.use(bodyParser.json())
@@ -49,6 +50,10 @@ app.use(errorHandler)
 
 //server execute
 if (require.main === module) {
+  redisClient
+    .connect()
+    .then(() => console.log('Connected to Redis'))
+    .catch(err => console.error('Redis connection error:', err))
   const PORT = process.env.PORT ? Number(process.env.PORT) : 5000
   app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
