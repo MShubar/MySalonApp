@@ -2,11 +2,23 @@
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+let rateLimit
+try {
+  rateLimit = require('express-rate-limit')
+} catch (e) {
+  console.warn('express-rate-limit not installed, skipping rate limiting')
+  rateLimit = () => (req, res, next) => next()
+}
 require('dotenv').config()
 const app = express()
 app.use(cors())
 app.use(bodyParser.json())
 app.use(express.json())
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+})
+app.use(limiter)
 
 //Routes
 const userAuthRoutes = require('./routes/authUser')
