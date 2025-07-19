@@ -2,7 +2,7 @@ const pool = require('../models/pool')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const JWT_SECRET = 'your_secret_key_here'
+const JWT_SECRET = process.env.JWT_SECRET
 
 const registerAdmin = async (req, res) => {
   const { username, password } = req.body
