@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import {
   FaUser,
   FaSignOutAlt,
@@ -16,21 +16,23 @@ import axios from 'axios'
 import { API_URL } from '../config'
 
 const Sidebar = () => {
-  const [active, setActive] = useState('User Management')
   const navigate = useNavigate()
+  const location = useLocation()
 
-  const navItem = (label, icon, route) => (
-    <div
-      className={`sidebar-item ${active === label ? 'active' : ''}`}
-      onClick={() => {
-        setActive(label)
-        navigate(route)
-      }}
-    >
+  const navItem = (label, icon, route) => {
+    const isActive = location.pathname === route
+    return (
+      <div
+        className={`sidebar-item ${isActive ? 'active' : ''}`}
+        onClick={() => {
+          navigate(route)
+        }}
+      >
       <span className="icon">{icon}</span>
       <span className="label">{label}</span>
-    </div>
-  )
+      </div>
+    )
+  }
 
   const handleLogout = async () => {
     const token = localStorage.getItem('authToken')
