@@ -13,6 +13,8 @@ if (process.env.NODE_ENV === 'development') {
   const morgan = require('morgan')
   app.use(morgan('dev'))
 }
+// Error handling middleware
+const errorHandler = require('./middleware/errorHandler')
 
 //Routes
 const userAuthRoutes = require('./routes/authUser')
@@ -42,9 +44,12 @@ app.use('/favorites', favoriteRoutes)
 app.use('/cart', cartRouter)
 app.use('/orders', orderRouter)
 
+// Error handler
+app.use(errorHandler)
+
 //server execute
 if (require.main === module) {
-  const PORT = process.env.PORT || 5000
+  const PORT = process.env.PORT ? Number(process.env.PORT) : 5000
   app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
   })
