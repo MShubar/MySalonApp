@@ -1,0 +1,4 @@
+# Ignore environment files
+ExpressBackend/.env
+
+# Node modules are already committed; keep as is
