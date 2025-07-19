@@ -38,7 +38,7 @@ app.use('/orders', orderRouter)
 
 //server execute
 if (require.main === module) {
-  const PORT = process.env.PORT || 5000
+  const PORT = process.env.PORT ? Number(process.env.PORT) : 5000
   app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
   })
