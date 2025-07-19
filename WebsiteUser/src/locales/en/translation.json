@@ -204,5 +204,12 @@
   "Please fill out all fields": "Please fill out all fields",
   "Passwords do not match": "Passwords do not match",
   "Registration failed": "Registration failed",
-  "Already have an account?": "Already have an account?"
+  "Already have an account?": "Already have an account?",
+  "Contact Us": "Contact Us",
+  "Name": "Name",
+  "Enter your name": "Enter your name",
+  "Comment": "Comment",
+  "Enter your comment": "Enter your comment",
+  "Submit": "Submit",
+  "Message sent successfully!": "Message sent successfully!"
 }

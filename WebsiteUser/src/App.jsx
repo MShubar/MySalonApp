@@ -26,12 +26,14 @@ import Packages from './components/products/Packages'
 import Favorites from './components/products/Favorites'
 import Training from './components/products/Training'
 import About from './components/About'
+import ContactUs from './components/contact/ContactUs'
 
 // Cart & Checkout
 import Cart from './components/cart/Cart'
 import Checkout from './components/cart/Checkout'
 import AddressPage from './components/cart/AddressPage'
 import PaymentSuccess from './components/cart/PaymentSuccessful'
+import NotFound from './components/NotFound'
 
 // Misc
 import backgroundImage from './assets/Background.png'
@@ -111,6 +113,7 @@ const App = () => {
           />
           <Route path="/about" element={<About />} />
           <Route path="/training" element={<Training />} />
+          <Route path="/contact" element={<ContactUs />} />
           <Route path="/account" element={<Account user={user} />} />
 
           <Route path="/signin" element={<SignIn setUser={setUser} />} />
@@ -127,6 +130,7 @@ const App = () => {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/address" element={<AddressPage />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>
