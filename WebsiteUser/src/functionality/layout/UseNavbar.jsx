@@ -4,6 +4,8 @@ import axios from 'axios'
 import { useTranslation } from 'react-i18next'
 import { API_URL } from '../../config'
 
+console.log('✅ API_URL:', API_URL)
+
 const useNavbar = ({ userType, setUser }) => {
   const { t, i18n } = useTranslation()
   const [types, setTypes] = useState([])
@@ -16,9 +18,15 @@ const useNavbar = ({ userType, setUser }) => {
     axios
       .get(`${API_URL}/types`)
       .then((res) => {
-        setTypes(res.data)
-        const selected = res.data.find((t) => t.type_name === userType)
-        if (selected) setCurrentIcon(selected.image_url)
+        const data = res.data
+        if (Array.isArray(data)) {
+          setTypes(data)
+          const selected = data.find((t) => t.type_name === userType)
+          if (selected) setCurrentIcon(selected.image_url)
+        } else {
+          console.error('Expected array but got:', data)
+          setTypes([]) // fallback to empty array
+        }
       })
       .catch((err) => {
         console.error('Failed to fetch user types:', err)
