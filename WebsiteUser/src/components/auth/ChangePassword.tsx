@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-import useChangePassword from '../../functionality/auth/useChangePassword'
+import useChangePassword from '../../functionality/auth/UseChangePassword'
 
 const PageContainer = styled.div`
   max-width: 600px;

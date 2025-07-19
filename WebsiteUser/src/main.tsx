@@ -1,6 +1,6 @@
 // main.jsx or index.jsx
 import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
+import App from './App.tsx'
 import { BrowserRouter } from 'react-router-dom'
 import './i18n'
 
