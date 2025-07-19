@@ -9,6 +9,7 @@ import PendingApproval from './pages/PendingApproval'
 import Dashboard from './pages/Dashboard'
 import { useAuth } from './context/AuthContext'
 import BookingsPage from './pages/Bookings'
+import SalonProfile from './pages/SalonProfile'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
@@ -33,6 +34,10 @@ export default function App() {
             <Navigate to="/login" />
           )
         }
+      />
+      <Route
+        path="/profile"
+        element={auth ? <SalonProfile /> : <Navigate to="/login" />}
       />
       <Route path="/bookings" element={<BookingsPage />} />
       <Route path="*" element={<NotFound />} />

@@ -44,6 +44,15 @@ export default function Navbar() {
               Bookings
             </Link>
           </li>
+          <li className="nav-item">
+            <Link
+              className="nav-link"
+              to="/profile"
+              onClick={() => setIsOpen(false)}
+            >
+              Profile
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>
