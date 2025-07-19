@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { API_URL } from '../config'
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
@@ -59,7 +60,7 @@ function Create() {
     formData.append('location', JSON.stringify({ latitude, longitude }))
 
     try {
-      const res = await fetch('http://localhost:5000/salons/register', {
+      const res = await fetch(`${API_URL}/salons/register`, {
         method: 'POST',
         body: formData
       })

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
+import { API_URL } from '../../config'
 
 const useNavbar = ({ userType, setUser }) => {
   const { t, i18n } = useTranslation()
@@ -13,7 +14,7 @@ const useNavbar = ({ userType, setUser }) => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/types')
+      .get(`${API_URL}/types`)
       .then((res) => {
         setTypes(res.data)
         const selected = res.data.find((t) => t.type_name === userType)

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
+import { API_URL, APP_URL } from '../../config'
 
 const useCheckout = () => {
   const { t } = useTranslation()
@@ -60,14 +61,13 @@ const useCheckout = () => {
       const query = new URLSearchParams({
         amount: total.toFixed(2),
         orderId: 'mock123456',
-        'response-url':
-          'http://localhost:3000/payment-success?redirect=bookings'
+        'response-url': `${APP_URL}/payment-success?redirect=bookings`
       }).toString()
 
       window.location.href = `https://mock-benefit-gateway.com/pay?${query}`
     } else {
       try {
-        await axios.post('http://localhost:5000/orders', orderPayload)
+        await axios.post(`${API_URL}/orders`, orderPayload)
         setSuccessMsg(true)
         setTimeout(() => {
           localStorage.removeItem('cart')

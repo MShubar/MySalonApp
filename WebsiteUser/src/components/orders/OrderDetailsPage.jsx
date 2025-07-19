@@ -3,6 +3,7 @@ import { useParams, useLocation } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { API_URL } from '../../config'
 import useFetch from '../../hooks/useFetch'
 
 const Container = styled.div`
@@ -105,7 +106,7 @@ const OrderDetailsPage = () => {
     state?.order
       ? null
       : id
-      ? `http://localhost:5000/orders/order/${id}`
+      ? `${API_URL}/orders/order/${id}`
       : null,
     [id]
   )
@@ -128,7 +129,7 @@ const OrderDetailsPage = () => {
   const handleCancelOrder = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/orders/order/${id}/cancel`,
+        `${API_URL}/orders/order/${id}/cancel`,
         { method: 'PATCH' }
       )
       if (!res.ok) throw new Error(`HTTP error ${res.status}`)

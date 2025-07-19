@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import axios from 'axios'
+import { API_URL } from '../config'
 
 const Gets = () => {
   const [admins, setAdmins] = useState([])
@@ -13,7 +14,7 @@ const Gets = () => {
   const fetchAdmins = async () => {
     try {
       const token = localStorage.getItem('authToken')
-      const response = await axios.get('http://localhost:5000/admins', {
+      const response = await axios.get(`${API_URL}/admins`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       setAdmins(response.data)
@@ -31,7 +32,7 @@ const Gets = () => {
     if (!adminToDelete) return
     try {
       const token = localStorage.getItem('authToken')
-      await axios.delete(`http://localhost:5000/admins/${adminToDelete.id}`, {
+      await axios.delete(`${API_URL}/admins/${adminToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       setAdmins(admins.filter((a) => a.id !== adminToDelete.id))

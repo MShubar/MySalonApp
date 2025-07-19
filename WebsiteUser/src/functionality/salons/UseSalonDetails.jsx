@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import useFetch from '../../hooks/useFetch'
+import { API_URL } from '../../config'
 
 export default function useSalonDetails(id) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
@@ -15,7 +16,7 @@ export default function useSalonDetails(id) {
     data: salon,
     loading,
     error
-  } = useFetch(id ? `http://localhost:5000/salons/${id}` : null, [id])
+  } = useFetch(id ? `${API_URL}/salons/${id}` : null, [id])
 
   const latitude =
     salon?.latitude || salon?.location?.latitude || salon?.location?.lat

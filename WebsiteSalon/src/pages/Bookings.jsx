@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
+import { API_URL } from '../config'
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([])
   const { auth } = useAuth()
 
   const fetchBookings = () => {
-    axios.get('http://localhost:5000/bookings').then((res) => {
+    axios.get(`${API_URL}/bookings`).then((res) => {
       const filtered = res.data
         .filter((b) => b.salon_name === auth.name)
         .sort((a, b) => {
@@ -49,7 +50,7 @@ export default function BookingsPage() {
 
   const markAsCompleted = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/bookings/${id}`, {
+      await axios.put(`${API_URL}/bookings/${id}`, {
         status: 'completed'
       })
       fetchBookings()

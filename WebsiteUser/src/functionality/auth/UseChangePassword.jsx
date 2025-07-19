@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
+import { API_URL } from '../../config'
 
 const useChangePassword = ({ userId }) => {
   const { t } = useTranslation()
@@ -36,7 +37,7 @@ const useChangePassword = ({ userId }) => {
 
     setLoading(true)
     try {
-      await axios.put(`http://localhost:5000/users/${userId}/change-password`, {
+      await axios.put(`${API_URL}/users/${userId}/change-password`, {
         currentPassword,
         newPassword
       })

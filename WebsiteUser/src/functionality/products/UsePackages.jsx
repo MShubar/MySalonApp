@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import useFetch from '../../hooks/useFetch'
+import { API_URL } from '../../config'
 
 export default function usePackages(t) {
   const {
     data: fetchedPackages = [],
     loading,
     error
-  } = useFetch('http://localhost:5000/package', [])
+  } = useFetch(`${API_URL}/package`, [])
 
   const [packages, setPackages] = useState([])
   const [sortOption, setSortOption] = useState('')
@@ -67,7 +68,7 @@ export default function usePackages(t) {
     localStorage.setItem('cart', JSON.stringify([...cart, ...itemsToAdd]))
 
     try {
-      await axios.patch(`http://localhost:5000/package/${pack.id}/decrease`, {
+      await axios.patch(`${API_URL}/package/${pack.id}/decrease`, {
         qty
       })
       setPackages((prev) =>

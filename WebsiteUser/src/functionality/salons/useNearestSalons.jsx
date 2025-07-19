@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import useFetch from '../../hooks/useFetch'
+import { API_URL } from '../../config'
 
 export default function useNearestSalons(userType, userId) {
   const [userLocation, setUserLocation] = useState(null)
@@ -33,7 +34,7 @@ export default function useNearestSalons(userType, userId) {
     refetch
   } = useFetch(
     userLocation
-      ? `http://localhost:5000/salons?userLat=${userLocation.latitude}&userLng=${userLocation.longitude}&type=${userType}`
+      ? `${API_URL}/salons?userLat=${userLocation.latitude}&userLng=${userLocation.longitude}&type=${userType}`
       : null,
     [userLocation, userType]
   )
@@ -70,7 +71,7 @@ export default function useNearestSalons(userType, userId) {
     const fetchFavorites = async () => {
       if (!userId) return
       try {
-        const res = await fetch(`http://localhost:5000/favorites/${userId}`)
+        const res = await fetch(`${API_URL}/favorites/${userId}`)
         const data = await res.json()
         setFavorites(new Set(data.map((f) => Number(f.salon_id))))
       } catch (err) {
@@ -84,7 +85,7 @@ export default function useNearestSalons(userType, userId) {
   const toggleFavorite = async (salonId) => {
     try {
       await fetch(
-        `http://localhost:5000/favorites/users/${userId}/favorites/${salonId}`,
+        `${API_URL}/favorites/users/${userId}/favorites/${salonId}`,
         { method: 'POST' }
       )
       refetch()

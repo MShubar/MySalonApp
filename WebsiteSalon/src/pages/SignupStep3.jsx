@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { API_URL } from '../config'
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
@@ -64,20 +65,20 @@ function SignupStep3() {
 
     try {
       const res = await axios.post(
-        'http://localhost:5000/salons/register',
+        `${API_URL}/salons/register`,
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' }
         }
       )
 
-      await axios.post('http://localhost:5000/types/assign', {
+      await axios.post(`${API_URL}/types/assign`, {
         salonId: res.data.salon.id,
         typeIds: step2.selectedTypes
       })
 
       await axios.post(
-        `http://localhost:5000/services/salon/${res.data.salon.id}`,
+        `${API_URL}/services/salon/${res.data.salon.id}`,
         {
           serviceIds: step2.selectedServices
         }

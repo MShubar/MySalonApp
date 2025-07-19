@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
+import { API_URL } from '../../config'
 
 const useCart = () => {
   const { t } = useTranslation()
@@ -35,7 +36,7 @@ const useCart = () => {
       updated.splice(index, 1)
       updateCartStorage(updated)
       try {
-        await axios.patch(`http://localhost:5000/${type}/${id}/increase`)
+        await axios.patch(`${API_URL}/${type}/${id}/increase`)
       } catch (err) {
         console.error('Failed to restore quantity', err)
       }
@@ -51,7 +52,7 @@ const useCart = () => {
 
     try {
       for (let i = 0; i < quantityToRestore; i++) {
-        await axios.patch(`http://localhost:5000/${type}/${id}/increase`)
+        await axios.patch(`${API_URL}/${type}/${id}/increase`)
       }
     } catch (err) {
       console.error('Failed to restore quantity for removed item', err)

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import useFetch from '../../hooks/useFetch'
+import { API_URL } from '../../config'
 
 export default function useProducts(t) {
   const {
     data: fetchedProducts = [],
     loading,
     error
-  } = useFetch('http://localhost:5000/product', [])
+  } = useFetch(`${API_URL}/product`, [])
 
   const [products, setProducts] = useState([])
   const [sortOption, setSortOption] = useState('')
@@ -64,7 +65,7 @@ export default function useProducts(t) {
     localStorage.setItem('cart', JSON.stringify([...cart, ...itemsToAdd]))
 
     try {
-      await fetch(`http://localhost:5000/product/${product.id}/decrease`, {
+      await fetch(`${API_URL}/product/${product.id}/decrease`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ qty })

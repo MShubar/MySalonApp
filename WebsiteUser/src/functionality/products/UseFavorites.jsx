@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { API_URL } from '../../config'
 
 export default function useFavorites(userId, userType) {
   const [userLocation, setUserLocation] = useState(null)
@@ -26,7 +27,7 @@ export default function useFavorites(userId, userType) {
       setLoading(true)
       try {
         const res = await fetch(
-          `http://localhost:5000/favorites/${userId}?type=${userType}`
+          `${API_URL}/favorites/${userId}?type=${userType}`
         )
         const data = await res.json()
         const array = Array.isArray(data) ? data : []
@@ -68,7 +69,7 @@ export default function useFavorites(userId, userType) {
   const toggleFavorite = async (salonId) => {
     try {
       await fetch(
-        `http://localhost:5000/favorites/users/${userId}/favorites/${salonId}`,
+        `${API_URL}/favorites/users/${userId}/favorites/${salonId}`,
         { method: 'POST' }
       )
       // re-fetch updated favorites

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function Edit() {
   const [userId, setUserId] = useState('')
@@ -13,7 +14,7 @@ function Edit() {
   useEffect(() => {
     const fetchBooking = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/bookings/${id}`)
+        const res = await fetch(`${API_URL}/bookings/${id}`)
         const data = await res.json()
         if (res.ok) {
           setUserId(data.user_id)
@@ -36,7 +37,7 @@ function Edit() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const res = await fetch(`http://localhost:5000/bookings/${id}`, {
+      const res = await fetch(`${API_URL}/bookings/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

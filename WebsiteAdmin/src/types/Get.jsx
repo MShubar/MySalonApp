@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function Get() {
   const [types, setTypes] = useState([])
@@ -8,7 +9,7 @@ function Get() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    fetch('http://localhost:5000/types') // Make sure your backend is running at this URL
+    fetch(`${API_URL}/types`) // Make sure your backend is running at this URL
       .then((res) => res.json())
       .then((data) => {
         setTypes(data)
@@ -25,7 +26,7 @@ function Get() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/types/${typeToDelete.id}`,
+        `${API_URL}/types/${typeToDelete.id}`,
         {
           method: 'DELETE'
         }

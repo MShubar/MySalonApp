@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function Create() {
   const [password, setPassword] = useState('') // for both admin and salon password
@@ -9,7 +10,7 @@ function Create() {
   const handleAdminSubmit = async (e) => {
     e.preventDefault()
     try {
-      const res = await fetch('http://localhost:5000/admins/register', {
+      const res = await fetch(`${API_URL}/admins/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import useFetch from '../../hooks/useFetch'
+import { API_URL } from '../../config'
 
 const useBookingDetails = (id, t) => {
   const [cancelError, setCancelError] = useState(null)
@@ -8,7 +9,7 @@ const useBookingDetails = (id, t) => {
     data: bookingData,
     loading,
     error
-  } = useFetch(`http://localhost:5000/bookings/${id}`, [id])
+  } = useFetch(`${API_URL}/bookings/${id}`, [id])
 
   const [booking, setBooking] = useState(null)
 
@@ -31,7 +32,7 @@ const useBookingDetails = (id, t) => {
   const handleCancelBooking = async () => {
     setCancelError(null)
     try {
-      const res = await fetch(`http://localhost:5000/bookings/${id}/cancel`, {
+      const res = await fetch(`${API_URL}/bookings/${id}/cancel`, {
         method: 'PATCH'
       })
       if (!res.ok) throw new Error(`HTTP error ${res.status}`)

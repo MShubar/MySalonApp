@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function Edit() {
   const [typeName, setTypeName] = useState('')
@@ -10,7 +11,7 @@ function Edit() {
   useEffect(() => {
     const fetchType = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/types/${id}`)
+        const res = await fetch(`${API_URL}/types/${id}`)
         const data = await res.json()
 
         if (res.ok) {
@@ -38,7 +39,7 @@ function Edit() {
     if (image) formData.append('image', image)
 
     try {
-      const res = await fetch(`http://localhost:5000/types/${id}`, {
+      const res = await fetch(`${API_URL}/types/${id}`, {
         method: 'PUT',
         body: formData
       })
@@ -80,7 +81,7 @@ function Edit() {
           {image && (
             <div className="mt-2">
               <img
-                src={`http://localhost:5000/${image}`}
+                src={`${API_URL}/${image}`}
                 alt="Current type"
                 width="100"
                 height="100"

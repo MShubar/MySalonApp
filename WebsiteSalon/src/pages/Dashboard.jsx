@@ -14,6 +14,7 @@ import {
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
+import { API_URL } from '../config'
 
 ChartJS.register(
   BarElement,
@@ -31,7 +32,7 @@ export default function DashboardPage() {
   const { auth } = useAuth()
 
   useEffect(() => {
-    axios.get('http://localhost:5000/bookings').then((res) => {
+    axios.get(`${API_URL}/bookings`).then((res) => {
       const filtered = res.data.filter((b) => b.salon_name === auth.name)
       setBookings(filtered)
     })
