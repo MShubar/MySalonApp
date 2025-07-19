@@ -41,4 +41,16 @@ describe('Authentication endpoints', () => {
     expect(res.body.message).toBe('Login successful')
     expect(res.body).toHaveProperty('token')
   })
+
+  test('rejects invalid credentials', async () => {
+    const hash = await bcrypt.hash('secret', 10)
+    mockQuery.mockResolvedValueOnce({ rows: [{ id: 1, username: 'john', password: hash }] })
+    bcrypt.compare.mockResolvedValueOnce(false)
+
+    const res = await request(app)
+      .post('/users/login')
+      .send({ username: 'john', password: 'wrong' })
+
+    expect(res.status).toBe(401)
+  })
 })
