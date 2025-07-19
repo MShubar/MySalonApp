@@ -8,6 +8,9 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(express.json())
 
+// Error handling middleware
+const errorHandler = require('./middleware/errorHandler')
+
 //Routes
 const userAuthRoutes = require('./routes/authUser')
 const adminAuthRoutes = require('./routes/authAdmin')
@@ -35,6 +38,9 @@ app.use('/approval', approvalRouter)
 app.use('/favorites', favoriteRoutes)
 app.use('/cart', cartRouter)
 app.use('/orders', orderRouter)
+
+// Error handler
+app.use(errorHandler)
 
 //server execute
 if (require.main === module) {
