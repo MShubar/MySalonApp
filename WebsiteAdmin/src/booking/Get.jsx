@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function Get() {
   const [bookings, setBookings] = useState([])
@@ -9,7 +10,7 @@ function Get() {
   const location = useLocation()
 
   useEffect(() => {
-    fetch('http://localhost:5000/bookings')
+    fetch(`${API_URL}/bookings`)
       .then((res) => res.json())
       .then((data) => setBookings(data))
       .catch((err) => console.error('Error fetching bookings:', err))
@@ -27,7 +28,7 @@ function Get() {
     if (!bookingToDelete) return
     try {
       const res = await fetch(
-        `http://localhost:5000/bookings/${bookingToDelete.id}`,
+        `${API_URL}/bookings/${bookingToDelete.id}`,
         {
           method: 'DELETE'
         }

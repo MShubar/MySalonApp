@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function Get() {
   const [packages, setPackages] = useState([])
@@ -8,7 +9,7 @@ function Get() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    fetch('http://localhost:5000/package')
+    fetch(`${API_URL}/package`)
       .then((res) => res.json())
       .then((data) => setPackages(data))
       .catch((err) => console.error('Error:', err))
@@ -23,7 +24,7 @@ function Get() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/package/${packageToDelete.id}`,
+        `${API_URL}/package/${packageToDelete.id}`,
         {
           method: 'DELETE'
         }

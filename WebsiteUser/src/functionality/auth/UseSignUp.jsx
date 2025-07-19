@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { API_URL } from '../../config'
 
 const useSignUp = () => {
   const navigate = useNavigate()
@@ -24,7 +25,7 @@ const useSignUp = () => {
     }
 
     try {
-      const res = await fetch('http://localhost:5000/users/register', {
+      const res = await fetch(`${API_URL}/users/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, username, password })

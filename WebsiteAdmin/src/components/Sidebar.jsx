@@ -13,6 +13,7 @@ import {
   FaTags
 } from 'react-icons/fa'
 import axios from 'axios'
+import { API_URL } from '../config'
 
 const Sidebar = () => {
   const [active, setActive] = useState('User Management')
@@ -35,7 +36,7 @@ const Sidebar = () => {
     const token = localStorage.getItem('authToken')
     try {
       await axios.post(
-        'http://localhost:5000/admins/logout',
+        `${API_URL}/admins/logout`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` }

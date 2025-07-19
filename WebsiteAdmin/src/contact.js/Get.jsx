@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
+import { API_URL } from '../config'
 
 function Get() {
   const [contacts, setContacts] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:5000/contacts')
+    fetch(`${API_URL}/contacts`)
       .then((res) => res.json())
       .then((data) => {
         setContacts(data)

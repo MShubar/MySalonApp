@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { API_URL } from '../config'
 
 function SignupStep2() {
   const [name, setName] = useState('')
@@ -11,9 +12,9 @@ function SignupStep2() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    axios.get('http://localhost:5000/types').then((res) => setTypes(res.data))
+    axios.get(`${API_URL}/types`).then((res) => setTypes(res.data))
     axios
-      .get('http://localhost:5000/services')
+      .get(`${API_URL}/services`)
       .then((res) => setServices(res.data))
   }, [])
 

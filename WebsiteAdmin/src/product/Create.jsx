@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function Create() {
   const [name, setName] = useState('')
@@ -38,7 +39,7 @@ function Create() {
     if (image) formData.append('image', image)
 
     try {
-      const res = await fetch('http://localhost:5000/product', {
+      const res = await fetch(`${API_URL}/product`, {
         method: 'POST',
         body: formData
       })

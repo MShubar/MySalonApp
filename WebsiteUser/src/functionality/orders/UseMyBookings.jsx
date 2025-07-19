@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import useFetch from '../../hooks/useFetch'
+import { API_URL } from '../../config'
 
 const useMyBookings = (t, user) => {
   const [showFilters, setShowFilters] = useState(false)
@@ -11,13 +12,13 @@ const useMyBookings = (t, user) => {
     data: bookingsData = [],
     loading: bookingsLoading,
     error: bookingsError
-  } = useFetch(user?.id ? 'http://localhost:5000/bookings' : null, [user?.id])
+  } = useFetch(user?.id ? `${API_URL}/bookings` : null, [user?.id])
 
   const {
     data: ordersData = [],
     loading: ordersLoading,
     error: ordersError
-  } = useFetch(user?.id ? `http://localhost:5000/orders/${user.id}` : null, [
+  } = useFetch(user?.id ? `${API_URL}/orders/${user.id}` : null, [
     user?.id
   ])
   const bookingsArray = Array.isArray(bookingsData) ? bookingsData : []
@@ -110,7 +111,7 @@ const useMyBookings = (t, user) => {
     if (!id) return
     try {
       const response = await fetch(
-        `http://localhost:5000/bookings/${id}/cancel`,
+        `${API_URL}/bookings/${id}/cancel`,
         {
           method: 'PATCH'
         }
@@ -130,7 +131,7 @@ const useMyBookings = (t, user) => {
   const handleRequestCancelOrder = async (orderId, setOrders) => {
     if (!orderId) return
     try {
-      const response = await fetch(`http://localhost:5000/orders/${orderId}`, {
+      const response = await fetch(`${API_URL}/orders/${orderId}`, {
         method: 'DELETE'
       })
       if (response.ok) {

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import axios from 'axios'
 import moment from 'moment'
+import { API_URL } from '../../config'
 
 export const useSalonBooking = ({ salonId, userId, t, navigate }) => {
   const [salon, setSalon] = useState(null)
@@ -32,8 +33,8 @@ export const useSalonBooking = ({ salonId, userId, t, navigate }) => {
     const fetchSalonAndServices = async () => {
       try {
         const [salonRes, servicesRes] = await Promise.all([
-          axios.get(`http://localhost:5000/salons/${salonId}`),
-          axios.get(`http://localhost:5000/services/salon/${salonId}`)
+          axios.get(`${API_URL}/salons/${salonId}`),
+          axios.get(`${API_URL}/services/salon/${salonId}`)
         ])
         const salonData = salonRes.data
         const slots = generateTimeSlots(
@@ -58,7 +59,7 @@ export const useSalonBooking = ({ salonId, userId, t, navigate }) => {
     const fetchBookedSlots = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/bookings/${salonId}/${date}/slots`
+          `${API_URL}/bookings/${salonId}/${date}/slots`
         )
         setBookedSlots(res.data)
       } catch (err) {
@@ -141,7 +142,7 @@ export const useSalonBooking = ({ salonId, userId, t, navigate }) => {
     }
 
     try {
-      await axios.post(`http://localhost:5000/bookings`, {
+      await axios.post(`${API_URL}/bookings`, {
         user_id: userId,
         salon_id: salonId,
         service: selectedServices.join(','),

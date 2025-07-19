@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { API_URL } from '../config'
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
@@ -39,7 +40,7 @@ function Edit() {
   useEffect(() => {
     const fetchSalon = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/salons/${id}`)
+        const res = await fetch(`${API_URL}/salons/${id}`)
         const data = await res.json()
 
         if (res.ok && data) {
@@ -77,7 +78,7 @@ function Edit() {
     if (image) formData.append('image', image)
 
     try {
-      const res = await fetch(`http://localhost:5000/salons/${id}`, {
+      const res = await fetch(`${API_URL}/salons/${id}`, {
         method: 'PUT',
         body: formData
       })

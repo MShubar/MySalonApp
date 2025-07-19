@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
+import { API_URL } from '../../config'
 
 const useEditProfile = ({ userId }) => {
   const { t } = useTranslation()
@@ -18,7 +19,7 @@ const useEditProfile = ({ userId }) => {
       setError('')
       setSuccess('')
       try {
-        const res = await axios.get(`http://localhost:5000/users/${userId}`)
+        const res = await axios.get(`${API_URL}/users/${userId}`)
         setFormData({
           username: res.data.username || '',
           email: res.data.email || ''
@@ -49,7 +50,7 @@ const useEditProfile = ({ userId }) => {
     }
 
     try {
-      await axios.put(`http://localhost:5000/users/${userId}`, formData)
+      await axios.put(`${API_URL}/users/${userId}`, formData)
       setSuccess(t('Profile updated successfully!'))
     } catch (err) {
       setError(err.response?.data?.message || t('Failed to update profile'))

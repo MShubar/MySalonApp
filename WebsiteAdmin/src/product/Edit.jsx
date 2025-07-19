@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function Edit() {
   const [name, setName] = useState('')
@@ -16,7 +17,7 @@ function Edit() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/product/${id}`)
+        const res = await fetch(`${API_URL}/product/${id}`)
         const data = await res.json()
 
         if (res.ok) {
@@ -51,7 +52,7 @@ function Edit() {
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/product/${id}`, {
+      const res = await fetch(`${API_URL}/product/${id}`, {
         method: 'PUT',
         body: formData
       })

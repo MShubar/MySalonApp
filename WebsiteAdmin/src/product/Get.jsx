@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function Get() {
   const [products, setProducts] = useState([])
@@ -8,7 +9,7 @@ function Get() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    fetch('http://localhost:5000/product')
+    fetch(`${API_URL}/product`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data)
@@ -26,7 +27,7 @@ function Get() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/product/${productToDelete.id}`,
+        `${API_URL}/product/${productToDelete.id}`,
         {
           method: 'DELETE'
         }

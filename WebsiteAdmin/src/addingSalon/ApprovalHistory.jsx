@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { API_URL } from '../config'
 
 export default function ApprovalHistory() {
   const { salonId } = useParams()
@@ -7,7 +8,7 @@ export default function ApprovalHistory() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetch(`http://localhost:5000/approval/history/${salonId}`)
+    fetch(`${API_URL}/approval/history/${salonId}`)
       .then(async (res) => {
         if (!res.ok) {
           const text = await res.text()

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function Create() {
   const [username, setUsername] = useState('')
@@ -21,7 +22,7 @@ function Create() {
     setError('') // Clear previous errors
 
     try {
-      const res = await fetch('http://localhost:5000/users/register', {
+      const res = await fetch(`${API_URL}/users/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

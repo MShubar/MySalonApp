@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import axios from 'axios'
+import { API_URL } from '../config'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -12,12 +13,12 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const res = await axios.post('http://localhost:5000/salons/login', {
+      const res = await axios.post(`${API_URL}/salons/login`, {
         email,
         password
       })
       const token = res.data.token
-      const profile = await axios.get('http://localhost:5000/salons/me', {
+      const profile = await axios.get(`${API_URL}/salons/me`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       setAuth({ ...profile.data, token })

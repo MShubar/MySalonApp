@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function Get() {
   const [salons, setSalons] = useState([])
@@ -13,8 +14,8 @@ function Get() {
     const fetchData = async () => {
       try {
         const [salonRes, typeRes] = await Promise.all([
-          fetch('http://localhost:5000/salons'),
-          fetch('http://localhost:5000/types/type') // this returns salons + types grouped
+          fetch(`${API_URL}/salons`),
+          fetch(`${API_URL}/types/type`) // this returns salons + types grouped
         ])
         const salonsData = await salonRes.json()
         const typesData = await typeRes.json()
@@ -49,8 +50,8 @@ function Get() {
   // Approve or unapprove salon
   const handleApprove = async (id, isCurrentlyApproved) => {
     const endpoint = isCurrentlyApproved
-      ? 'http://localhost:5000/approval/unapprove'
-      : 'http://localhost:5000/approval/approve'
+      ? `${API_URL}/approval/unapprove`
+      : `${API_URL}/approval/approve`
 
     try {
       const res = await fetch(endpoint, {
@@ -80,7 +81,7 @@ function Get() {
     if (!salonToDelete) return
     try {
       const res = await fetch(
-        `http://localhost:5000/salons/${salonToDelete.id}`,
+        `${API_URL}/salons/${salonToDelete.id}`,
         { method: 'DELETE' }
       )
       if (res.ok) {

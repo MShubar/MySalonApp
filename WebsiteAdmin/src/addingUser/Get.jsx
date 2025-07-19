@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function Get() {
   const [users, setUsers] = useState([])
@@ -9,7 +10,7 @@ function Get() {
   const location = useLocation()
 
   useEffect(() => {
-    fetch('http://localhost:5000/users')
+    fetch(`${API_URL}/users`)
       .then((res) => res.json())
       .then((data) => setUsers(data))
       .catch((err) => console.error('Error:', err))
@@ -27,7 +28,7 @@ function Get() {
     if (!userToDelete) return
     try {
       const res = await fetch(
-        `http://localhost:5000/users/${userToDelete.id}`,
+        `${API_URL}/users/${userToDelete.id}`,
         {
           method: 'DELETE'
         }

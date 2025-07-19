@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { API_URL } from '../config'
 
 function EditPackage() {
   const [title, setTitle] = useState('')
@@ -15,7 +16,7 @@ function EditPackage() {
 
   useEffect(() => {
     const fetchPackage = async () => {
-      const res = await fetch(`http://localhost:5000/package/${id}`)
+      const res = await fetch(`${API_URL}/package/${id}`)
       const data = await res.json()
       if (res.ok) {
         setTitle(data.title)
@@ -45,7 +46,7 @@ function EditPackage() {
       formData.append('image', newImage)
     }
 
-    const res = await fetch(`http://localhost:5000/package/${id}`, {
+    const res = await fetch(`${API_URL}/package/${id}`, {
       method: 'PUT',
       body: formData
     })
