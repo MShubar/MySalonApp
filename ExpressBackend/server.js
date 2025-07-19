@@ -8,6 +8,12 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(express.json())
 
+// Log requests in development mode
+if (process.env.NODE_ENV === 'development') {
+  const morgan = require('morgan')
+  app.use(morgan('dev'))
+}
+
 //Routes
 const userAuthRoutes = require('./routes/authUser')
 const adminAuthRoutes = require('./routes/authAdmin')
