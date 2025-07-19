@@ -57,6 +57,8 @@ app.use('/favorites', favoriteRoutes)
 app.use('/cart', cartRouter)
 app.use('/orders', orderRouter)
 
+// 404 handler
+app.use((req, res) => res.status(404).json({ message: 'Not Found' }))
 // Error handler
 app.use(errorHandler)
 
