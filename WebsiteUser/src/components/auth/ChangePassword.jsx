@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import useChangePassword from '../../functionality/auth/useChangePassword'
 
 const PageContainer = styled.div`
@@ -174,6 +175,11 @@ function ChangePassword({ userId }) {
       </Card>
     </PageContainer>
   )
+}
+
+ChangePassword.propTypes = {
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired
 }
 
 export default ChangePassword

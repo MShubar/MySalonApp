@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useNavigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import useEditProfile from '../../functionality/auth/UseEditProfile'
 
 const PageContainer = styled.div`
@@ -162,6 +163,11 @@ function EditProfile({ userId }) {
       </Card>
     </PageContainer>
   )
+}
+
+EditProfile.propTypes = {
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired
 }
 
 export default EditProfile
