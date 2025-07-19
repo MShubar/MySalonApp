@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const uploadToAzure = require('../middleware/azureBlob')
 
-const JWT_SECRET = 'your_secret_key_here'
+const JWT_SECRET = process.env.JWT_SECRET
 
 const registerSalon = async (req, res) => {
   let location
