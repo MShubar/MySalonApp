@@ -21,7 +21,7 @@ import CreateBookings from './booking/Create'
 import EditBookings from './booking/Edit'
 import GetBookings from './booking/Get'
 
-import GetContact from './contact.js/Get'
+import GetContact from './contacts/Get'
 
 import CreatePackages from './package/Create'
 import EditPackages from './package/Edit'
