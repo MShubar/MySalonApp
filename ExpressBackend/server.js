@@ -36,6 +36,9 @@ app.use('/favorites', favoriteRoutes)
 app.use('/cart', cartRouter)
 app.use('/orders', orderRouter)
 
+// 404 handler
+app.use((req, res) => res.status(404).json({ message: 'Not Found' }))
+
 //server execute
 if (require.main === module) {
   const PORT = process.env.PORT || 5000
