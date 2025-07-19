@@ -3,8 +3,9 @@ import { Spinner } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
 import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion as Motion } from 'framer-motion'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 import useNearestSalons from '../../functionality/salons/useNearestSalons'
 
 const Container = styled.div`
@@ -199,7 +200,7 @@ const NearestSalon = ({ userType, userId }) => {
           {sortedSalons.map((salon) => {
             const isFavorited = favorites.has(salon.id)
             return (
-              <motion.div
+              <Motion.div
                 key={salon.id}
                 className="col-md-4 mb-4"
                 initial={{ opacity: 0, y: 50 }}
@@ -280,13 +281,18 @@ const NearestSalon = ({ userType, userId }) => {
                     </div>
                   </div>
                 </CardStyled>
-              </motion.div>
+              </Motion.div>
             )
           })}
         </div>
       )}
     </Container>
   )
+}
+
+NearestSalon.propTypes = {
+  userType: PropTypes.string,
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 }
 
 export default NearestSalon
