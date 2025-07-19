@@ -6,6 +6,7 @@
     "test": "jest --runInBand",
     "start": "node server.js",
     "nodemon": "nodemon server.js",
+    "format": "prettier --write ."
     "dev": "nodemon server.js"
   },
   "author": "",
