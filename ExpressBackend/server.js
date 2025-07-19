@@ -8,6 +8,11 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(express.json())
 
+// Log requests in development mode
+if (process.env.NODE_ENV === 'development') {
+  const morgan = require('morgan')
+  app.use(morgan('dev'))
+}
 // Error handling middleware
 const errorHandler = require('./middleware/errorHandler')
 
