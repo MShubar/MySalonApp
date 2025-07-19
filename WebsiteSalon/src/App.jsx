@@ -1,5 +1,6 @@
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import NotFound from './components/NotFound'
 import Login from './pages/Login'
 import SignupStep1 from './pages/SignupStep1'
 import SignupStep2 from './pages/SignupStep2'
@@ -34,7 +35,7 @@ export default function App() {
         }
       />
       <Route path="/bookings" element={<BookingsPage />} />
-      <Route path="*" element={<Navigate to="/login" />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }

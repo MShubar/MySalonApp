@@ -34,6 +34,7 @@ import GetProducts from './product/Get'
 import CreateTypes from './types/Create'
 import EditTypes from './types/Edit'
 import GetTypes from './types/Get'
+import NotFound from './components/NotFound'
 
 import './App.css'
 
@@ -273,6 +274,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </div>
