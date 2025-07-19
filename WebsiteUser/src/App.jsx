@@ -31,6 +31,7 @@ import Cart from './components/cart/Cart'
 import Checkout from './components/cart/Checkout'
 import AddressPage from './components/cart/AddressPage'
 import PaymentSuccess from './components/cart/PaymentSuccessful'
+import NotFound from './components/NotFound'
 
 // Misc
 import backgroundImage from './assets/Background.png'
@@ -125,6 +126,7 @@ const App = () => {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/address" element={<AddressPage />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>
