@@ -44,6 +44,7 @@ const useNavbar = ({ userType, setUser }) => {
     { to: '/products', label: 'Products' },
     { to: '/packages', label: 'Packages' },
     { to: '/favorites', label: 'Favorites' },
+    { to: '/about', label: 'About' },
     ...(userType === 'women' || userType === 'men'
       ? [{ to: '/training', label: 'training' }]
       : [])
