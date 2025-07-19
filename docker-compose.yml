@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  backend:
+    build: ./ExpressBackend
+    env_file:
+      - ./ExpressBackend/.env
+    ports:
+      - "5000:5000"
+  admin:
+    build: ./WebsiteAdmin
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
+  salon:
+    build: ./WebsiteSalon
+    ports:
+      - "3002:80"
+    depends_on:
+      - backend
+  user:
+    build: ./WebsiteUser
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
