@@ -45,4 +45,14 @@ describe('Booking endpoints', () => {
     expect(res.status).toBe(201)
     expect(res.body).toEqual({ id: 1 })
   })
+
+  test('rejects booking with missing fields', async () => {
+    mockQuery.mockResolvedValueOnce({ rows: [], rowCount: 0 })
+
+    const res = await request(app)
+      .post('/bookings')
+      .send({})
+
+    expect(res.status).toBe(400)
+  })
 })
