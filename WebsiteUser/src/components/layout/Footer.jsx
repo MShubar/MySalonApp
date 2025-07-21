@@ -23,6 +23,9 @@ const Footer = () => (
         <Link to="/terms" className="text-light text-decoration-none">
           Terms
         </Link>
+  <Link to="/privacy" className="text-light text-decoration-none">
+        Privacy Policy
+      </Link>
       </nav>
       <small>&copy; {new Date().getFullYear()} MySalon</small>
     </div>

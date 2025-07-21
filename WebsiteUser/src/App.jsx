@@ -35,11 +35,12 @@ import Terms from './components/legal/Terms'
 import Faq from './components/Faq'
 
 // Cart & Checkout
-import Cart from './components/cart/Cart';
-import Checkout from './components/cart/Checkout';
-import AddressPage from './components/cart/AddressPage';
-import PaymentSuccess from './components/cart/PaymentSuccessful';
-import NotFound from './components/NotFound';
+import Cart from './components/cart/Cart'
+import Checkout from './components/cart/Checkout'
+import AddressPage from './components/cart/AddressPage'
+import PaymentSuccess from './components/cart/PaymentSuccessful'
+import NotFound from './components/NotFound'
+import Privacy from './components/legal/Privacy'
 
 // Misc
 import backgroundImage from './assets/Background.png';
@@ -114,7 +115,6 @@ const App = () => {
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/account" element={<Account user={user} />} />
-
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
               <Route
@@ -129,6 +129,7 @@ const App = () => {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/address" element={<AddressPage />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </motion.div>
