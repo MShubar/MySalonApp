@@ -1,5 +1,7 @@
-import React, { useState, useContext } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import React, { useState, useContext } from 'react'
+import "./styles/variables.css";
+import { Routes, Route, useLocation } from 'react-router-dom'
+
 // Layout
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
