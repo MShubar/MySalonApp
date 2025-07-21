@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
 import 'normalize.css'
 import './i18n'
+import './App.css'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
