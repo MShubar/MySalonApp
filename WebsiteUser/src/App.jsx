@@ -4,8 +4,8 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
 // Layout
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
+import Navbar from './components/layout/Navbar'
+import Footer from './components/layout/Footer'
 
 // Auth
 import SignIn from './components/auth/Signin';
@@ -31,6 +31,7 @@ import Favorites from './components/products/Favorites'
 import Training from './components/products/Training'
 import About from './components/About'
 import ContactUs from './components/contact/ContactUs'
+import Terms from './components/legal/Terms'
 import Faq from './components/Faq'
 
 // Cart & Checkout
@@ -111,6 +112,7 @@ const App = () => {
           <Route path="/faq" element={<Faq />} />
           <Route path="/training" element={<Training />} />
           <Route path="/contact" element={<ContactUs />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/account" element={<Account user={user} />} />
 
               <Route path="/signin" element={<SignIn />} />
