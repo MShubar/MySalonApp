@@ -61,7 +61,7 @@ const SalonDetails = () => {
         {salon.image_url ? (
           <img
             src={salon.image_url}
-            alt={salon.name}
+            alt={`Image of ${salon.name} salon`}
             style={imageStyle}
             onError={(e) => (e.target.style.display = 'none')}
           />

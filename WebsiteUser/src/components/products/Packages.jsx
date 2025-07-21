@@ -122,7 +122,7 @@ const Packages = () => {
                   {pack.image_url ? (
                     <img
                       src={pack.image_url}
-                      alt={pack.title}
+                      alt={`${pack.title} package image`}
                       className="card-img-top"
                       style={{
                         height: '180px',
