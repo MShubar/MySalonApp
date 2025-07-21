@@ -1,28 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
 import { API_URL } from '../../config'
+import { AppContext } from '../../context/AppContext'
 
 const useCart = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [cart, setCart] = useState([])
-
-  useEffect(() => {
-    const stored = localStorage.getItem('cart')
-    if (stored) {
-      try {
-        setCart(JSON.parse(stored))
-      } catch (error) {
-        console.error('Error parsing cart:', error)
-      }
-    }
-  }, [])
+  const { cart, setCart } = useContext(AppContext)
 
   const updateCartStorage = (updated) => {
     setCart(updated)
-    localStorage.setItem('cart', JSON.stringify(updated))
   }
 
   const increaseQuantity = (item) => {

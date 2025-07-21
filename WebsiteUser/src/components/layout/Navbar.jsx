@@ -2,7 +2,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import useNavbar from '../../functionality/layout/UseNavbar'
-const Navbar = ({ setUserType, userType, user, setUser }) => {
+const Navbar = ({ setUserType, userType, user }) => {
   const {
     t,
     i18n,
@@ -13,7 +13,7 @@ const Navbar = ({ setUserType, userType, user, setUser }) => {
     handleLogout,
     navLinks,
     location
-  } = useNavbar({ userType, setUserType, setUser })
+  } = useNavbar({ userType, setUserType })
 
   return (
     <>

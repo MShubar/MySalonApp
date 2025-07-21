@@ -82,7 +82,11 @@ const SignUpLink = styled.a`
     text-decoration: underline;
   }
 `
-const SignIn = ({ setUser }) => {
+import { useContext } from 'react'
+import { AppContext } from '../../context/AppContext'
+
+const SignIn = () => {
+  const { setUser } = useContext(AppContext)
   const {
     t,
     username,
@@ -91,7 +95,7 @@ const SignIn = ({ setUser }) => {
     setPassword,
     error,
     handleSignIn
-  } = useSignIn({ setUser })
+  } = useSignIn()
 
   const onSubmit = (e) => {
     e.preventDefault()
