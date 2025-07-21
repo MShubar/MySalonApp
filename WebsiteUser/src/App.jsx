@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 // Layout
 import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
 
 // Auth
 import SignIn from './components/auth/Signin';
@@ -113,6 +114,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
+      <Footer />
     </div>
   );
 };
