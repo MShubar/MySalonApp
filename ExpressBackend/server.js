@@ -12,7 +12,21 @@ try {
 require('dotenv').config()
 const redisClient = require('./models/redis')
 const app = express()
-app.use(cors())
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+  .split(',')
+  .map((o) => o.trim())
+  .filter((o) => o)
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+}
+app.use(cors(corsOptions))
 app.use(bodyParser.json())
 app.use(express.json())
 const limiter = rateLimit({
