@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import TopBar from '../layout/TopBar'
 import useSignUp from '../../functionality/auth/UseSignUp'
+import { useForm } from 'react-hook-form'
 
 const Container = styled.div`
   max-width: 500px;
@@ -83,23 +84,21 @@ const SignInLink = styled.a`
   }
 `
 const SignUp = () => {
+  const { t, error, handleSignUp } = useSignUp()
   const {
-    t,
-    email,
-    setEmail,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    confirmPassword,
-    setConfirmPassword,
-    error,
-    handleSignUp
-  } = useSignUp()
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm()
 
-  const onSubmit = (e) => {
-    e.preventDefault()
-    handleSignUp()
+  const onSubmit = (data) => {
+    handleSignUp({
+      email: data.email,
+      username: data.username,
+      password: data.password,
+      confirmPassword: data.confirmPassword
+    })
   }
 
   return (
@@ -108,49 +107,51 @@ const SignUp = () => {
       <Container>
         <Heading>{t('Sign Up')}</Heading>
 
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
             <Label>{t('Username')}</Label>
             <Input
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              {...register('username', { required: t('Username is required') })}
               placeholder={t('Enter your username')}
-              required
             />
+            {errors.username && <ErrorText>{errors.username.message}</ErrorText>}
           </FormGroup>
 
           <FormGroup>
             <Label>{t('Email Address')}</Label>
             <Input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register('email', { required: t('Email is required') })}
               placeholder={t('Enter your email')}
-              required
             />
+            {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
           </FormGroup>
 
           <FormGroup>
             <Label>{t('Password')}</Label>
             <Input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register('password', { required: t('Password is required') })}
               placeholder={t('Enter your password')}
-              required
             />
+            {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
           </FormGroup>
 
           <FormGroup>
             <Label>{t('Confirm Password')}</Label>
             <Input
               type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              {...register('confirmPassword', {
+                required: t('Confirm Password is required'),
+                validate: (value) =>
+                  value === watch('password') || t('Passwords do not match')
+              })}
               placeholder={t('Confirm your password')}
-              required
             />
+            {errors.confirmPassword && (
+              <ErrorText>{errors.confirmPassword.message}</ErrorText>
+            )}
           </FormGroup>
 
           {error && <ErrorText>{error}</ErrorText>}
