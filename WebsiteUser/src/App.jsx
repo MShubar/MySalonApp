@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import "./styles/variables.css";
 import { Routes, Route, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
 
 // Layout
 import Navbar from './components/layout/Navbar';
@@ -75,7 +76,14 @@ const App = () => {
           maxWidth: '100%',
         }}
       >
-        <Routes>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <Routes location={location}>
           <Route
             path="/"
             element={<NearestSalon userType={userType} userId={userId} />}
@@ -116,6 +124,8 @@ const App = () => {
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+          </motion.div>
+        </AnimatePresence>
       </div>
       <ScrollToTop />
       <Footer />
