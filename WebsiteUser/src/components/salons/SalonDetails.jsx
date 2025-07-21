@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { Spinner, Button } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
+import LoadingSpinner from '../LoadingSpinner'
 import { useTranslation } from 'react-i18next'
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -26,11 +27,7 @@ const SalonDetails = () => {
     useSalonDetails(id)
 
   if (loading) {
-    return (
-      <div style={styles.centered}>
-        <Spinner animation="border" variant="info" />
-      </div>
-    )
+    return <LoadingSpinner style={styles.centered} />
   }
 
   if (error) {
@@ -61,7 +58,7 @@ const SalonDetails = () => {
         {salon.image_url ? (
           <img
             src={salon.image_url}
-            alt={salon.name}
+            alt={`Image of ${salon.name} salon`}
             style={imageStyle}
             onError={(e) => (e.target.style.display = 'none')}
           />

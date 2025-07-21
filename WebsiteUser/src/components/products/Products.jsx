@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Spinner } from 'react-bootstrap'
+import LoadingSpinner from '../LoadingSpinner'
 import { Helmet } from 'react-helmet'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
@@ -70,11 +70,7 @@ const Products = () => {
   } = useProducts(t)
 
   if (loading) {
-    return (
-      <div className="d-flex justify-content-center my-5">
-        <Spinner animation="border" variant="light" />
-      </div>
-    )
+    return <LoadingSpinner className="my-5" />
   }
 
   if (error) {
