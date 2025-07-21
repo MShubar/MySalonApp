@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Spinner } from 'react-bootstrap';
-import { Helmet } from 'react-helmet';
-import { useTranslation } from 'react-i18next';
-import usePackages from '../../functionality/products/UsePackages';
-import ServerError from '../ServerError';
+import React, { useState } from 'react'
+import LoadingSpinner from '../LoadingSpinner'
+import { Helmet } from 'react-helmet'
+import { useTranslation } from 'react-i18next'
+import usePackages from '../../functionality/products/UsePackages'
+import ServerError from '../ServerError'
 
 const Packages = () => {
   const { t } = useTranslation();
@@ -92,9 +92,7 @@ const Packages = () => {
       </div>
 
       {loading ? (
-        <div className="d-flex justify-content-center my-5">
-          <Spinner animation="border" variant="light" />
-        </div>
+        <LoadingSpinner className="my-5" />
       ) : error ? (
         error.response?.status === 500 ? (
           <ServerError onRetry={retry} />
@@ -126,7 +124,7 @@ const Packages = () => {
                   {pack.image_url ? (
                     <img
                       src={pack.image_url}
-                      alt={pack.title}
+                      alt={`${pack.title} package image`}
                       className="card-img-top"
                       style={{
                         height: '180px',

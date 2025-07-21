@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Spinner } from 'react-bootstrap';
-import { Helmet } from 'react-helmet';
-import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import useProducts from '../../functionality/products/UseProducts';
-import ServerError from '../ServerError';
+import React, { useState } from 'react'
+import LoadingSpinner from '../LoadingSpinner'
+import { Helmet } from 'react-helmet'
+import { useTranslation } from 'react-i18next'
+import styled from 'styled-components'
+import useProducts from '../../functionality/products/UseProducts'
+import ServerError from '../ServerError'
 
 const Container = styled.div`
   color: #ddd;
@@ -75,6 +75,7 @@ const Products = () => {
     currency: 'BHD',
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('')
 
   const {
     products,
@@ -89,12 +90,12 @@ const Products = () => {
     handleAddToCart,
   } = useProducts(t);
 
+  const filteredProducts = getSortedProducts().filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   if (loading) {
-    return (
-      <div className="d-flex justify-content-center my-5">
-        <Spinner animation="border" variant="light" />
-      </div>
-    );
+    return <LoadingSpinner className="my-5" />
   }
 
   if (error) {
@@ -116,12 +117,23 @@ const Products = () => {
 
       <Header className="text-center mb-4"> {t('Products')} </Header>
 
+
       {successMessage && (
         <SuccessOverlay>
           <i className="bi bi-check-circle me-2"></i>
           {successMessage}
         </SuccessOverlay>
       )}
+
+      <div className="mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder={t('Search products')}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
 
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
         <button
@@ -152,13 +164,13 @@ const Products = () => {
         )}
       </div>
 
-      {products.length === 0 ? (
+      {filteredProducts.length === 0 ? (
         <p className="text-center text-muted fst-italic">
           {t('no_products_found')}
         </p>
       ) : (
         <div className="row">
-          {getSortedProducts().map((product) => (
+          {filteredProducts.map((product) => (
             <div key={product.id} className="col-6 mb-4">
               <CardStyled
                 className="card h-100 shadow-sm"
