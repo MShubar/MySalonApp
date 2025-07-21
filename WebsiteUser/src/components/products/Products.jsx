@@ -1,19 +1,19 @@
-import React, { useState } from 'react'
-import { Spinner } from 'react-bootstrap'
-import { Helmet } from 'react-helmet'
-import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
-import useProducts from '../../functionality/products/UseProducts'
-import ServerError from '../ServerError'
+import React, { useState } from 'react';
+import { Spinner } from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
+import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+import useProducts from '../../functionality/products/UseProducts';
+import ServerError from '../ServerError';
 
 const Container = styled.div`
   color: #ddd;
-`
+`;
 
 const Header = styled.h2`
   color: #222;
   font-weight: 700;
-`
+`;
 
 const SuccessOverlay = styled.div`
   position: fixed;
@@ -29,7 +29,7 @@ const SuccessOverlay = styled.div`
   text-align: center;
   font-size: 1.1rem;
   font-weight: 500;
-`
+`;
 
 const CardStyled = styled.div`
   border: 1px solid #333;
@@ -38,39 +38,43 @@ const CardStyled = styled.div`
   opacity: ${(props) => (props.$soldOut ? 0.5 : 1)};
   background-color: #1f1f1f;
   color: #ddd;
-`
+`;
 
 const ProductImage = styled.img`
   height: 180px;
   object-fit: cover;
   border-bottom: 1px solid #444;
-`
+`;
 
 const Placeholder = styled.div`
   height: 180px;
   font-size: 48px;
-`
+`;
 
 const ProductTitle = styled.h5`
   color: #a3c1f7;
   font-weight: 600;
-`
+`;
 
 const ProductDescription = styled.p`
   font-size: 0.9rem;
   color: #bbb;
   min-height: 48px;
-`
+`;
 
 const Price = styled.div`
   font-size: 1rem;
   font-weight: 600;
   color: #f0e68c;
-`
+`;
 
 const Products = () => {
-  const { t } = useTranslation()
-  const [showFilters, setShowFilters] = useState(false)
+  const { t } = useTranslation();
+  const currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'BHD',
+  });
+  const [showFilters, setShowFilters] = useState(false);
 
   const {
     products,
@@ -82,26 +86,26 @@ const Products = () => {
     handleSort,
     getSortedProducts,
     adjustQty,
-    handleAddToCart
-  } = useProducts(t)
+    handleAddToCart,
+  } = useProducts(t);
 
   if (loading) {
     return (
       <div className="d-flex justify-content-center my-5">
         <Spinner animation="border" variant="light" />
       </div>
-    )
+    );
   }
 
   if (error) {
     if (error.response?.status === 500) {
-      return <ServerError onRetry={retry} />
+      return <ServerError onRetry={retry} />;
     }
     return (
       <div className="text-center mt-5 text-danger">
         {t('Failed to load products')}
       </div>
-    )
+    );
   }
 
   return (
@@ -223,7 +227,7 @@ const Products = () => {
                   </div>
 
                   <Price className="mb-2">
-                    {Number(product.price).toFixed(2)} BHD
+                    {currencyFormatter.format(product.price)}
                   </Price>
 
                   <button
@@ -242,7 +246,7 @@ const Products = () => {
         </div>
       )}
     </Container>
-  )
-}
+  );
+};
 
-export default Products
+export default Products;

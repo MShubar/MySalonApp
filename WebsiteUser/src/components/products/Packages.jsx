@@ -1,13 +1,17 @@
-import React, { useState } from 'react'
-import { Spinner } from 'react-bootstrap'
-import { Helmet } from 'react-helmet'
-import { useTranslation } from 'react-i18next'
-import usePackages from '../../functionality/products/UsePackages'
-import ServerError from '../ServerError'
+import React, { useState } from 'react';
+import { Spinner } from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
+import { useTranslation } from 'react-i18next';
+import usePackages from '../../functionality/products/UsePackages';
+import ServerError from '../ServerError';
 
 const Packages = () => {
-  const { t } = useTranslation()
-  const [showFilters, setShowFilters] = useState(false)
+  const { t } = useTranslation();
+  const currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'BHD',
+  });
+  const [showFilters, setShowFilters] = useState(false);
 
   const {
     packages,
@@ -19,8 +23,8 @@ const Packages = () => {
     handleSort,
     getSortedPackages,
     adjustQty,
-    handleAddToCart
-  } = usePackages(t)
+    handleAddToCart,
+  } = usePackages(t);
 
   return (
     <div className="container mt-4" style={{ color: '#ddd' }}>
@@ -50,7 +54,7 @@ const Packages = () => {
             boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
             textAlign: 'center',
             fontSize: '1.1rem',
-            fontWeight: '500'
+            fontWeight: '500',
           }}
         >
           <i className="bi bi-check-circle me-2"></i>
@@ -115,7 +119,7 @@ const Packages = () => {
                   overflow: 'hidden',
                   opacity: pack.quantity <= 0 ? 0.5 : 1,
                   backgroundColor: '#1f1f1f',
-                  color: '#ddd'
+                  color: '#ddd',
                 }}
               >
                 <div style={{ position: 'relative' }}>
@@ -127,7 +131,7 @@ const Packages = () => {
                       style={{
                         height: '180px',
                         objectFit: 'cover',
-                        borderBottom: '1px solid #444'
+                        borderBottom: '1px solid #444',
                       }}
                     />
                   ) : (
@@ -158,7 +162,7 @@ const Packages = () => {
                     style={{
                       fontSize: '0.9rem',
                       color: '#bbb',
-                      minHeight: '48px'
+                      minHeight: '48px',
                     }}
                   >
                     {pack.description?.length > 60
@@ -201,10 +205,10 @@ const Packages = () => {
                     style={{
                       fontSize: '1rem',
                       fontWeight: '600',
-                      color: '#f0e68c'
+                      color: '#f0e68c',
                     }}
                   >
-                    {Number(pack.price).toFixed(2)} BHD
+                    {currencyFormatter.format(pack.price)}
                   </div>
 
                   <button
@@ -221,7 +225,7 @@ const Packages = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Packages
+export default Packages;
