@@ -61,6 +61,7 @@ const NearestSalon = ({ userType, userId }) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [showFilters, setShowFilters] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const {
     loading,
@@ -97,7 +98,10 @@ const NearestSalon = ({ userType, userId }) => {
     const meetsRating = salon.rating >= minRating
     const meetsDistance =
       salon.distance !== null ? salon.distance <= maxDistance : false
-    return meetsRating && meetsDistance
+    const nameMatches = salon.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+    return meetsRating && meetsDistance && nameMatches
   })
 
   const sortedSalons = [...filteredSalons].sort((a, b) => {
@@ -190,6 +194,14 @@ const NearestSalon = ({ userType, userId }) => {
           </div>
         </FilterContainer>
       )}
+
+      <input
+        type="text"
+        className="form-control mb-3"
+        placeholder={t('Search salons')}
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
 
       {/* Salon Cards */}
       {sortedSalons.length === 0 ? (
