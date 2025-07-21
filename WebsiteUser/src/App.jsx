@@ -38,6 +38,7 @@ import NotFound from './components/NotFound'
 // Misc
 import backgroundImage from './assets/Background.png'
 import { AppContext } from './context/AppContext'
+import Footer from './components/layout/Footer'
 
 const App = () => {
   const location = useLocation()
@@ -109,10 +110,11 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/address" element={<AddressPage />} />
-          <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
       </div>
+      <Footer />
     </div>
   )
 }
