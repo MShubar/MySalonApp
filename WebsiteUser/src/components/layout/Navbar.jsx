@@ -1,7 +1,6 @@
 import Dropdown from 'react-bootstrap/Dropdown'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { useState, useEffect } from 'react'
 import useNavbar from '../../functionality/layout/UseNavbar'
 const Navbar = ({ setUserType, userType, user }) => {
   const {
@@ -15,19 +14,6 @@ const Navbar = ({ setUserType, userType, user }) => {
     navLinks,
     location
   } = useNavbar({ userType, setUserType })
-
-  const [theme, setTheme] = useState(() =>
-    localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
-  )
-
-  useEffect(() => {
-    document.body.classList.toggle('dark-theme', theme === 'dark')
-    document.body.classList.toggle('light-theme', theme === 'light')
-    localStorage.setItem('theme', theme)
-  }, [theme])
-
-  const toggleTheme = () =>
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
 
   return (
     <>
@@ -227,16 +213,6 @@ const Navbar = ({ setUserType, userType, user }) => {
               <i className="bi bi-cart3 fs-5"></i>
             </button>
           </Link>
-          <button
-            onClick={toggleTheme}
-            className="btn btn-outline-primary btn-sm"
-            style={{ width: 40, height: 40, borderRadius: '50%' }}
-            aria-label="Toggle theme"
-          >
-            <i
-              className={`bi ${theme === 'dark' ? 'bi-sun' : 'bi-moon'} fs-5`}
-            ></i>
-          </button>
         </div>
 
         {/* Navigation Tabs */}
