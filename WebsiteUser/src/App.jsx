@@ -38,6 +38,7 @@ import NotFound from './components/NotFound'
 // Misc
 import backgroundImage from './assets/Background.png'
 import { AppContext } from './context/AppContext'
+import ScrollToTop from './components/ScrollToTop'
 
 const App = () => {
   const location = useLocation()
@@ -113,6 +114,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
+      <ScrollToTop />
     </div>
   )
 }
