@@ -2,7 +2,15 @@
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+let rateLimit
+try {
+  rateLimit = require('express-rate-limit')
+} catch (e) {
+  console.warn('express-rate-limit not installed, skipping rate limiting')
+  rateLimit = () => (req, res, next) => next()
+}
 require('dotenv').config()
+const redisClient = require('./models/redis')
 const app = express()
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
   .split(',')
@@ -21,6 +29,19 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(bodyParser.json())
 app.use(express.json())
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+})
+app.use(limiter)
+
+// Log requests in development mode
+if (process.env.NODE_ENV === 'development') {
+  const morgan = require('morgan')
+  app.use(morgan('dev'))
+}
+// Error handling middleware
+const errorHandler = require('./middleware/errorHandler')
 
 //Routes
 const userAuthRoutes = require('./routes/authUser')
@@ -50,9 +71,18 @@ app.use('/favorites', favoriteRoutes)
 app.use('/cart', cartRouter)
 app.use('/orders', orderRouter)
 
+// 404 handler
+app.use((req, res) => res.status(404).json({ message: 'Not Found' }))
+// Error handler
+app.use(errorHandler)
+
 //server execute
 if (require.main === module) {
-  const PORT = process.env.PORT || 5000
+  redisClient
+    .connect()
+    .then(() => console.log('Connected to Redis'))
+    .catch(err => console.error('Redis connection error:', err))
+  const PORT = process.env.PORT ? Number(process.env.PORT) : 5000
   app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
   })
