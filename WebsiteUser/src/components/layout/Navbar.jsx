@@ -144,7 +144,7 @@ const Navbar = ({ setUserType, userType, user }) => {
               {currentIcon ? (
                 <img
                   src={currentIcon}
-                  alt={userType}
+                  alt={`${userType} icon`}
                   style={{
                     width: 32,
                     height: 32,
@@ -184,7 +184,7 @@ const Navbar = ({ setUserType, userType, user }) => {
                   >
                     <img
                       src={type.image_url}
-                      alt={type.type_name}
+                      alt={`${type.type_name} icon`}
                       style={{
                         width: 32,
                         height: 32,
