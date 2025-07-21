@@ -10,8 +10,7 @@ const AzureMap = ({ setLocation }) => {
       zoom: 9,
       authOptions: {
         authType: 'subscriptionKey',
-        subscriptionKey:
-          '8cjefp8SgYBtDuPsFr5fOluH7lRZ4hi7EA9bSXdEuSCTokzugfq5JQQJ99BFACYeBjFxc5JwAAAgAZMPa8j7'
+        subscriptionKey: import.meta.env.VITE_AZURE_MAPS_KEY
       },
       keyboardOptions: {
         enabled: true, // disable keyboard shortcuts entirely

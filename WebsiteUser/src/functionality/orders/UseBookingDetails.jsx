@@ -8,7 +8,8 @@ const useBookingDetails = (id, t) => {
   const {
     data: bookingData,
     loading,
-    error
+    error,
+    retry
   } = useFetch(`${API_URL}/bookings/${id}`, [id])
 
   const [booking, setBooking] = useState(null)
@@ -58,6 +59,7 @@ const useBookingDetails = (id, t) => {
     booking,
     loading,
     error,
+    retry,
     cancelError,
     handleCancelBooking,
     formatDate

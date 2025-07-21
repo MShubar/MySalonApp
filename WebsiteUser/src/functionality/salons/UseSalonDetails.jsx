@@ -15,7 +15,8 @@ export default function useSalonDetails(id) {
   const {
     data: salon,
     loading,
-    error
+    error,
+    retry
   } = useFetch(id ? `${API_URL}/salons/${id}` : null, [id])
 
   const latitude =
@@ -27,6 +28,7 @@ export default function useSalonDetails(id) {
     salon,
     loading,
     error,
+    retry,
     isMobile,
     latitude,
     longitude

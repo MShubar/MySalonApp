@@ -3,6 +3,7 @@ import { Spinner } from 'react-bootstrap'
 import { Helmet } from 'react-helmet'
 import { useTranslation } from 'react-i18next'
 import usePackages from '../../functionality/products/UsePackages'
+import ServerError from '../ServerError'
 
 const Packages = () => {
   const { t } = useTranslation()
@@ -12,6 +13,7 @@ const Packages = () => {
     packages,
     loading,
     error,
+    retry,
     successMessage,
     sortOption,
     handleSort,
@@ -90,9 +92,13 @@ const Packages = () => {
           <Spinner animation="border" variant="light" />
         </div>
       ) : error ? (
-        <p className="text-center text-danger">
-          {t('Failed to load packages')}
-        </p>
+        error.response?.status === 500 ? (
+          <ServerError onRetry={retry} />
+        ) : (
+          <p className="text-center text-danger">
+            {t('Failed to load packages')}
+          </p>
+        )
       ) : packages.length === 0 ? (
         <p className="text-center text-muted fst-italic">
           {t('no_packages_found')}

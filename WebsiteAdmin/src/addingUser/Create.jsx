@@ -8,6 +8,7 @@ function Create() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false) // To show loading state
   const [error, setError] = useState('') // To show error messages
+  // Initialize navigation before using it in submit handler
   const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault()

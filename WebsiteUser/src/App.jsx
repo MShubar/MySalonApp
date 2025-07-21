@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 // Layout
 import Navbar from './components/layout/Navbar'
@@ -37,32 +37,17 @@ import NotFound from './components/NotFound'
 
 // Misc
 import backgroundImage from './assets/Background.png'
+import { AppContext } from './context/AppContext'
 
 const App = () => {
   const location = useLocation()
   const [userType, setUserType] = useState('Women')
-  const [user, setUser] = useState(null)
-  const [isUserLoaded, setIsUserLoaded] = useState(false)
+  const { user, authLoaded } = useContext(AppContext)
 
   const showNavbar = !['/signin', '/signup'].includes(location.pathname)
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user')
-    if (storedUser && storedUser !== 'undefined') {
-      try {
-        const parsedUser = JSON.parse(storedUser)
-        setUser(parsedUser)
-      } catch {
-        setUser(null)
-      }
-    } else {
-      setUser(null)
-    }
-    setIsUserLoaded(true)
-  }, [location])
-
   const userId = user?.id
-  if (!isUserLoaded) return null
+  if (!authLoaded) return null
 
   return (
     <div
@@ -76,12 +61,7 @@ const App = () => {
       }}
     >
       {showNavbar && (
-        <Navbar
-          user={user}
-          setUser={setUser}
-          userType={userType}
-          setUserType={setUserType}
-        />
+        <Navbar user={user} userType={userType} setUserType={setUserType} />
       )}
 
       <div
@@ -116,7 +96,7 @@ const App = () => {
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/account" element={<Account user={user} />} />
 
-          <Route path="/signin" element={<SignIn setUser={setUser} />} />
+          <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route
             path="/edit-profile"

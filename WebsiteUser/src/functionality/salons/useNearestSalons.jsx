@@ -124,6 +124,7 @@ export default function useNearestSalons(userType, userId) {
     setMaxDistance,
     sortBy,
     setSortBy,
-    toggleFavorite
+    toggleFavorite,
+    retry: refetch
   }
 }

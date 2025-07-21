@@ -3,9 +3,11 @@ import { Spinner } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
 import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion as Motion } from 'framer-motion'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 import useNearestSalons from '../../functionality/salons/useNearestSalons'
+import ServerError from '../ServerError'
 
 const Container = styled.div`
   color: #ddd;
@@ -71,7 +73,8 @@ const NearestSalon = ({ userType, userId }) => {
     setMaxDistance,
     sortBy,
     setSortBy,
-    toggleFavorite
+    toggleFavorite,
+    retry
   } = useNearestSalons(userType, userId)
 
   if (loading) {
@@ -83,6 +86,9 @@ const NearestSalon = ({ userType, userId }) => {
   }
 
   if (error) {
+    if (error.response?.status === 500) {
+      return <ServerError onRetry={retry} />
+    }
     return (
       <div className="text-center mt-5 text-danger">
         {t('Failed to load salons')}
@@ -199,7 +205,7 @@ const NearestSalon = ({ userType, userId }) => {
           {sortedSalons.map((salon) => {
             const isFavorited = favorites.has(salon.id)
             return (
-              <motion.div
+              <Motion.div
                 key={salon.id}
                 className="col-md-4 mb-4"
                 initial={{ opacity: 0, y: 50 }}
@@ -280,13 +286,18 @@ const NearestSalon = ({ userType, userId }) => {
                     </div>
                   </div>
                 </CardStyled>
-              </motion.div>
+              </Motion.div>
             )
           })}
         </div>
       )}
     </Container>
   )
+}
+
+NearestSalon.propTypes = {
+  userType: PropTypes.string,
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 }
 
 export default NearestSalon
