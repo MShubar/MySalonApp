@@ -9,7 +9,8 @@ export default function usePackages(t) {
   const {
     data: fetchedPackages = [],
     loading,
-    error
+    error,
+    retry
   } = useFetch(`${API_URL}/package`, [])
 
   const [packages, setPackages] = useState([])
@@ -94,6 +95,7 @@ export default function usePackages(t) {
     packages,
     loading,
     error,
+    retry,
     successMessage,
     sortOption,
     handleSort,

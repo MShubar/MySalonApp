@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import useBookingDetails from '../../functionality/orders/UseBookingDetails'
+import ServerError from '../ServerError'
 
 const Container = styled.div`
   max-width: 800px;
@@ -88,6 +89,7 @@ const BookingDetailsPage = () => {
     booking,
     loading,
     error,
+    retry,
     cancelError,
     handleCancelBooking,
     formatDate
@@ -102,6 +104,9 @@ const BookingDetailsPage = () => {
   }
 
   if (error) {
+    if (error.response?.status === 500) {
+      return <ServerError onRetry={retry} />
+    }
     return (
       <LoadingContainer>
         <ErrorText>{t('Failed to load booking details.')}</ErrorText>

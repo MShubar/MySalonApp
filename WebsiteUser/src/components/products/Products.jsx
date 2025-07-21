@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import useProducts from '../../functionality/products/UseProducts'
+import ServerError from '../ServerError'
 
 const Container = styled.div`
   color: #ddd;
@@ -75,6 +76,7 @@ const Products = () => {
     products,
     loading,
     error,
+    retry,
     sortOption,
     successMessage,
     handleSort,
@@ -92,6 +94,9 @@ const Products = () => {
   }
 
   if (error) {
+    if (error.response?.status === 500) {
+      return <ServerError onRetry={retry} />
+    }
     return (
       <div className="text-center mt-5 text-danger">
         {t('Failed to load products')}

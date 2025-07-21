@@ -11,13 +11,15 @@ const useMyBookings = (t, user) => {
   const {
     data: bookingsData = [],
     loading: bookingsLoading,
-    error: bookingsError
+    error: bookingsError,
+    retry: bookingsRetry
   } = useFetch(user?.id ? `${API_URL}/bookings` : null, [user?.id])
 
   const {
     data: ordersData = [],
     loading: ordersLoading,
-    error: ordersError
+    error: ordersError,
+    retry: ordersRetry
   } = useFetch(user?.id ? `${API_URL}/orders/${user.id}` : null, [
     user?.id
   ])
@@ -157,6 +159,8 @@ const useMyBookings = (t, user) => {
     ordersLoading,
     bookingsError,
     ordersError,
+    bookingsRetry,
+    ordersRetry,
     filteredData,
     formatDate,
     formatTime,
