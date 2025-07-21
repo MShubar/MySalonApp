@@ -23,7 +23,7 @@ const Footer = () => (
       </nav>
       <small>&copy; {new Date().getFullYear()} MySalon</small>
     </div>
-<div className="container text-center">
+    <div className="container text-center">
       <a
         href="https://facebook.com/mysalon"
         className="text-decoration-none text-light mx-3"
