@@ -12,3 +12,18 @@ This Express.js API uses Azure Blob Storage for storing uploaded files. The back
 3. In the Storage Account menu select **Containers**, create a container (for example `salons`) and use its name for `AZURE_CONTAINER_NAME`.
 
 Add these variables to `ExpressBackend/.env` or your system environment before running `npm start`.
+
+This directory contains the Express.js backend for MySalonApp.
+
+## Docker
+
+1. Build the Docker image from this folder:
+   ```sh
+   docker build -t express-backend .
+   ```
+2. Run the container and expose port 5000:
+   ```sh
+   docker run -p 5000:5000 express-backend
+   ```
+   Provide environment variables using `--env-file` or `-e` options if required.
+
