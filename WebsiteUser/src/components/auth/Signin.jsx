@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import TopBar from '../layout/TopBar'
-import PropTypes from 'prop-types'
 import useSignIn from '../../functionality/auth/UseSignIn'
+import { useForm } from 'react-hook-form'
 const Container = styled.div`
   max-width: 500px;
   margin: 5rem auto;
@@ -87,19 +87,15 @@ import { AppContext } from '../../context/AppContext'
 
 const SignIn = () => {
   const { setUser } = useContext(AppContext)
+  const { t, error, handleSignIn } = useSignIn()
   const {
-    t,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    error,
-    handleSignIn
-  } = useSignIn()
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm()
 
-  const onSubmit = (e) => {
-    e.preventDefault()
-    handleSignIn()
+  const onSubmit = (data) => {
+    handleSignIn({ username: data.username, password: data.password })
   }
 
   return (
@@ -108,27 +104,25 @@ const SignIn = () => {
       <Container>
         <Heading>{t('Sign In')}</Heading>
 
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
             <Label>{t('Username')}</Label>
             <Input
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              {...register('username', { required: t('Username is required') })}
               placeholder={t('Enter your username')}
-              required
             />
+            {errors.username && <ErrorText>{errors.username.message}</ErrorText>}
           </FormGroup>
 
           <FormGroup>
             <Label>{t('Password')}</Label>
             <Input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register('password', { required: t('Password is required') })}
               placeholder={t('Enter your password')}
-              required
             />
+            {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
           </FormGroup>
 
           {error && <ErrorText>{error}</ErrorText>}
@@ -143,10 +137,6 @@ const SignIn = () => {
       </Container>
     </>
   )
-}
-
-SignIn.propTypes = {
-  setUser: PropTypes.func.isRequired
 }
 
 export default SignIn
