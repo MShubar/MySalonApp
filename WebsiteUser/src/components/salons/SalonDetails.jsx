@@ -10,6 +10,7 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 import useSalonDetails from '../../functionality/salons/UseSalonDetails'
 import ServerError from '../ServerError'
+import Breadcrumbs from '../layout/Breadcrumbs'
 // Fix Leaflet marker icon issue
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -53,7 +54,9 @@ const SalonDetails = () => {
   const imageStyle = isMobile ? styles.imageMobile : styles.image
 
   return (
-    <div style={layoutStyle}>
+    <>
+      <Breadcrumbs items={[{ label: t('Home'), to: '/' }, { label: salon.name }]} />
+      <div style={layoutStyle}>
       <div style={styles.imageSection}>
         {salon.image_url ? (
           <img
@@ -149,6 +152,7 @@ const SalonDetails = () => {
         </button>
       </div>
     </div>
+    </>
   )
 }
 
