@@ -15,21 +15,6 @@ const Header = styled.h2`
   font-weight: 700;
 `
 
-const SuccessOverlay = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #28a745;
-  color: #fff;
-  padding: 16px 32px;
-  border-radius: 12px;
-  z-index: 9999;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  text-align: center;
-  font-size: 1.1rem;
-  font-weight: 500;
-`
 
 const CardStyled = styled.div`
   border: 1px solid #333;
@@ -78,7 +63,6 @@ const Products = () => {
     error,
     retry,
     sortOption,
-    successMessage,
     handleSort,
     getSortedProducts,
     adjustQty,
@@ -108,12 +92,6 @@ const Products = () => {
 
       <Header className="text-center mb-4"> {t('Products')} </Header>
 
-      {successMessage && (
-        <SuccessOverlay>
-          <i className="bi bi-check-circle me-2"></i>
-          {successMessage}
-        </SuccessOverlay>
-      )}
 
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
         <button
