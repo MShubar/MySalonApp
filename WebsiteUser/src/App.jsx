@@ -42,6 +42,7 @@ import NotFound from './components/NotFound';
 // Misc
 import backgroundImage from './assets/Background.png'
 import { AppContext } from './context/AppContext'
+import Footer from './components/layout/Footer'
 import ScrollToTop from './components/ScrollToTop'
 
 const App = () => {
