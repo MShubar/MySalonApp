@@ -27,6 +27,7 @@ import Favorites from './components/products/Favorites'
 import Training from './components/products/Training'
 import About from './components/About'
 import ContactUs from './components/contact/ContactUs'
+import Faq from './components/Faq'
 
 // Cart & Checkout
 import Cart from './components/cart/Cart'
@@ -92,6 +93,7 @@ const App = () => {
             element={<Favorites userId={userId} userType={userType} />}
           />
           <Route path="/about" element={<About />} />
+          <Route path="/faq" element={<Faq />} />
           <Route path="/training" element={<Training />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/account" element={<Account user={user} />} />
