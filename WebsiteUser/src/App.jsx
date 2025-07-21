@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import "./styles/variables.css";
 import { Routes, Route, useLocation } from 'react-router-dom'
 // Layout
 import Navbar from './components/layout/Navbar'
