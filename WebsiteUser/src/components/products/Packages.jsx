@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Spinner } from 'react-bootstrap'
+import LoadingSpinner from '../LoadingSpinner'
 import { Helmet } from 'react-helmet'
 import { useTranslation } from 'react-i18next'
 import usePackages from '../../functionality/products/UsePackages'
@@ -88,9 +88,7 @@ const Packages = () => {
       </div>
 
       {loading ? (
-        <div className="d-flex justify-content-center my-5">
-          <Spinner animation="border" variant="light" />
-        </div>
+        <LoadingSpinner className="my-5" />
       ) : error ? (
         error.response?.status === 500 ? (
           <ServerError onRetry={retry} />
