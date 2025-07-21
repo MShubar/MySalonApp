@@ -1,1 +1,11 @@
+# Node modules
 node_modules/
+
+# Cypress artifacts
+cypress/screenshots/
+cypress/videos/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+
