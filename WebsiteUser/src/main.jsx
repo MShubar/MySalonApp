@@ -5,6 +5,7 @@ import ErrorBoundary from './ErrorBoundary.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
 import './i18n'
+import './App.css'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
