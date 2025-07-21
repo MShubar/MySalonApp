@@ -1,54 +1,58 @@
 import React, { useState, useContext } from 'react'
+import "./styles/variables.css";
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+
 // Layout
-import Navbar from './components/layout/Navbar'
+import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
 
 // Auth
-import SignIn from './components/auth/Signin'
-import SignUp from './components/auth/Signup'
-import Account from './components/auth/Account'
-import EditProfile from './components/auth/EditProfile'
-import ChangePassword from './components/auth/ChangePassword'
+import SignIn from './components/auth/Signin';
+import SignUp from './components/auth/Signup';
+import Account from './components/auth/Account';
+import EditProfile from './components/auth/EditProfile';
+import ChangePassword from './components/auth/ChangePassword';
 
 // Salons
-import NearestSalon from './components/salons/NearestSalon'
-import SalonDetails from './components/salons/SalonDetails'
+import NearestSalon from './components/salons/NearestSalon';
+import SalonDetails from './components/salons/SalonDetails';
 
 // Orders & Bookings
-import SalonBooking from './components/orders/SalonBooking'
-import MyBookings from './components/orders/MyBookings'
-import BookingDetailsPage from './components/orders/BookingDetailsPage'
-import OrderDetailsPage from './components/orders/OrderDetailsPage'
+import SalonBooking from './components/orders/SalonBooking';
+import MyBookings from './components/orders/MyBookings';
+import BookingDetailsPage from './components/orders/BookingDetailsPage';
+import OrderDetailsPage from './components/orders/OrderDetailsPage';
 
 // Products & Packages
-import Products from './components/products/Products'
-import Packages from './components/products/Packages'
-import Favorites from './components/products/Favorites'
-import Training from './components/products/Training'
-import About from './components/About'
-import ContactUs from './components/contact/ContactUs'
+import Products from './components/products/Products';
+import Packages from './components/products/Packages';
+import Favorites from './components/products/Favorites';
+import Training from './components/products/Training';
+import About from './components/About';
+import ContactUs from './components/contact/ContactUs';
 
 // Cart & Checkout
-import Cart from './components/cart/Cart'
-import Checkout from './components/cart/Checkout'
-import AddressPage from './components/cart/AddressPage'
-import PaymentSuccess from './components/cart/PaymentSuccessful'
-import NotFound from './components/NotFound'
+import Cart from './components/cart/Cart';
+import Checkout from './components/cart/Checkout';
+import AddressPage from './components/cart/AddressPage';
+import PaymentSuccess from './components/cart/PaymentSuccessful';
+import NotFound from './components/NotFound';
 
 // Misc
 import backgroundImage from './assets/Background.png'
 import { AppContext } from './context/AppContext'
+import ScrollToTop from './components/ScrollToTop'
 
 const App = () => {
-  const location = useLocation()
-  const [userType, setUserType] = useState('Women')
-  const { user, authLoaded } = useContext(AppContext)
+  const location = useLocation();
+  const [userType, setUserType] = useState('Women');
+  const { user, authLoaded } = useContext(AppContext);
 
-  const showNavbar = !['/signin', '/signup'].includes(location.pathname)
+  const showNavbar = !['/signin', '/signup'].includes(location.pathname);
 
-  const userId = user?.id
-  if (!authLoaded) return null
+  const userId = user?.id;
+  if (!authLoaded) return null;
 
   return (
     <div
@@ -58,7 +62,7 @@ const App = () => {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
-        width: '100%'
+        width: '100%',
       }}
     >
       {showNavbar && (
@@ -69,7 +73,7 @@ const App = () => {
         style={{
           padding: '1rem',
           paddingBottom: '80px',
-          maxWidth: '100%'
+          maxWidth: '100%',
         }}
       >
         <AnimatePresence mode="wait">
@@ -123,8 +127,10 @@ const App = () => {
           </motion.div>
         </AnimatePresence>
       </div>
+      <ScrollToTop />
+      <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
