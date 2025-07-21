@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 import { useTranslation } from 'react-i18next'
 import { API_URL } from '../../config'
+import { AppContext } from '../../context/AppContext'
 
 console.log('✅ API_URL:', API_URL)
 
-const useNavbar = ({ userType, setUser }) => {
+const useNavbar = ({ userType }) => {
+  const { setUser } = useContext(AppContext)
   const { t, i18n } = useTranslation()
   const [types, setTypes] = useState([])
   const [currentIcon, setCurrentIcon] = useState(null)

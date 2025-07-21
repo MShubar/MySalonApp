@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { AppContext } from '../../context/AppContext'
 
-const useSignIn = ({ setUser }) => {
+const useSignIn = () => {
+  const { setUser } = useContext(AppContext)
   const navigate = useNavigate()
   const { t } = useTranslation()
 
