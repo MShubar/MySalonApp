@@ -90,6 +90,18 @@ const ContactUs = () => {
           {t('Submit')}
         </button>
       </form>
+      <div className="mt-5" style={{ maxWidth: 600, margin: '0 auto' }}>
+        <iframe
+          title="Salon Location"
+          src="https://www.google.com/maps?q=New+York+City&output=embed"
+          width="100%"
+          height="400"
+          style={{ border: 0 }}
+          allowFullScreen=""
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
     </div>
   )
 }
