@@ -4,7 +4,6 @@ import App from './App.jsx'
 import ErrorBoundary from './ErrorBoundary.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
-import { ToastProvider } from './context/ToastContext'
 import 'normalize.css'
 import './i18n'
 
@@ -12,9 +11,7 @@ createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <ErrorBoundary>
       <AppProvider>
-        <ToastProvider>
-          <App />
-        </ToastProvider>
+        <App />
       </AppProvider>
     </ErrorBoundary>
   </BrowserRouter>

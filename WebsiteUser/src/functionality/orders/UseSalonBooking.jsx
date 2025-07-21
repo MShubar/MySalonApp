@@ -1,8 +1,7 @@
-import { useState, useEffect, useMemo, useContext } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import axios from 'axios'
 import moment from 'moment'
 import { API_URL } from '../../config'
-import { ToastContext } from '../../context/ToastContext'
 
 export const useSalonBooking = ({ salonId, userId, t, navigate }) => {
   const [salon, setSalon] = useState(null)
@@ -15,7 +14,6 @@ export const useSalonBooking = ({ salonId, userId, t, navigate }) => {
   const [total, setTotal] = useState(0)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  const { success: toastSuccess, error: toastError } = useContext(ToastContext)
   const [timeSlots, setTimeSlots] = useState([])
   const [bookedSlots, setBookedSlots] = useState([])
 
@@ -154,11 +152,9 @@ export const useSalonBooking = ({ salonId, userId, t, navigate }) => {
         amount: total,
         duration: totalDuration
       })
-      toastSuccess(t('Booking successful!'))
       setSuccess(t('Booking successful!'))
       setTimeout(() => navigate('/'), 2000)
     } catch (err) {
-      toastError(t('Failed to book. Please try again.'))
       setError(t('Failed to book. Please try again.'))
       console.error(err)
     }

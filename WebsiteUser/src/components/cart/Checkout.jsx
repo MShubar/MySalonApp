@@ -41,6 +41,21 @@ const SectionTitle = styled.h5`
   margin-bottom: 1rem;
 `
 
+const AlertOverlay = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #dc3545;
+  color: #fff;
+  padding: 20px 40px;
+  border-radius: 12px;
+  z-index: 9999;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 500;
+`
 
 const SuccessAlert = styled.div`
   background: #198754;
@@ -105,6 +120,7 @@ const Checkout = () => {
     paymentMethod,
     setPaymentMethod,
     successMsg,
+    logoutMsg,
     subtotal,
     tax,
     deliveryFee,
@@ -115,6 +131,13 @@ const Checkout = () => {
 
   return (
     <PageContainer>
+      {logoutMsg && (
+        <AlertOverlay>
+          {typeof logoutMsg === 'string'
+            ? logoutMsg
+            : t('You must be logged in to place an order')}
+        </AlertOverlay>
+      )}
 
       {successMsg && (
         <SuccessAlert>
