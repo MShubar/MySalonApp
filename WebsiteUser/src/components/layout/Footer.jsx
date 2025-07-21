@@ -20,6 +20,9 @@ const Footer = () => (
         <Link to="/privacy" className="text-light text-decoration-none">
           Privacy
         </Link>
+        <Link to="/terms" className="text-light text-decoration-none">
+          Terms
+        </Link>
       </nav>
       <small>&copy; {new Date().getFullYear()} MySalon</small>
     </div>
