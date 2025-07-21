@@ -34,6 +34,7 @@ import Checkout from './components/cart/Checkout'
 import AddressPage from './components/cart/AddressPage'
 import PaymentSuccess from './components/cart/PaymentSuccessful'
 import NotFound from './components/NotFound'
+import HeroSection from './components/HeroSection'
 
 // Misc
 import backgroundImage from './assets/Background.png'
@@ -74,7 +75,12 @@ const App = () => {
         <Routes>
           <Route
             path="/"
-            element={<NearestSalon userType={userType} userId={userId} />}
+            element={(
+              <>
+                <HeroSection />
+                <NearestSalon userType={userType} userId={userId} />
+              </>
+            )}
           />
           <Route path="/salon/:id" element={<SalonDetails userId={userId} />} />
           <Route
