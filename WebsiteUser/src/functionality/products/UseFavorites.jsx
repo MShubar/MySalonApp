@@ -21,36 +21,37 @@ export default function useFavorites(userId, userType) {
     }
   }, [])
 
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      if (!userId || !userLocation) return
-      setLoading(true)
-      try {
-        const res = await fetch(
-          `${API_URL}/favorites/${userId}?type=${userType}`
-        )
-        const data = await res.json()
-        const array = Array.isArray(data) ? data : []
-        const enriched = array.map((salon) => ({
-          ...salon,
-          distance:
-            salon.latitude && salon.longitude
-              ? calculateDistance(
-                  userLocation.latitude,
-                  userLocation.longitude,
-                  salon.latitude,
-                  salon.longitude
-                )
-              : null
-        }))
-        setFavorites(enriched)
-      } catch (err) {
-        console.error('Fetch favorites error:', err)
-        setError(err.message || 'Failed to fetch')
-      } finally {
-        setLoading(false)
-      }
+  const fetchFavorites = async () => {
+    if (!userId || !userLocation) return
+    setLoading(true)
+    try {
+      const res = await fetch(
+        `${API_URL}/favorites/${userId}?type=${userType}`
+      )
+      const data = await res.json()
+      const array = Array.isArray(data) ? data : []
+      const enriched = array.map((salon) => ({
+        ...salon,
+        distance:
+          salon.latitude && salon.longitude
+            ? calculateDistance(
+                userLocation.latitude,
+                userLocation.longitude,
+                salon.latitude,
+                salon.longitude
+              )
+            : null
+      }))
+      setFavorites(enriched)
+    } catch (err) {
+      console.error('Fetch favorites error:', err)
+      setError(err)
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
     fetchFavorites()
   }, [userId, userType, userLocation])
 
@@ -83,5 +84,5 @@ export default function useFavorites(userId, userType) {
     }
   }
 
-  return { favorites, loading, error, toggleFavorite, userLocation }
+  return { favorites, loading, error, toggleFavorite, userLocation, retry: fetchFavorites }
 }

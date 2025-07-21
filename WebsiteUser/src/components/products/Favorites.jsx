@@ -7,6 +7,7 @@ import { motion as Motion } from 'framer-motion'
 import styled from 'styled-components'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import useFavorites from '../../functionality/products/UseFavorites'
+import ServerError from '../ServerError'
 
 const Container = styled.div`
   color: #ddd;
@@ -64,7 +65,7 @@ const Favorites = ({ userId, userType }) => {
   const [sortBy, setSortBy] = useState('distance')
   const [showFilters, setShowFilters] = useState(false)
 
-  const { favorites, loading, error, toggleFavorite } = useFavorites(
+  const { favorites, loading, error, toggleFavorite, retry } = useFavorites(
     userId,
     userType
   )
@@ -78,6 +79,9 @@ const Favorites = ({ userId, userType }) => {
   }
 
   if (error) {
+    if (error.response?.status === 500) {
+      return <ServerError onRetry={retry} />
+    }
     return (
       <div className="text-center mt-5 text-danger">
         {t('Failed to load favorites')}

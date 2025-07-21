@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { API_URL } from '../../config'
 import useFetch from '../../hooks/useFetch'
+import ServerError from '../ServerError'
 
 const Container = styled.div`
   max-width: 800px;
@@ -101,7 +102,8 @@ const OrderDetailsPage = () => {
   const {
     data: orderData,
     loading,
-    error
+    error,
+    retry
   } = useFetch(
     state?.order
       ? null
@@ -156,6 +158,9 @@ const OrderDetailsPage = () => {
   }
 
   if (error) {
+    if (error.response?.status === 500) {
+      return <ServerError onRetry={retry} />
+    }
     return (
       <Container>
         <Text style={{ color: '#f44336' }}>

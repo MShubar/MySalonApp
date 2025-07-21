@@ -6,7 +6,8 @@ export default function useProducts(t) {
   const {
     data: fetchedProducts = [],
     loading,
-    error
+    error,
+    retry
   } = useFetch(`${API_URL}/product`, [])
 
   const [products, setProducts] = useState([])
@@ -93,6 +94,7 @@ export default function useProducts(t) {
     products,
     loading,
     error,
+    retry,
     sortOption,
     successMessage,
     handleSort,

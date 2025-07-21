@@ -7,6 +7,7 @@ import { motion as Motion } from 'framer-motion'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import useNearestSalons from '../../functionality/salons/useNearestSalons'
+import ServerError from '../ServerError'
 
 const Container = styled.div`
   color: #ddd;
@@ -72,7 +73,8 @@ const NearestSalon = ({ userType, userId }) => {
     setMaxDistance,
     sortBy,
     setSortBy,
-    toggleFavorite
+    toggleFavorite,
+    retry
   } = useNearestSalons(userType, userId)
 
   if (loading) {
@@ -84,6 +86,9 @@ const NearestSalon = ({ userType, userId }) => {
   }
 
   if (error) {
+    if (error.response?.status === 500) {
+      return <ServerError onRetry={retry} />
+    }
     return (
       <div className="text-center mt-5 text-danger">
         {t('Failed to load salons')}

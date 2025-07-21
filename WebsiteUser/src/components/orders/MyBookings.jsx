@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import useMyBookings from '../../functionality/orders/UseMyBookings'
+import ServerError from '../ServerError'
 
 const Container = styled.div`
   color: #ddd;
@@ -79,7 +80,9 @@ const MyBookings = () => {
     formatTime,
     groupOrderItems,
     handleRequestCancel,
-    handleRequestCancelOrder
+    handleRequestCancelOrder,
+    bookingsRetry,
+    ordersRetry
   } = useMyBookings(t, user)
 
   const typeFilters = ['All', 'Bookings', 'Orders']
@@ -121,6 +124,9 @@ const MyBookings = () => {
   }
 
   if (bookingsError || ordersError) {
+    if (bookingsError?.response?.status === 500 || ordersError?.response?.status === 500) {
+      return <ServerError onRetry={bookingsError ? bookingsRetry : ordersRetry} />
+    }
     return (
       <p className="text-center text-danger mt-5">
         {t('Failed to load bookings or orders.')}

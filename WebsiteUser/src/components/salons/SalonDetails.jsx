@@ -8,6 +8,7 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 import useSalonDetails from '../../functionality/salons/UseSalonDetails'
+import ServerError from '../ServerError'
 // Fix Leaflet marker icon issue
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -21,7 +22,7 @@ const SalonDetails = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
-  const { salon, loading, error, isMobile, latitude, longitude } =
+  const { salon, loading, error, retry, isMobile, latitude, longitude } =
     useSalonDetails(id)
 
   if (loading) {
@@ -32,7 +33,18 @@ const SalonDetails = () => {
     )
   }
 
-  if (error || !salon) {
+  if (error) {
+    if (error.response?.status === 500) {
+      return <ServerError onRetry={retry} />
+    }
+    return (
+      <p style={{ textAlign: 'center', color: '#bbb' }}>
+        {t('Salon not found')}
+      </p>
+    )
+  }
+
+  if (!salon) {
     return (
       <p style={{ textAlign: 'center', color: '#bbb' }}>
         {t('Salon not found')}
