@@ -1,10 +1,9 @@
 // src/functionality/usePackages.js
 
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import useFetch from '../../hooks/useFetch'
 import { API_URL } from '../../config'
-import { ToastContext } from '../../context/ToastContext'
 
 export default function usePackages(t) {
   const {
@@ -16,7 +15,7 @@ export default function usePackages(t) {
 
   const [packages, setPackages] = useState([])
   const [sortOption, setSortOption] = useState('')
-  const { success, error: toastError } = useContext(ToastContext)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     if (Array.isArray(fetchedPackages)) {
@@ -54,7 +53,7 @@ export default function usePackages(t) {
 
   const handleAddToCart = async (pack, qty = 1) => {
     if (pack.quantity < qty) {
-      toastError(t('Not enough stock available'))
+      showOverlay(t('Not enough stock available'))
       return
     }
 
@@ -80,11 +79,16 @@ export default function usePackages(t) {
             : p
         )
       )
-      success(`${pack.title} x${qty} ${t('added to cart')}`)
+      showOverlay(`${pack.title} x${qty} ${t('added to cart')}`)
     } catch (err) {
       console.error('Error updating quantity:', err)
-      toastError(t('Failed to update quantity'))
+      showOverlay(t('Failed to update quantity'))
     }
+  }
+
+  const showOverlay = (message) => {
+    setSuccessMessage(message)
+    setTimeout(() => setSuccessMessage(null), 2500)
   }
 
   return {
@@ -92,10 +96,12 @@ export default function usePackages(t) {
     loading,
     error,
     retry,
+    successMessage,
     sortOption,
     handleSort,
     getSortedPackages,
     adjustQty,
-    handleAddToCart
+    handleAddToCart,
+    showOverlay
   }
 }

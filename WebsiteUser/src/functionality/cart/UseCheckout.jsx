@@ -1,8 +1,7 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import axios from 'axios'
 import { API_URL, APP_URL } from '../../config'
-import { ToastContext } from '../../context/ToastContext'
 
 const useCheckout = () => {
   const { t } = useTranslation()
@@ -10,7 +9,7 @@ const useCheckout = () => {
   const [address, setAddress] = useState(null)
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [successMsg, setSuccessMsg] = useState(false)
-  const { success, error: toastError } = useContext(ToastContext)
+  const [logoutMsg, setLogoutMsg] = useState(false)
   const [user, setUser] = useState(() =>
     JSON.parse(localStorage.getItem('user'))
   )
@@ -24,7 +23,8 @@ const useCheckout = () => {
     if (storedAddr) setAddress(JSON.parse(storedAddr))
 
     if (!user || !user.id) {
-      toastError(t('You must be logged in to place an order'))
+      setLogoutMsg(true)
+      setTimeout(() => setLogoutMsg(false), 2500)
     }
   }, [user])
 
@@ -38,12 +38,12 @@ const useCheckout = () => {
 
   const placeOrder = async () => {
     if (!address) {
-      toastError(t('Address not set'))
+      showOverlay(t('Address not set'))
       return
     }
 
     if (!user || !user.id) {
-      toastError(t('User not logged in'))
+      showOverlay(t('User not logged in'))
       return
     }
 
@@ -68,7 +68,6 @@ const useCheckout = () => {
     } else {
       try {
         await axios.post(`${API_URL}/orders`, orderPayload)
-        success(t('Order placed successfully'))
         setSuccessMsg(true)
         setTimeout(() => {
           localStorage.removeItem('cart')
@@ -81,11 +80,15 @@ const useCheckout = () => {
           'Failed to place order:',
           err.response?.data || err.message
         )
-        toastError(t('Failed to place order'))
+        showOverlay(t('Failed to place order'))
       }
     }
   }
 
+  const showOverlay = (message) => {
+    setLogoutMsg(message)
+    setTimeout(() => setLogoutMsg(false), 2500)
+  }
 
   return {
     t,
@@ -94,6 +97,7 @@ const useCheckout = () => {
     paymentMethod,
     setPaymentMethod,
     successMsg,
+    logoutMsg,
     subtotal,
     tax,
     deliveryFee,

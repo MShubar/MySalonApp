@@ -14,6 +14,7 @@ const Packages = () => {
     loading,
     error,
     retry,
+    successMessage,
     sortOption,
     handleSort,
     getSortedPackages,
@@ -34,6 +35,28 @@ const Packages = () => {
         {t('Packages')}
       </h2>
 
+      {successMessage && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            background: '#28a745',
+            color: '#fff',
+            padding: '16px 32px',
+            borderRadius: '12px',
+            zIndex: 9999,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+            textAlign: 'center',
+            fontSize: '1.1rem',
+            fontWeight: '500'
+          }}
+        >
+          <i className="bi bi-check-circle me-2"></i>
+          {successMessage}
+        </div>
+      )}
 
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
         <button
