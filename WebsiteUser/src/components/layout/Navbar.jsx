@@ -1,5 +1,6 @@
 import Dropdown from 'react-bootstrap/Dropdown'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import useNavbar from '../../functionality/layout/UseNavbar'
 const Navbar = ({ setUserType, userType, user }) => {
   const {
@@ -270,6 +271,13 @@ const Navbar = ({ setUserType, userType, user }) => {
       </nav>
     </>
   )
+}
+
+Navbar.propTypes = {
+  setUserType: PropTypes.func.isRequired,
+  userType: PropTypes.string,
+  user: PropTypes.object,
+  setUser: PropTypes.func.isRequired
 }
 
 export default Navbar

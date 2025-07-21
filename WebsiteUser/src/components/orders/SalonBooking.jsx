@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { Spinner, Button, Alert, Row, Col, Card } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
+import PropTypes from 'prop-types'
 import { useSalonBooking } from '../../functionality/orders/UseSalonBooking'
 
 const SalonBooking = ({ userId }) => {
@@ -227,6 +228,10 @@ const SalonBooking = ({ userId }) => {
       </form>
     </div>
   )
+}
+
+SalonBooking.propTypes = {
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
 }
 
 export default SalonBooking

@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import TopBar from '../layout/TopBar'
+import PropTypes from 'prop-types'
 import useSignIn from '../../functionality/auth/UseSignIn'
 const Container = styled.div`
   max-width: 500px;
@@ -142,6 +143,10 @@ const SignIn = () => {
       </Container>
     </>
   )
+}
+
+SignIn.propTypes = {
+  setUser: PropTypes.func.isRequired
 }
 
 export default SignIn
