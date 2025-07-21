@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 // Layout
 import Navbar from './components/layout/Navbar'
+import Footer from './components/layout/Footer'
 
 // Auth
 import SignIn from './components/auth/Signin'
@@ -27,6 +28,7 @@ import Favorites from './components/products/Favorites'
 import Training from './components/products/Training'
 import About from './components/About'
 import ContactUs from './components/contact/ContactUs'
+import Terms from './components/legal/Terms'
 
 // Cart & Checkout
 import Cart from './components/cart/Cart'
@@ -94,6 +96,7 @@ const App = () => {
           <Route path="/about" element={<About />} />
           <Route path="/training" element={<Training />} />
           <Route path="/contact" element={<ContactUs />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/account" element={<Account user={user} />} />
 
           <Route path="/signin" element={<SignIn />} />
@@ -113,6 +116,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
+      <Footer />
     </div>
   )
 }
