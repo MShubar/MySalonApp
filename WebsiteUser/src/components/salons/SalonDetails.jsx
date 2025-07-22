@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { Spinner, Button } from 'react-bootstrap'
 import { useState } from 'react'
+import { Button } from 'react-bootstrap'
+import LoadingSpinner from '../LoadingSpinner'
 import { useTranslation } from 'react-i18next'
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -10,6 +11,7 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 import useSalonDetails from '../../functionality/salons/UseSalonDetails'
 import ServerError from '../ServerError'
+import Breadcrumbs from '../layout/Breadcrumbs'
 // Fix Leaflet marker icon issue
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -31,11 +33,7 @@ const SalonDetails = () => {
     setExpanded((prev) => ({ ...prev, [sid]: !prev[sid] }))
 
   if (loading) {
-    return (
-      <div style={styles.centered}>
-        <Spinner animation="border" variant="info" />
-      </div>
-    )
+    return <LoadingSpinner style={styles.centered} />
   }
 
   if (error) {
@@ -61,12 +59,14 @@ const SalonDetails = () => {
   const imageStyle = isMobile ? styles.imageMobile : styles.image
 
   return (
-    <div style={layoutStyle}>
+    <>
+      <Breadcrumbs items={[{ label: t('Home'), to: '/' }, { label: salon.name }]} />
+      <div style={layoutStyle}>
       <div style={styles.imageSection}>
         {salon.image_url ? (
           <img
             src={salon.image_url}
-            alt={salon.name}
+            alt={`Image of ${salon.name} salon`}
             style={imageStyle}
             onError={(e) => (e.target.style.display = 'none')}
           />
@@ -181,6 +181,7 @@ const SalonDetails = () => {
         </button>
       </div>
     </div>
+    </>
   )
 }
 

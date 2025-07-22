@@ -7,13 +7,9 @@ const useSignUp = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
-  const [email, setEmail] = useState('')
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
 
-  const handleSignUp = async () => {
+  const handleSignUp = async ({ email, username, password, confirmPassword }) => {
     if (!email || !username || !password || !confirmPassword) {
       setError(t('Please fill out all fields'))
       return
@@ -45,14 +41,6 @@ const useSignUp = () => {
 
   return {
     t,
-    email,
-    setEmail,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    confirmPassword,
-    setConfirmPassword,
     error,
     setError,
     handleSignUp
