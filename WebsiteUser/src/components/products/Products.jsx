@@ -31,6 +31,27 @@ const SuccessOverlay = styled.div`
   font-weight: 500;
 `
 
+const CheckOverlay = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #28a745;
+  color: #fff;
+  border-radius: 50%;
+  padding: 4px;
+  font-size: 1.1rem;
+  animation: fadeOut 1s forwards;
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+`
+
 const CardStyled = styled.div`
   border: 1px solid #333;
   border-radius: 12px;
@@ -71,6 +92,15 @@ const Price = styled.div`
 const Products = () => {
   const { t } = useTranslation()
   const [showFilters, setShowFilters] = useState(false)
+  const [addedIds, setAddedIds] = useState([])
+
+  const showCheckmark = (id) => {
+    setAddedIds((prev) => [...prev, id])
+    setTimeout(
+      () => setAddedIds((prev) => prev.filter((itemId) => itemId !== id)),
+      1000
+    )
+  }
 
   const {
     products,
@@ -177,6 +207,11 @@ const Products = () => {
                       {t('Sold Out')}
                     </span>
                   )}
+                  {addedIds.includes(product.id) && (
+                    <CheckOverlay>
+                      <i className="bi bi-check-lg"></i>
+                    </CheckOverlay>
+                  )}
                 </div>
 
                 <div className="card-body d-flex flex-column">
@@ -228,9 +263,10 @@ const Products = () => {
 
                   <button
                     className="btn btn-success w-100 mt-auto"
-                    onClick={() =>
+                    onClick={() => {
                       handleAddToCart(product, product.selectedQty || 1)
-                    }
+                      showCheckmark(product.id)
+                    }}
                     disabled={product.quantity <= 0}
                   >
                     <i className="bi bi-cart-plus me-2"></i> {t('Add to Cart')}
