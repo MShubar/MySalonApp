@@ -39,6 +39,7 @@ const Navbar = ({ setUserType, userType, user }) => {
               id="user-dropdown-toggle"
               aria-haspopup="true"
               aria-expanded="false"
+              aria-label={t('User Account Menu')}
             >
               <i
                 className="bi bi-person-circle fs-3 text-secondary"
@@ -66,6 +67,7 @@ const Navbar = ({ setUserType, userType, user }) => {
                     className="d-flex align-items-center gap-2"
                     style={{ color: '#ddd' }}
                     tabIndex={0}
+                    aria-label={t('Account')}
                   >
                     <i className="bi bi-pencil-square" aria-hidden="true"></i>{' '}
                     {t('Account')}
@@ -76,6 +78,7 @@ const Navbar = ({ setUserType, userType, user }) => {
                     className="d-flex align-items-center gap-2 text-danger"
                     role="button"
                     tabIndex={0}
+                    aria-label={t('Logout')}
                   >
                     <i className="bi bi-box-arrow-right" aria-hidden="true"></i>{' '}
                     {t('Logout')}
@@ -93,6 +96,7 @@ const Navbar = ({ setUserType, userType, user }) => {
                     className="d-flex align-items-center gap-2"
                     style={{ color: '#ddd' }}
                     tabIndex={0}
+                    aria-label={t('Sign In')}
                   >
                     <i
                       className="bi bi-box-arrow-in-right"
@@ -106,6 +110,7 @@ const Navbar = ({ setUserType, userType, user }) => {
                     className="d-flex align-items-center gap-2"
                     style={{ color: '#ddd' }}
                     tabIndex={0}
+                    aria-label={t('Sign Up')}
                   >
                     <i className="bi bi-person-plus" aria-hidden="true"></i>{' '}
                     {t('Sign Up')}
@@ -114,7 +119,11 @@ const Navbar = ({ setUserType, userType, user }) => {
               )}
               {/* Language Toggle - always visible */}
               <Dropdown.Divider style={{ borderColor: '#444' }} />
-              <Dropdown.Item onClick={toggleLanguage} style={{ color: '#ddd' }}>
+              <Dropdown.Item
+                onClick={toggleLanguage}
+                style={{ color: '#ddd' }}
+                aria-label="Toggle Language"
+              >
                 <i className="bi bi-globe2 me-2"></i>
                 {i18n.language === 'en' ? 'العربية' : 'English'}
               </Dropdown.Item>
@@ -144,7 +153,7 @@ const Navbar = ({ setUserType, userType, user }) => {
               {currentIcon ? (
                 <img
                   src={currentIcon}
-                  alt={userType}
+                  alt={`${userType} icon`}
                   style={{
                     width: 32,
                     height: 32,
@@ -181,10 +190,11 @@ const Navbar = ({ setUserType, userType, user }) => {
                     style={{ fontWeight: 500, color: '#ddd' }}
                     tabIndex={0}
                     role="button"
+                    aria-label={t(type.type_name)}
                   >
                     <img
                       src={type.image_url}
-                      alt={type.type_name}
+                      alt={`${type.type_name} icon`}
                       style={{
                         width: 32,
                         height: 32,
@@ -205,10 +215,11 @@ const Navbar = ({ setUserType, userType, user }) => {
           </Dropdown>
 
           {/* Cart Icon in Top Right */}
-          <Link to="/cart" title={t('Cart')}>
+          <Link to="/cart" title={t('Cart')} aria-label={t('Cart')}>
             <button
               className="btn btn-outline-primary btn-sm"
               style={{ width: 40, height: 40, borderRadius: '50%' }}
+              aria-label={t('Cart')}
             >
               <i className="bi bi-cart3 fs-5"></i>
             </button>
@@ -239,6 +250,7 @@ const Navbar = ({ setUserType, userType, user }) => {
                 key={idx}
                 to={to}
                 className="btn btn-outline-primary btn-sm text-capitalize fw-semibold px-3"
+                aria-label={t(label)}
                 style={{
                   minWidth: 110,
                   maxWidth: 110,

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Spinner } from 'react-bootstrap'
+import LoadingSpinner from '../LoadingSpinner'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
 import { useNavigate } from 'react-router-dom'
@@ -71,11 +71,7 @@ const Favorites = ({ userId, userType }) => {
   )
 
   if (loading) {
-    return (
-      <div className="d-flex justify-content-center py-4">
-        <Spinner animation="border" variant="light" />
-      </div>
-    )
+    return <LoadingSpinner className="py-4" />
   }
 
   if (error) {
