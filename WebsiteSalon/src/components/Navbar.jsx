@@ -31,6 +31,7 @@ export default function Navbar() {
               className="nav-link"
               to="/dashboard"
               onClick={() => setIsOpen(false)}
+              aria-label="Dashboard"
             >
               Dashboard
             </Link>
@@ -40,6 +41,7 @@ export default function Navbar() {
               className="nav-link"
               to="/bookings"
               onClick={() => setIsOpen(false)}
+              aria-label="Bookings"
             >
               Bookings
             </Link>
@@ -49,6 +51,7 @@ export default function Navbar() {
               className="nav-link"
               to="/profile"
               onClick={() => setIsOpen(false)}
+              aria-label="Profile"
             >
               Profile
             </Link>
