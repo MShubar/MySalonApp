@@ -1,6 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+NProgress.configure({ showSpinner: false })
 import './styles/variables.css';
-import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
 // Layout
@@ -52,7 +55,15 @@ const App = () => {
   const [userType, setUserType] = useState('Women');
   const { user, authLoaded } = useContext(AppContext);
 
-  const showNavbar = !['/signin', '/signup'].includes(location.pathname);
+  useEffect(() => {
+    NProgress.start()
+    const timer = setTimeout(() => {
+      NProgress.done()
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [location.pathname])
+
+  const showNavbar = !['/signin', '/signup'].includes(location.pathname)
 
   const userId = user?.id;
   if (!authLoaded) return null;
