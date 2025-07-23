@@ -1,6 +1,7 @@
 const pool = require('../models/pool')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const uploadToAzure = require('../middleware/azureBlob')
 
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -79,7 +80,7 @@ const loginUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const result = await pool.query('SELECT id, username, email FROM users')
+    const result = await pool.query('SELECT id, username, email, avatar_url FROM users')
     res.json(result.rows)
   } catch (err) {
     console.error('Get All Users Error:', err.message)
@@ -91,7 +92,7 @@ const getUser = async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT id, username, email FROM users WHERE id = $1',
+      'SELECT id, username, email, avatar_url FROM users WHERE id = $1',
       [id]
     )
     if (result.rows.length === 0) {
@@ -127,6 +128,7 @@ const deleteUser = async (req, res) => {
 const editUser = async (req, res) => {
   const { id } = req.params
   const { username, email, password } = req.body
+  const file = req.file
 
   try {
     const existingUser = await pool.query('SELECT * FROM users WHERE id = $1', [
@@ -136,16 +138,21 @@ const editUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' })
     }
 
-    const hashedPassword = password
-      ? await bcrypt.hash(password, 10)
-      : existingUser.rows[0].password
+    const current = existingUser.rows[0]
+    const hashedPassword = password ? await bcrypt.hash(password, 10) : current.password
+
+    let avatarUrl = current.avatar_url
+    if (file) {
+      avatarUrl = await uploadToAzure(file)
+    }
 
     const updatedUser = await pool.query(
-      'UPDATE users SET username = $1, email = $2, password = $3 WHERE id = $4 RETURNING id, username, email',
+      'UPDATE users SET username = $1, email = $2, password = $3, avatar_url = $4 WHERE id = $5 RETURNING id, username, email, avatar_url',
       [
-        username || existingUser.rows[0].username,
-        email || existingUser.rows[0].email,
+        username || current.username,
+        email || current.email,
         hashedPassword,
+        avatarUrl,
         id
       ]
     )
