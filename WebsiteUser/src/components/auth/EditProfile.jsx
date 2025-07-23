@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import useEditProfile from '../../functionality/auth/UseEditProfile'
+import Cropper from 'react-easy-crop'
 
 const PageContainer = styled.div`
   max-width: 600px;
@@ -99,6 +100,23 @@ const Spinner = styled.div`
   margin: 2rem auto;
 `
 
+const CropWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 300px;
+  background: #333;
+  margin-bottom: 1rem;
+`
+
+const Preview = styled.img`
+  display: block;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+`
+
 function EditProfile({ userId }) {
   const navigate = useNavigate()
   const {
@@ -113,6 +131,11 @@ function EditProfile({ userId }) {
     handleSubmit
   } = useEditProfile({ userId })
 
+  const [imageSrc, setImageSrc] = useState('')
+  const [crop, setCrop] = useState({ x: 0, y: 0 })
+  const [zoom, setZoom] = useState(1)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
+
   useEffect(() => {
     document.body.style.backgroundColor = '#121212'
     return () => {
@@ -123,6 +146,46 @@ function EditProfile({ userId }) {
   const onSubmit = (e) => {
     e.preventDefault()
     handleSubmit()
+  }
+
+  const onCropComplete = useCallback((_, areaPixels) => {
+    setCroppedAreaPixels(areaPixels)
+  }, [])
+
+  const showCroppedImage = useCallback(() => {
+    if (!imageSrc || !croppedAreaPixels) return
+    const image = new Image()
+    image.src = imageSrc
+    image.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = croppedAreaPixels.width
+      canvas.height = croppedAreaPixels.height
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(
+        image,
+        croppedAreaPixels.x,
+        croppedAreaPixels.y,
+        croppedAreaPixels.width,
+        croppedAreaPixels.height,
+        0,
+        0,
+        croppedAreaPixels.width,
+        croppedAreaPixels.height
+      )
+      const base64 = canvas.toDataURL('image/jpeg')
+      handleChange({ name: 'photo', value: base64 })
+      setImageSrc('')
+    }
+  }, [imageSrc, croppedAreaPixels, handleChange])
+
+  const handleFileChange = (e) => {
+    const file = e.target.files && e.target.files[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      setImageSrc(reader.result)
+    }
+    reader.readAsDataURL(file)
   }
 
   return (
@@ -167,19 +230,36 @@ function EditProfile({ userId }) {
             </FormGroup>
 
             <FormGroup>
-              <Label>{t('Avatar')}</Label>
-              {avatarUrl && (
-                <img
-                  src={avatarUrl}
-                  alt="avatar"
-                  style={{ width: '80px', borderRadius: '50%', marginBottom: '0.5rem' }}
-                />
+              <Label>{t('Profile Photo')}</Label>
+              {imageSrc ? (
+                <>
+                  <CropWrapper>
+                    <Cropper
+                      image={imageSrc}
+                      crop={crop}
+                      zoom={zoom}
+                      aspect={1}
+                      onCropChange={setCrop}
+                      onZoomChange={setZoom}
+                      onCropComplete={onCropComplete}
+                    />
+                  </CropWrapper>
+                  <Button type="button" onClick={showCroppedImage}>
+                    {t('Apply Crop')}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  {formData.photo && (
+                    <Preview src={formData.photo} alt={t('Profile preview')} />
+                  )}
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                  />
+                </>
               )}
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleAvatarChange(e.target.files[0])}
-              />
             </FormGroup>
 
             <Button type="submit">{t('Save Changes')}</Button>
