@@ -149,11 +149,15 @@ const NearestSalon = ({ userType, userId }) => {
     return 0
   })
 
-  return (
-    <Container className="container mt-4">
-      <Helmet>
-        <title>{t('Nearest Salons')}</title>
-      </Helmet>
+    return (
+      <Container className="container mt-4">
+        <Helmet>
+          <title>{t('Nearest Salons')}</title>
+          <meta
+            name="description"
+            content="Find salons closest to you and book an appointment."
+          />
+        </Helmet>
 
       <Header className="text-center mb-4"> {t('Nearest Salons')} </Header>
 

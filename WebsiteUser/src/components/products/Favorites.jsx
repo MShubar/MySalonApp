@@ -121,11 +121,15 @@ const Favorites = ({ userId, userType }) => {
     return 0
   })
 
-  return (
-    <Container className="container mt-4">
-      <Helmet>
-        <title>{t('Favorites')}</title>
-      </Helmet>
+    return (
+      <Container className="container mt-4">
+        <Helmet>
+          <title>{t('Favorites')}</title>
+          <meta
+            name="description"
+            content="Your saved salons and products at MySalon."
+          />
+        </Helmet>
 
       <Header className="text-center mb-4"> {t('Favorites')} </Header>
 
