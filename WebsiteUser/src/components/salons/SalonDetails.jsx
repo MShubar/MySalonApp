@@ -1,5 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { Spinner, Button } from 'react-bootstrap'
+import { useState } from 'react'
+import { Button } from 'react-bootstrap'
+import LoadingSpinner from '../LoadingSpinner'
 import { useTranslation } from 'react-i18next'
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -9,6 +11,7 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 import useSalonDetails from '../../functionality/salons/UseSalonDetails'
 import ServerError from '../ServerError'
+import Breadcrumbs from '../layout/Breadcrumbs'
 // Fix Leaflet marker icon issue
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -21,16 +24,16 @@ const SalonDetails = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const [expanded, setExpanded] = useState({})
 
   const { salon, loading, error, retry, isMobile, latitude, longitude } =
     useSalonDetails(id)
 
+  const toggleExpanded = (sid) =>
+    setExpanded((prev) => ({ ...prev, [sid]: !prev[sid] }))
+
   if (loading) {
-    return (
-      <div style={styles.centered}>
-        <Spinner animation="border" variant="info" />
-      </div>
-    )
+    return <LoadingSpinner style={styles.centered} />
   }
 
   if (error) {
@@ -56,12 +59,14 @@ const SalonDetails = () => {
   const imageStyle = isMobile ? styles.imageMobile : styles.image
 
   return (
-    <div style={layoutStyle}>
+    <>
+      <Breadcrumbs items={[{ label: t('Home'), to: '/' }, { label: salon.name }]} />
+      <div style={layoutStyle}>
       <div style={styles.imageSection}>
         {salon.image_url ? (
           <img
             src={salon.image_url}
-            alt={salon.name}
+            alt={`Image of ${salon.name} salon`}
             style={imageStyle}
             onError={(e) => (e.target.style.display = 'none')}
           />
@@ -101,21 +106,45 @@ const SalonDetails = () => {
         {salon.services && salon.services.length > 0 ? (
           <div style={styles.servicesContainer}>
             <strong style={{ color: '#f0e68c' }}>{t('Services')}:</strong>
-            <div className="mt-2 d-flex flex-wrap gap-2">
-              {salon.services.map((service, i) => (
-                <span
-                  key={i}
-                  className="badge px-3 py-2"
-                  style={{
-                    borderRadius: '20px',
-                    backgroundColor: '#254d8f',
-                    color: '#f0f8ff',
-                    fontSize: '0.9rem'
-                  }}
-                >
-                  {t(service.name)}
-                </span>
-              ))}
+            <div className="mt-2 d-flex flex-column gap-2">
+              {salon.services.map((service) => {
+                const desc = service.description || ''
+                const isLong = desc.length > 100
+                const isOpen = expanded[service.id]
+                return (
+                  <div
+                    key={service.id}
+                    style={{
+                      borderRadius: '12px',
+                      backgroundColor: '#254d8f',
+                      color: '#f0f8ff',
+                      padding: '0.5rem 0.75rem'
+                    }}
+                  >
+                    <strong>{t(service.name)}</strong>
+                    {desc && (
+                      <p style={{ margin: '0.25rem 0 0', fontSize: '0.85rem' }}>
+                        {isOpen || !isLong ? desc : desc.slice(0, 100) + '...'}
+                        {isLong && (
+                          <button
+                            onClick={() => toggleExpanded(service.id)}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: '#a3c1f7',
+                              marginLeft: '4px',
+                              cursor: 'pointer',
+                              padding: 0
+                            }}
+                          >
+                            {isOpen ? t('Show Less') : t('Show More')}
+                          </button>
+                        )}
+                      </p>
+                    )}
+                  </div>
+                )
+              })}
             </div>
           </div>
         ) : (
@@ -152,6 +181,7 @@ const SalonDetails = () => {
         </button>
       </div>
     </div>
+    </>
   )
 }
 

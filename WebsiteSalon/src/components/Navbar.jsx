@@ -32,6 +32,7 @@ export default function Navbar() {
               className="nav-link d-flex align-items-center gap-1"
               to="/dashboard"
               onClick={() => setIsOpen(false)}
+              aria-label="Dashboard"
             >
               <LayoutDashboard size={16} className="me-1" />Dashboard
             </Link>
@@ -41,6 +42,7 @@ export default function Navbar() {
               className="nav-link d-flex align-items-center gap-1"
               to="/bookings"
               onClick={() => setIsOpen(false)}
+              aria-label="Bookings"
             >
               <CalendarCheck size={16} className="me-1" />Bookings
             </Link>
@@ -50,6 +52,7 @@ export default function Navbar() {
               className="nav-link d-flex align-items-center gap-1"
               to="/profile"
               onClick={() => setIsOpen(false)}
+              aria-label="Profile"
             >
               <User size={16} className="me-1" />Profile
             </Link>
