@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Spinner } from 'react-bootstrap'
+import LoadingSpinner from '../LoadingSpinner'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
 import { useNavigate } from 'react-router-dom'
@@ -64,6 +64,9 @@ const Favorites = ({ userId, userType }) => {
   const [maxDistance, setMaxDistance] = useState(100)
   const [sortBy, setSortBy] = useState('distance')
   const [showFilters, setShowFilters] = useState(false)
+  const [categoryFilter, setCategoryFilter] = useState('')
+  const [minPrice, setMinPrice] = useState('')
+  const [maxPrice, setMaxPrice] = useState('')
 
   const { favorites, loading, error, toggleFavorite, retry } = useFavorites(
     userId,
@@ -71,11 +74,7 @@ const Favorites = ({ userId, userType }) => {
   )
 
   if (loading) {
-    return (
-      <div className="d-flex justify-content-center py-4">
-        <Spinner animation="border" variant="light" />
-      </div>
-    )
+    return <LoadingSpinner className="py-4" />
   }
 
   if (error) {
@@ -89,11 +88,26 @@ const Favorites = ({ userId, userType }) => {
     )
   }
 
-  const filteredFavorites = favorites.filter((salon) => {
-    const meetsRating = salon.rating >= minRating
+  const categories = Array.from(
+    new Set(favorites.map((p) => p.category).filter(Boolean))
+  )
+
+  const filteredFavorites = favorites.filter((product) => {
+    const meetsCategory =
+      categoryFilter === '' || product.category === categoryFilter
+    const price = Number(product.price)
+    const meetsMinPrice =
+      minPrice === '' || (!isNaN(price) && price >= Number(minPrice))
+    const meetsMaxPrice =
+      maxPrice === '' || (!isNaN(price) && price <= Number(maxPrice))
+
+    const meetsRating = product.rating >= minRating
     const meetsDistance =
-      salon.distance !== null ? salon.distance <= maxDistance : false
-    return meetsRating && meetsDistance
+      product.distance !== null ? product.distance <= maxDistance : false
+
+    return (
+      meetsCategory && meetsMinPrice && meetsMaxPrice && meetsRating && meetsDistance
+    )
   })
 
   const sortedFavorites = [...filteredFavorites].sort((a, b) => {
@@ -186,6 +200,55 @@ const Favorites = ({ userId, userType }) => {
               min={0}
               value={maxDistance}
               onChange={(e) => setMaxDistance(Number(e.target.value))}
+            />
+          </div>
+
+          {categories.length > 0 && (
+            <div className="mb-3">
+              <label htmlFor="categoryFilter" className="form-label" style={{ color: '#ccc' }}>
+                {t('Category')}
+              </label>
+              <select
+                id="categoryFilter"
+                className="form-select"
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+              >
+                <option value="">{t('All')}</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <div className="mb-3">
+            <label htmlFor="minPrice" className="form-label" style={{ color: '#ccc' }}>
+              {t('Min Price')}
+            </label>
+            <input
+              id="minPrice"
+              type="number"
+              className="form-control"
+              min={0}
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label htmlFor="maxPrice" className="form-label" style={{ color: '#ccc' }}>
+              {t('Max Price')}
+            </label>
+            <input
+              id="maxPrice"
+              type="number"
+              className="form-control"
+              min={0}
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
             />
           </div>
         </FilterContainer>

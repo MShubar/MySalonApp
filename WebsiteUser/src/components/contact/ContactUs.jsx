@@ -3,34 +3,35 @@ import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
 import { API_URL } from '../../config'
 
+
 const ContactUs = () => {
-  const { t } = useTranslation()
-  const [form, setForm] = useState({ name: '', email: '', comment: '' })
-  const [status, setStatus] = useState(null)
+  const { t } = useTranslation();
+  const [form, setForm] = useState({ name: '', email: '', comment: '' });
+  const [status, setStatus] = useState(null);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setStatus(null)
+    e.preventDefault();
+    setStatus(null);
     try {
       const res = await fetch(`${API_URL}/contacts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
-      })
+        body: JSON.stringify(form),
+      });
       if (res.ok) {
-        setStatus('success')
-        setForm({ name: '', email: '', comment: '' })
+        setStatus('success');
+        setForm({ name: '', email: '', comment: '' });
       } else {
-        setStatus('error')
+        setStatus('error');
       }
     } catch {
-      setStatus('error')
+      setStatus('error');
     }
-  }
+  };
 
   return (
     <div className="container py-5">
@@ -42,7 +43,11 @@ const ContactUs = () => {
         />
       </Helmet>
       <h2 className="text-center mb-4">{t('Contact Us')}</h2>
-      <form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: 500 }}>
+      <form
+        onSubmit={handleSubmit}
+        className="mx-auto"
+        style={{ maxWidth: 500 }}
+      >
         <div className="mb-3">
           <label className="form-label" htmlFor="name">
             {t('Name')}
@@ -98,8 +103,20 @@ const ContactUs = () => {
           {t('Submit')}
         </button>
       </form>
+      <div className="mt-5" style={{ maxWidth: 600, margin: '0 auto' }}>
+        <iframe
+          title="Salon Location"
+          src="https://www.google.com/maps?q=New+York+City&output=embed"
+          width="100%"
+          height="400"
+          style={{ border: 0 }}
+          allowFullScreen=""
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default ContactUs
+export default ContactUs;

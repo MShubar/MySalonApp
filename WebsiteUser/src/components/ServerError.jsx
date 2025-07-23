@@ -1,5 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import { Link } from 'react-router-dom'
 
 const ServerError = ({ onRetry }) => (
   <div className="d-flex flex-column align-items-center justify-content-center text-center py-5">
@@ -17,6 +18,9 @@ const ServerError = ({ onRetry }) => (
         Retry
       </button>
     )}
+    <Link to="/contact" className="btn btn-secondary mt-3">
+      Contact Support
+    </Link>
   </div>
 )
 

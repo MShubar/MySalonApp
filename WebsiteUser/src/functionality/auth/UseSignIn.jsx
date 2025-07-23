@@ -8,11 +8,9 @@ const useSignIn = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  const handleSignIn = async () => {
+  const handleSignIn = async ({ username, password }) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/users/login`, {
         method: 'POST',
@@ -39,10 +37,6 @@ const useSignIn = () => {
 
   return {
     t,
-    username,
-    setUsername,
-    password,
-    setPassword,
     error,
     handleSignIn
   }

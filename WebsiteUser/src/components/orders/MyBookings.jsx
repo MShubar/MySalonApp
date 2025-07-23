@@ -1,36 +1,36 @@
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Helmet } from 'react-helmet'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import useMyBookings from '../../functionality/orders/UseMyBookings'
-import ServerError from '../ServerError'
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import useMyBookings from '../../functionality/orders/UseMyBookings';
+import ServerError from '../ServerError';
 
 const Container = styled.div`
   color: #ddd;
-`
+`;
 
 const Header = styled.h2`
   color: #222;
   font-weight: 700;
-`
+`;
 
 const CardStyled = styled.div`
   background-color: #1f1f1f;
   border: 1px solid #333;
   border-radius: 16px;
   cursor: pointer;
-`
+`;
 
 const CardTitle = styled.h5`
   color: #f0f8ff;
   text-transform: capitalize;
-`
+`;
 
 const CardText = styled.p`
   color: #ccc;
   margin-bottom: 4px;
-`
+`;
 
 const OrderItemImage = styled.img`
   width: 40px;
@@ -39,28 +39,17 @@ const OrderItemImage = styled.img`
   border-radius: 8px;
   margin-right: 8px;
   border: 1px solid #444;
-`
+`;
 
 const Total = styled.div`
   color: #f0e68c;
   font-weight: 600;
-`
-
-const Status = styled.div`
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: ${(props) =>
-    props.$status === 'cancelled'
-      ? '#f44336'
-      : props.$status === 'completed'
-      ? '#4caf50'
-      : '#ccc'};
-`
+`;
 
 const MyBookings = () => {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-  const [user] = useState(() => JSON.parse(localStorage.getItem('user')))
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [user] = useState(() => JSON.parse(localStorage.getItem('user')));
 
   const {
     showFilters,
@@ -82,11 +71,11 @@ const MyBookings = () => {
     handleRequestCancel,
     handleRequestCancelOrder,
     bookingsRetry,
-    ordersRetry
-  } = useMyBookings(t, user)
+    ordersRetry,
+  } = useMyBookings(t, user);
 
-  const typeFilters = ['All', 'Bookings', 'Orders']
-  const dateFilters = ['All', 'Today', 'Upcoming', 'Past']
+  const typeFilters = ['All', 'Bookings', 'Orders'];
+  const dateFilters = ['All', 'Today', 'Upcoming', 'Past'];
   const statusFilters = [
     'All',
     'Pending',
@@ -94,8 +83,29 @@ const MyBookings = () => {
     'Completed',
     'Delivered',
     'Cancelled',
-    'Complaint'
-  ]
+    'Complaint',
+  ];
+
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'pending':
+        return (
+          <span className="badge bg-warning text-dark">{t('Pending')}</span>
+        );
+      case 'active':
+        return <span className="badge bg-info text-dark">{t('Active')}</span>;
+      case 'completed':
+        return <span className="badge bg-success">{t('Completed')}</span>;
+      case 'delivered':
+        return <span className="badge bg-primary">{t('Delivered')}</span>;
+      case 'cancelled':
+        return <span className="badge bg-secondary">{t('Cancelled')}</span>;
+      case 'complaint':
+        return <span className="badge bg-danger">{t('Complaint')}</span>;
+      default:
+        return <span className="badge bg-dark">{t('Unknown')}</span>;
+    }
+  };
 
   if (!user || !user.id) {
     return (
@@ -120,22 +130,27 @@ const MyBookings = () => {
           {t('Sign Up')}
         </a>
       </Container>
-    )
+    );
   }
 
   if (bookingsLoading || ordersLoading) {
-    return <p className="text-center mt-5">{t('Loading...')}</p>
+    return <p className="text-center mt-5">{t('Loading...')}</p>;
   }
 
   if (bookingsError || ordersError) {
-    if (bookingsError?.response?.status === 500 || ordersError?.response?.status === 500) {
-      return <ServerError onRetry={bookingsError ? bookingsRetry : ordersRetry} />
+    if (
+      bookingsError?.response?.status === 500 ||
+      ordersError?.response?.status === 500
+    ) {
+      return (
+        <ServerError onRetry={bookingsError ? bookingsRetry : ordersRetry} />
+      );
     }
     return (
       <p className="text-center text-danger mt-5">
         {t('Failed to load bookings or orders.')}
       </p>
-    )
+    );
   }
 
   return (
@@ -179,9 +194,9 @@ const MyBookings = () => {
                       : 'btn-outline-primary'
                   }`}
                   onClick={() => {
-                    if (index === 0) setActiveTypeFilter(filter)
-                    if (index === 1) setActiveDateFilter(filter)
-                    if (index === 2) setActiveStatusFilter(filter)
+                    if (index === 0) setActiveTypeFilter(filter);
+                    if (index === 1) setActiveDateFilter(filter);
+                    if (index === 2) setActiveStatusFilter(filter);
                   }}
                 >
                   {t(filter)}
@@ -265,9 +280,12 @@ const MyBookings = () => {
                     {t('Total')}: {Number(item.total).toFixed(2)} BHD
                   </Total>
 
-                  <Status className="mb-2" $status={item.status?.toLowerCase()}>
-                    {t('Status')}: {t(item.status || 'Unknown')}
-                  </Status>
+                  <div className="mb-2">
+                    <CardText>
+                      <strong>{t('Status')}:</strong>{' '}
+                      {getStatusBadge(item.status?.toLowerCase())}
+                    </CardText>
+                  </div>
 
                   {item.type === 'booking' &&
                     ['active', 'pending'].includes(
@@ -276,8 +294,8 @@ const MyBookings = () => {
                       <button
                         className="btn btn-danger mt-3 w-100"
                         onClick={(e) => {
-                          e.stopPropagation()
-                          handleRequestCancel(item.id)
+                          e.stopPropagation();
+                          handleRequestCancel(item.id);
                         }}
                       >
                         {t('Cancel')}
@@ -289,8 +307,8 @@ const MyBookings = () => {
                       <button
                         className="btn btn-danger w-100 mt-3"
                         onClick={(e) => {
-                          e.stopPropagation()
-                          handleRequestCancelOrder(item.id)
+                          e.stopPropagation();
+                          handleRequestCancelOrder(item.id);
                         }}
                       >
                         {t('Cancel')}
@@ -303,7 +321,7 @@ const MyBookings = () => {
         </div>
       )}
     </Container>
-  )
-}
+  );
+};
 
-export default MyBookings
+export default MyBookings;
