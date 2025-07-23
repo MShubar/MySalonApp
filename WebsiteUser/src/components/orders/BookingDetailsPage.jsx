@@ -122,13 +122,17 @@ const BookingDetailsPage = () => {
     )
   }
 
-  return (
-    <Container>
-      <Helmet>
-        <title>{`${t('Booking')} #${booking.id || t('Unknown')} ${t(
-          'Details'
-        )}`}</title>
-      </Helmet>
+    return (
+      <Container>
+        <Helmet>
+          <title>{`${t('Booking')} #${booking.id || t('Unknown')} ${t(
+            'Details'
+          )}`}</title>
+          <meta
+            name="description"
+            content="Detailed view of your booking at MySalon."
+          />
+        </Helmet>
 
       <Card>
         <Title>

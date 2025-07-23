@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import { Spinner } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
 import { useNavigate } from 'react-router-dom'
 import { motion as Motion } from 'framer-motion'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import PropTypes from 'prop-types'
 import useNearestSalons from '../../functionality/salons/useNearestSalons'
 import ServerError from '../ServerError'
@@ -57,10 +56,36 @@ const ServiceBadge = styled.span`
   font-size: 0.8rem;
 `
 
+const shimmer = keyframes`
+  100% {
+    transform: translateX(100%);
+  }
+`
+
+const LoadingCard = styled.div`
+  height: 250px;
+  border-radius: 16px;
+  background-color: #333;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: ${shimmer} 1.5s infinite;
+  }
+`
+
 const NearestSalon = ({ userType, userId }) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [showFilters, setShowFilters] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const {
     loading,
@@ -79,9 +104,15 @@ const NearestSalon = ({ userType, userId }) => {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center py-4">
-        <Spinner animation="border" variant="light" />
-      </div>
+      <Container className="container mt-4">
+        <div className="row">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="col-md-4 mb-4">
+              <LoadingCard />
+            </div>
+          ))}
+        </div>
+      </Container>
     )
   }
 
@@ -101,7 +132,10 @@ const NearestSalon = ({ userType, userId }) => {
     const meetsRating = salon.rating >= minRating
     const meetsDistance =
       salon.distance !== null ? salon.distance <= maxDistance : false
-    return meetsRating && meetsDistance
+    const nameMatches = salon.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+    return meetsRating && meetsDistance && nameMatches
   })
 
   const sortedSalons = [...filteredSalons].sort((a, b) => {
@@ -115,11 +149,15 @@ const NearestSalon = ({ userType, userId }) => {
     return 0
   })
 
-  return (
-    <Container className="container mt-4">
-      <Helmet>
-        <title>{t('Nearest Salons')}</title>
-      </Helmet>
+    return (
+      <Container className="container mt-4">
+        <Helmet>
+          <title>{t('Nearest Salons')}</title>
+          <meta
+            name="description"
+            content="Find salons closest to you and book an appointment."
+          />
+        </Helmet>
 
       <Header className="text-center mb-4"> {t('Nearest Salons')} </Header>
 
@@ -194,6 +232,14 @@ const NearestSalon = ({ userType, userId }) => {
           </div>
         </FilterContainer>
       )}
+
+      <input
+        type="text"
+        className="form-control mb-3"
+        placeholder={t('Search salons')}
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
 
       {/* Salon Cards */}
       {sortedSalons.length === 0 ? (

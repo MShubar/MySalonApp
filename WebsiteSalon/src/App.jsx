@@ -1,5 +1,6 @@
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import ErrorBoundary from './ErrorBoundary.jsx'
 import NotFound from './components/NotFound'
 import Login from './pages/Login'
 import SignupStep1 from './pages/SignupStep1'
@@ -17,7 +18,8 @@ export default function App() {
   const { auth } = useAuth()
 
   return (
-    <Routes>
+    <ErrorBoundary>
+      <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignupStep1 />} />
       <Route path="/signup/step2" element={<SignupStep2 />} />
@@ -42,5 +44,6 @@ export default function App() {
       <Route path="/bookings" element={<BookingsPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
+    </ErrorBoundary>
   )
 }
