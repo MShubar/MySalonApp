@@ -175,6 +175,7 @@ export const useSalonBooking = ({ salonId, userId, t, navigate }) => {
     total,
     error,
     success,
+    totalDuration,
     slotsWithStatus,
     handleBookingSubmit
   }

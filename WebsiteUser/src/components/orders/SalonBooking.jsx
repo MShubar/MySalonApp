@@ -24,11 +24,39 @@ const SalonBooking = ({ userId }) => {
     notes,
     setNotes,
     total,
+    totalDuration,
     error,
     success,
     slotsWithStatus,
     handleBookingSubmit
   } = useSalonBooking({ salonId: id, userId, t, navigate })
+
+  const handleAddToCalendar = () => {
+    if (!salon || !date || !time) return
+    const start = moment(`${date} ${time}`, 'YYYY-MM-DD HH:mm')
+    const end = start.clone().add(totalDuration || 60, 'minutes')
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//MySalonApp//EN',
+      'BEGIN:VEVENT',
+      `UID:${Date.now()}@mysalonapp`,
+      `DTSTAMP:${moment().utc().format('YYYYMMDDTHHmmss')}Z`,
+      `DTSTART:${start.format('YYYYMMDDTHHmmss')}`,
+      `DTEND:${end.format('YYYYMMDDTHHmmss')}`,
+      `SUMMARY:Appointment at ${salon.name}`,
+      `DESCRIPTION:${notes || ''}`,
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n')
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'booking.ics'
+    link.click()
+    URL.revokeObjectURL(url)
+  }
 
   if (loading) {
     return <LoadingSpinner className="mt-5" />
@@ -62,7 +90,18 @@ const SalonBooking = ({ userId }) => {
       </h2>
 
       {error && <Alert variant="danger">{error}</Alert>}
-      {success && <Alert variant="success">{success}</Alert>}
+      {success && (
+        <>
+          <Alert variant="success">{success}</Alert>
+          <Button
+            variant="outline-light"
+            className="mb-3"
+            onClick={handleAddToCalendar}
+          >
+            {t('Add to calendar')}
+          </Button>
+        </>
+      )}
 
       <form onSubmit={handleBookingSubmit}>
         <Row className="gy-4">
