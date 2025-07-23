@@ -38,7 +38,7 @@ const BackButton = styled.button`
 `
 
 const FormGroup = styled.div`
-  margin-bottom: 1rem;
+  margin: 0 0 1.2rem;
 `
 
 const Label = styled.label`
