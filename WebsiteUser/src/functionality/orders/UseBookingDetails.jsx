@@ -13,7 +13,6 @@ const useBookingDetails = (id, t) => {
   } = useFetch(`${API_URL}/bookings/${id}`, [id])
 
   const [booking, setBooking] = useState(null)
-  const [ratingError, setRatingError] = useState(null)
 
   useEffect(() => {
     if (bookingData) {
@@ -26,8 +25,7 @@ const useBookingDetails = (id, t) => {
         total: bookingData.total || 0,
         services: (bookingData.service_name || '')
           .split(',')
-          .map((s) => s.trim()),
-        rating: bookingData.rating || null
+          .map((s) => s.trim())
       })
     }
   }, [bookingData, id, t])
@@ -50,23 +48,6 @@ const useBookingDetails = (id, t) => {
     }
   }
 
-  const handleSaveRating = async (rating) => {
-    setRatingError(null)
-    try {
-      const res = await fetch(`${API_URL}/bookings/${id}/rating`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ rating })
-      })
-      if (!res.ok) throw new Error(`HTTP error ${res.status}`)
-      const updated = await res.json()
-      setBooking((prev) => ({ ...prev, rating: updated.rating }))
-    } catch (err) {
-      console.error('Error saving rating:', err)
-      setRatingError(t('Failed to save rating.'))
-    }
-  }
-
   const formatDate = (dateStr) =>
     new Date(dateStr).toLocaleDateString('en-GB', {
       day: '2-digit',
@@ -81,8 +62,6 @@ const useBookingDetails = (id, t) => {
     retry,
     cancelError,
     handleCancelBooking,
-    handleSaveRating,
-    ratingError,
     formatDate
   }
 }

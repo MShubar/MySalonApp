@@ -6,7 +6,6 @@ const {
   addBooking,
   editBooking,
   cancelBooking,
-  updateBookingRating,
   createCheckoutSession,
   getBookedSlots
 } = require('../controllers/booking')
@@ -18,6 +17,5 @@ router.put('/:id', editBooking)
 router.post('/create-checkout-session', createCheckoutSession)
 router.get('/:salonId/:date/slots', getBookedSlots)
 router.patch('/:id/cancel', cancelBooking)
-router.patch('/:id/rating', updateBookingRating)
 
 module.exports = router

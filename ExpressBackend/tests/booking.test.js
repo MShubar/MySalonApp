@@ -55,15 +55,4 @@ describe('Booking endpoints', () => {
 
     expect(res.status).toBe(400)
   })
-
-  test('updates rating', async () => {
-    mockQuery.mockResolvedValueOnce({ rows: [{ rating: 5 }], rowCount: 1 })
-
-    const res = await request(app)
-      .patch('/bookings/1/rating')
-      .send({ rating: 5 })
-
-    expect(res.status).toBe(200)
-    expect(res.body).toEqual({ message: 'Rating saved', rating: 5 })
-  })
 })

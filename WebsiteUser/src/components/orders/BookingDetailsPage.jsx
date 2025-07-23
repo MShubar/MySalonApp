@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import useBookingDetails from '../../functionality/orders/UseBookingDetails'
 import ServerError from '../ServerError'
-import { useState, useEffect } from 'react'
 
 const Container = styled.div`
   max-width: 800px;
@@ -77,15 +76,6 @@ const InfoText = styled.p`
   color: #ccc;
 `
 
-const RatingContainer = styled.div`
-  margin-top: 1rem;
-  font-size: 1.5rem;
-  color: #f0e68c;
-  cursor: pointer;
-  display: flex;
-  gap: 0.25rem;
-`
-
 const LoadingContainer = styled.div`
   text-align: center;
   margin-top: 5rem;
@@ -94,7 +84,6 @@ const LoadingContainer = styled.div`
 const BookingDetailsPage = () => {
   const { t } = useTranslation()
   const { id } = useParams()
-  const [tempRating, setTempRating] = useState(0)
 
   const {
     booking,
@@ -103,14 +92,8 @@ const BookingDetailsPage = () => {
     retry,
     cancelError,
     handleCancelBooking,
-    handleSaveRating,
-    ratingError,
     formatDate
   } = useBookingDetails(id, t)
-
-  useEffect(() => {
-    setTempRating(booking?.rating || 0)
-  }, [booking])
 
   if (loading) {
     return (
@@ -185,34 +168,6 @@ const BookingDetailsPage = () => {
           </ServiceList>
         ) : (
           <InfoText>{t('No services found for this booking.')}</InfoText>
-        )}
-
-        {booking.status.toLowerCase() === 'completed' && (
-          <div>
-            {booking.rating ? (
-              <p>
-                {t('Your Rating')}: {booking.rating} ⭐
-              </p>
-            ) : (
-              <>
-                <p>{t('Rate the services')}:</p>
-                <RatingContainer>
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <span
-                      key={n}
-                      onClick={() => handleSaveRating(n)}
-                      onMouseEnter={() => setTempRating(n)}
-                      onMouseLeave={() => setTempRating(booking.rating || 0)}
-                      style={{ color: n <= tempRating ? '#ffc107' : '#555' }}
-                    >
-                      ★
-                    </span>
-                  ))}
-                </RatingContainer>
-                {ratingError && <ErrorText>{ratingError}</ErrorText>}
-              </>
-            )}
-          </div>
         )}
 
         {cancelError && <ErrorText>{cancelError}</ErrorText>}
