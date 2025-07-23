@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
 import Navbar from '../layout/Navbar'
 
@@ -43,6 +44,13 @@ const Training = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>{t('training')}</title>
+        <meta
+          name="description"
+          content="Explore training sessions and tutorials provided by MySalon."
+        />
+      </Helmet>
       <Navbar />
       <HeaderRow>
         <Title>{t('training')}</Title>

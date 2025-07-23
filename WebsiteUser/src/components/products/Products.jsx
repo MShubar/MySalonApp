@@ -104,11 +104,15 @@ const Products = () => {
     )
   }
 
-  return (
-    <Container className="container mt-4">
-      <Helmet>
-        <title>{t('Products')}</title>
-      </Helmet>
+    return (
+      <Container className="container mt-4">
+        <Helmet>
+          <title>{t('Products')}</title>
+          <meta
+            name="description"
+            content="Browse our range of beauty products available at MySalon."
+          />
+        </Helmet>
 
       <Header className="text-center mb-4"> {t('Products')} </Header>
 

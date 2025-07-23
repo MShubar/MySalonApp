@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet'
 import { API_URL } from '../../config'
 
 const ContactUs = () => {
@@ -33,6 +34,13 @@ const ContactUs = () => {
 
   return (
     <div className="container py-5">
+      <Helmet>
+        <title>{t('Contact Us')}</title>
+        <meta
+          name="description"
+          content="Get in touch with the MySalon team. We'd love to hear from you."
+        />
+      </Helmet>
       <h2 className="text-center mb-4">{t('Contact Us')}</h2>
       <form onSubmit={handleSubmit} className="mx-auto" style={{ maxWidth: 500 }}>
         <div className="mb-3">

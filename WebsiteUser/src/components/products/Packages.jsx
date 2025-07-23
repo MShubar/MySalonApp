@@ -22,11 +22,15 @@ const Packages = () => {
     handleAddToCart
   } = usePackages(t)
 
-  return (
-    <div className="container mt-4" style={{ color: '#ddd' }}>
-      <Helmet>
-        <title>{t('Packages')}</title>
-      </Helmet>
+    return (
+      <div className="container mt-4" style={{ color: '#ddd' }}>
+        <Helmet>
+          <title>{t('Packages')}</title>
+          <meta
+            name="description"
+            content="Check out special packages and offers from MySalon."
+          />
+        </Helmet>
 
       <h2
         className="text-center mb-4"

@@ -102,6 +102,10 @@ const MyBookings = () => {
       <Container className="container mt-5 text-center">
         <Helmet>
           <title>{t('My Bookings & Orders')}</title>
+          <meta
+            name="description"
+            content="Review your salon bookings and product orders with MySalon."
+          />
         </Helmet>
         <Header>{t('Access Restricted')}</Header>
         <p className="text-center text-danger mt-5">
@@ -138,6 +142,10 @@ const MyBookings = () => {
     <Container className="container mt-4">
       <Helmet>
         <title>{t('My Bookings & Orders')}</title>
+        <meta
+          name="description"
+          content="Review your salon bookings and product orders with MySalon."
+        />
       </Helmet>
 
       <Header className="text-center mb-4">
