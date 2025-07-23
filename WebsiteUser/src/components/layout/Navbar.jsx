@@ -1,6 +1,16 @@
 import Dropdown from 'react-bootstrap/Dropdown'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import {
+  MapPin,
+  CalendarCheck,
+  ShoppingBag,
+  Package,
+  Heart,
+  Info,
+  Mail,
+  GraduationCap
+} from 'lucide-react'
 import useNavbar from '../../functionality/layout/UseNavbar'
 const Navbar = ({ setUserType, userType, user }) => {
   const {
@@ -14,6 +24,17 @@ const Navbar = ({ setUserType, userType, user }) => {
     navLinks,
     location
   } = useNavbar({ userType, setUserType })
+
+  const iconMap = {
+    '/': MapPin,
+    '/bookings': CalendarCheck,
+    '/products': ShoppingBag,
+    '/packages': Package,
+    '/favorites': Heart,
+    '/about': Info,
+    '/contact': Mail,
+    '/training': GraduationCap
+  }
 
   return (
     <>
@@ -234,17 +255,19 @@ const Navbar = ({ setUserType, userType, user }) => {
             tabIndex={0}
             aria-roledescription="scrollable list"
           >
-            {navLinks.map(({ to, label }, idx) => (
-              <Link
-                key={idx}
-                to={to}
-                className="btn btn-outline-primary btn-sm text-capitalize fw-semibold px-3"
-                style={{
-                  minWidth: 110,
-                  maxWidth: 110,
-                  fontSize: '0.95rem',
-                  borderRadius: '0.5rem',
-                  borderColor: '#4f8ef7',
+            {navLinks.map(({ to, label }, idx) => {
+              const Icon = iconMap[to]
+              return (
+                <Link
+                  key={idx}
+                  to={to}
+                  className="btn btn-outline-primary btn-sm text-capitalize fw-semibold px-3"
+                  style={{
+                    minWidth: 110,
+                    maxWidth: 110,
+                    fontSize: '0.95rem',
+                    borderRadius: '0.5rem',
+                    borderColor: '#4f8ef7',
                   whiteSpace: 'normal',
                   height: 70,
                   display: 'flex',
@@ -261,11 +284,13 @@ const Navbar = ({ setUserType, userType, user }) => {
                     location.pathname === to ? '#4f8ef7' : 'transparent',
                   color: location.pathname === to ? '#fff' : '#4f8ef7'
                 }}
-                aria-current={location.pathname === to ? 'page' : undefined}
-              >
-                {t(label)}
-              </Link>
-            ))}
+                  aria-current={location.pathname === to ? 'page' : undefined}
+                >
+                  {Icon && <Icon size={16} className="me-1" />}
+                  {t(label)}
+                </Link>
+              )
+            })}
           </div>
         </div>
       </nav>
