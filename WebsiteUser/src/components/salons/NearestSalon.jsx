@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import LoadingSpinner from '../LoadingSpinner'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
 import { useNavigate } from 'react-router-dom'
 import { motion as Motion } from 'framer-motion'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import PropTypes from 'prop-types'
 import useNearestSalons from '../../functionality/salons/useNearestSalons'
 import ServerError from '../ServerError'
@@ -57,6 +56,31 @@ const ServiceBadge = styled.span`
   font-size: 0.8rem;
 `
 
+const shimmer = keyframes`
+  100% {
+    transform: translateX(100%);
+  }
+`
+
+const LoadingCard = styled.div`
+  height: 250px;
+  border-radius: 16px;
+  background-color: #333;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: ${shimmer} 1.5s infinite;
+  }
+`
+
 const NearestSalon = ({ userType, userId }) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -79,7 +103,17 @@ const NearestSalon = ({ userType, userId }) => {
   } = useNearestSalons(userType, userId)
 
   if (loading) {
-    return <LoadingSpinner className="py-4" />
+    return (
+      <Container className="container mt-4">
+        <div className="row">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="col-md-4 mb-4">
+              <LoadingCard />
+            </div>
+          ))}
+        </div>
+      </Container>
+    )
   }
 
   if (error) {
