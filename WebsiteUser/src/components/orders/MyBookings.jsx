@@ -273,8 +273,10 @@ const MyBookings = () => {
                   </Total>
 
                   <div className="mb-2">
-                    <strong>{t('Status')}:</strong>{' '}
-                    {getStatusBadge(item.status?.toLowerCase())}
+                    <CardText>
+                      <strong>{t('Status')}:</strong>{' '}
+                      {getStatusBadge(item.status?.toLowerCase())}
+                    </CardText>
                   </div>
 
                   {item.type === 'booking' &&
