@@ -8,11 +8,11 @@ const Container = styled.div`
   margin: 4rem auto;
   padding: 1rem;
   text-align: center;
-  color: #f0f8ff;
+  color: var(--text-light);
 `
 
 const Card = styled.div`
-  background: #1f1f1f;
+  background: var(--background);
   padding: 2.5rem 1.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
@@ -20,7 +20,7 @@ const Card = styled.div`
 
 const Heading = styled.h2`
   margin-bottom: 1rem;
-  color: #4caf50;
+  color: var(--success);
 `
 
 const Text = styled.p`
@@ -31,16 +31,16 @@ const BackButton = styled(Link)`
   display: inline-block;
   margin-top: 1.5rem;
   padding: 0.6rem 1.5rem;
-  border: 1px solid #4f8ef7;
-  color: #4f8ef7;
+  border: 1px solid var(--primary);
+  color: var(--primary);
   border-radius: 6px;
   text-decoration: none;
   font-weight: 600;
   transition: background 0.3s ease, color 0.3s ease;
 
   &:hover {
-    background: #4f8ef7;
-    color: #fff;
+    background: var(--primary);
+    color: var(--white);
   }
 `
 const PaymentSuccess = () => {

@@ -18,14 +18,14 @@ L.Icon.Default.mergeOptions({
 const PageContainer = styled.div`
   max-width: 800px;
   margin: 2rem auto;
-  color: #ddd;
+  color: var(--text-muted);
   padding: 1rem;
 `
 
 const Heading = styled.h2`
   text-align: center;
   margin-bottom: 1.5rem;
-  color: #80b3ff;
+  color: var(--accent);
 `
 
 const StyledMapContainer = styled(MapContainer)`
@@ -47,28 +47,28 @@ const InputGroup = styled.div`
 const Input = styled.input`
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #555;
+  border: 1px solid var(--border);
   border-radius: 5px;
-  background-color: #222;
-  color: #ddd;
+  background-color: var(--input-background);
+  color: var(--text-muted);
   &:focus {
     outline: none;
-    border-color: #80b3ff;
+    border-color: var(--accent);
   }
 `
 
 const TextArea = styled.textarea`
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #555;
+  border: 1px solid var(--border);
   border-radius: 5px;
-  background-color: #222;
-  color: #ddd;
+  background-color: var(--input-background);
+  color: var(--text-muted);
   min-height: 100px;
   margin-top: 1rem;
   &:focus {
     outline: none;
-    border-color: #80b3ff;
+    border-color: var(--accent);
   }
 `
 
@@ -78,15 +78,15 @@ const ButtonContainer = styled.div`
 `
 
 const Button = styled.button`
-  background-color: #007bff;
-  color: #fff;
+  background-color: var(--button-background);
+  color: var(--white);
   padding: 0.75rem 2rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-weight: 500;
   &:hover {
-    background-color: #0056b3;
+    background-color: var(--button-hover);
   }
 `
 

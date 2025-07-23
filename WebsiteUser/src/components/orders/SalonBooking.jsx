@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { Spinner, Button, Alert, Row, Col, Card } from 'react-bootstrap'
+import { Button, Alert, Row, Col, Card } from 'react-bootstrap'
+import LoadingSpinner from '../LoadingSpinner'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
 import PropTypes from 'prop-types'
@@ -23,18 +24,42 @@ const SalonBooking = ({ userId }) => {
     notes,
     setNotes,
     total,
+    totalDuration,
     error,
     success,
     slotsWithStatus,
     handleBookingSubmit
   } = useSalonBooking({ salonId: id, userId, t, navigate })
 
+  const handleAddToCalendar = () => {
+    if (!salon || !date || !time) return
+    const start = moment(`${date} ${time}`, 'YYYY-MM-DD HH:mm')
+    const end = start.clone().add(totalDuration || 60, 'minutes')
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//MySalonApp//EN',
+      'BEGIN:VEVENT',
+      `UID:${Date.now()}@mysalonapp`,
+      `DTSTAMP:${moment().utc().format('YYYYMMDDTHHmmss')}Z`,
+      `DTSTART:${start.format('YYYYMMDDTHHmmss')}`,
+      `DTEND:${end.format('YYYYMMDDTHHmmss')}`,
+      `SUMMARY:Appointment at ${salon.name}`,
+      `DESCRIPTION:${notes || ''}`,
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n')
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'booking.ics'
+    link.click()
+    URL.revokeObjectURL(url)
+  }
+
   if (loading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center mt-5">
-        <Spinner animation="border" variant="light" />
-      </div>
-    )
+    return <LoadingSpinner className="mt-5" />
   }
 
   if (!salon) {
@@ -65,7 +90,18 @@ const SalonBooking = ({ userId }) => {
       </h2>
 
       {error && <Alert variant="danger">{error}</Alert>}
-      {success && <Alert variant="success">{success}</Alert>}
+      {success && (
+        <>
+          <Alert variant="success">{success}</Alert>
+          <Button
+            variant="outline-light"
+            className="mb-3"
+            onClick={handleAddToCalendar}
+          >
+            {t('Add to calendar')}
+          </Button>
+        </>
+      )}
 
       <form onSubmit={handleBookingSubmit}>
         <Row className="gy-4">
