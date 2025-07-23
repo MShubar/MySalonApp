@@ -7,7 +7,8 @@ const useEditProfile = ({ userId }) => {
   const { t } = useTranslation()
   const [formData, setFormData] = useState({
     username: '',
-    email: ''
+    email: '',
+    photo: ''
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -22,7 +23,8 @@ const useEditProfile = ({ userId }) => {
         const res = await axios.get(`${API_URL}/users/${userId}`)
         setFormData({
           username: res.data.username || '',
-          email: res.data.email || ''
+          email: res.data.email || '',
+          photo: res.data.photo || ''
         })
       } catch (err) {
         console.error('Error fetching user data:', err)
