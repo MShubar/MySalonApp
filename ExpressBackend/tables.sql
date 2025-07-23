@@ -27,7 +27,8 @@ CREATE TABLE bookings (
   service VARCHAR(150) NOT NULL,
   booking_date DATE NOT NULL,
   booking_time TIME NOT NULL,
-  status VARCHAR(50) DEFAULT 'pending'
+  status VARCHAR(50) DEFAULT 'pending',
+  rating INTEGER CHECK (rating >= 1 AND rating <= 5)
 );
 CREATE TABLE favorites (
   id SERIAL PRIMARY KEY,

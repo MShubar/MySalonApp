@@ -19,13 +19,14 @@ const getBookings = async (req, res) => {
         s.image_url,
         string_agg(sv.name, ', ') AS service_name,
         b.total,
-        b.status
+        b.status,
+        b.rating
       FROM bookings b
       JOIN users u ON b.user_id = u.id
       JOIN salons s ON b.salon_id = s.id
       LEFT JOIN services sv 
         ON sv.id::text = ANY (string_to_array(b.service, ','))
-      GROUP BY b.id, b.booking_date, b.booking_time, u.username, s.name, s.image_url, b.total, b.status;
+      GROUP BY b.id, b.booking_date, b.booking_time, u.username, s.name, s.image_url, b.total, b.status, b.rating;
     `)
 
     res.json(result.rows)
@@ -51,7 +52,8 @@ const getBookingById = async (req, res) => {
         COALESCE(b.total, 0) AS total,
         b.booking_date,
         b.booking_time,
-        b.service
+        b.service,
+        b.rating
       FROM bookings b
       JOIN salons s ON b.salon_id = s.id
       WHERE b.id = $1
@@ -83,7 +85,8 @@ const getBookingById = async (req, res) => {
     // Return booking with service names
     res.json({
       ...booking,
-      service_name: serviceNames.join(', ')
+      service_name: serviceNames.join(', '),
+      rating: booking.rating
     })
   } catch (err) {
     console.error('getBookingById error:', err)
@@ -116,9 +119,9 @@ const addBooking = async (req, res) => {
     }
 
     const result = await pool.query(
-      `INSERT INTO bookings 
-        (user_id, salon_id, service, booking_date, booking_time, notes, total, duration, status) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'active') 
+      `INSERT INTO bookings
+        (user_id, salon_id, service, booking_date, booking_time, notes, total, duration, status, rating)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'active', NULL)
        RETURNING *`,
       [
         user_id,
@@ -209,6 +212,29 @@ const cancelBooking = async (req, res) => {
     res.json({ message: 'Booking cancelled', status: 'Cancelled' })
   } catch (err) {
     console.error('Cancel booking error:', err)
+    res.status(500).json({ message: 'Server error' })
+  }
+}
+
+const updateBookingRating = async (req, res) => {
+  const { id } = req.params
+  const { rating } = req.body
+
+  if (!rating || rating < 1 || rating > 5)
+    return res.status(400).json({ message: 'Invalid rating' })
+
+  try {
+    const result = await pool.query(
+      `UPDATE bookings SET rating = $1 WHERE id = $2 RETURNING rating`,
+      [rating, id]
+    )
+
+    if (result.rowCount === 0)
+      return res.status(404).json({ message: 'Booking not found' })
+
+    res.json({ message: 'Rating saved', rating: result.rows[0].rating })
+  } catch (err) {
+    console.error('Update rating error:', err)
     res.status(500).json({ message: 'Server error' })
   }
 }
@@ -325,6 +351,7 @@ module.exports = {
   addBooking,
   cancelBooking,
   editBooking,
+  updateBookingRating,
   createCheckoutSession,
   getBookedSlots
 }
