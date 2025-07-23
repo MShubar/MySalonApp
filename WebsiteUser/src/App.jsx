@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
+import ErrorBoundary from './ErrorBoundary.jsx'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 NProgress.configure({ showSpinner: false })
@@ -90,6 +91,7 @@ const App = () => {
           maxWidth: '100%',
         }}
       >
+        <ErrorBoundary>
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
@@ -97,54 +99,50 @@ const App = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <Routes location={location}>
-              <Route
-                path="/"
-                element={<NearestSalon userType={userType} userId={userId} />}
-              />
-              <Route
-                path="/salon/:id"
-                element={<SalonDetails userId={userId} />}
-              />
-              <Route
-                path="/salon/:id/book"
-                element={<SalonBooking userId={userId} />}
-              />
-              <Route path="/bookings" element={<MyBookings />} />
-              <Route path="/bookings/:id" element={<BookingDetailsPage />} />
-              <Route path="/orders/:id" element={<OrderDetailsPage />} />
+        <Routes>
+          <Route
+            path="/"
+            element={<NearestSalon userType={userType} userId={userId} />}
+          />
+          <Route path="/salon/:id" element={<SalonDetails userId={userId} />} />
+          <Route
+            path="/salon/:id/book"
+            element={<SalonBooking userId={userId} />}
+          />
+          <Route path="/bookings" element={<MyBookings />} />
+          <Route path="/bookings/:id" element={<BookingDetailsPage />} />
+          <Route path="/orders/:id" element={<OrderDetailsPage />} />
 
-              <Route path="/products" element={<Products />} />
-              <Route path="/packages" element={<Packages />} />
-              <Route
-                path="/favorites"
-                element={<Favorites userId={userId} userType={userType} />}
-              />
-              <Route path="/about" element={<About />} />
-              <Route path="/faq" element={<Faq />} />
-              <Route path="/training" element={<Training />} />
-              <Route path="/contact" element={<ContactUs />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/account" element={<Account user={user} />} />
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route
-                path="/edit-profile"
-                element={<EditProfile userId={userId} />}
-              />
-              <Route
-                path="/change-password"
-                element={<ChangePassword userId={userId} />}
-              />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/address" element={<AddressPage />} />
-              <Route path="/payment-success" element={<PaymentSuccess />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </motion.div>
+          <Route path="/products" element={<Products />} />
+          <Route path="/packages" element={<Packages />} />
+          <Route
+            path="/favorites"
+            element={<Favorites userId={userId} userType={userType} />}
+          />
+          <Route path="/about" element={<About />} />
+          <Route path="/training" element={<Training />} />
+          <Route path="/contact" element={<ContactUs />} />
+          <Route path="/account" element={<Account user={user} />} />
+
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route
+            path="/edit-profile"
+            element={<EditProfile userId={userId} />}
+          />
+          <Route
+            path="/change-password"
+            element={<ChangePassword userId={userId} />}
+          />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/address" element={<AddressPage />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+         </motion.div>
         </AnimatePresence>
+        </ErrorBoundary>
       </div>
       <ScrollToTop />
       <Footer />
