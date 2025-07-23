@@ -25,6 +25,7 @@ import Products from './components/products/Products'
 import Packages from './components/products/Packages'
 import Favorites from './components/products/Favorites'
 import Training from './components/products/Training'
+import ProductDetails from './components/products/ProductDetails'
 import About from './components/About'
 import ContactUs from './components/contact/ContactUs'
 
@@ -86,6 +87,7 @@ const App = () => {
           <Route path="/orders/:id" element={<OrderDetailsPage />} />
 
           <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/packages" element={<Packages />} />
           <Route
             path="/favorites"
