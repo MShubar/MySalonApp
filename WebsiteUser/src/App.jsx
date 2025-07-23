@@ -4,8 +4,8 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 
 // Layout
-import Navbar from './components/layout/Navbar'
-import Footer from './components/layout/Footer'
+import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
 
 // Auth
 import SignIn from './components/auth/Signin';
@@ -25,22 +25,22 @@ import BookingDetailsPage from './components/orders/BookingDetailsPage';
 import OrderDetailsPage from './components/orders/OrderDetailsPage';
 
 // Products & Packages
-import Products from './components/products/Products'
-import Packages from './components/products/Packages'
-import Favorites from './components/products/Favorites'
-import Training from './components/products/Training'
-import About from './components/About'
-import ContactUs from './components/contact/ContactUs'
-import Terms from './components/legal/Terms'
-import Faq from './components/Faq'
+import Products from './components/products/Products';
+import Packages from './components/products/Packages';
+import Favorites from './components/products/Favorites';
+import Training from './components/products/Training';
+import About from './components/About';
+import ContactUs from './components/contact/ContactUs';
+import Terms from './components/legal/Terms';
+import Faq from './components/Faq';
 
 // Cart & Checkout
-import Cart from './components/cart/Cart'
-import Checkout from './components/cart/Checkout'
-import AddressPage from './components/cart/AddressPage'
-import PaymentSuccess from './components/cart/PaymentSuccessful'
-import NotFound from './components/NotFound'
-import Privacy from './components/legal/Privacy'
+import Cart from './components/cart/Cart';
+import Checkout from './components/cart/Checkout';
+import AddressPage from './components/cart/AddressPage';
+import PaymentSuccess from './components/cart/PaymentSuccessful';
+import NotFound from './components/NotFound';
+import Privacy from './components/legal/Privacy';
 
 // Misc
 import backgroundImage from './assets/Background.png';
@@ -103,18 +103,18 @@ const App = () => {
               <Route path="/bookings/:id" element={<BookingDetailsPage />} />
               <Route path="/orders/:id" element={<OrderDetailsPage />} />
 
-          <Route path="/products" element={<Products />} />
-          <Route path="/packages" element={<Packages />} />
-          <Route
-            path="/favorites"
-            element={<Favorites userId={userId} userType={userType} />}
-          />
-          <Route path="/about" element={<About />} />
-          <Route path="/faq" element={<Faq />} />
-          <Route path="/training" element={<Training />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/account" element={<Account user={user} />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/packages" element={<Packages />} />
+              <Route
+                path="/favorites"
+                element={<Favorites userId={userId} userType={userType} />}
+              />
+              <Route path="/about" element={<About />} />
+              <Route path="/faq" element={<Faq />} />
+              <Route path="/training" element={<Training />} />
+              <Route path="/contact" element={<ContactUs />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/account" element={<Account user={user} />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
               <Route
