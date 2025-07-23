@@ -101,8 +101,17 @@ const Spinner = styled.div`
 
 function EditProfile({ userId }) {
   const navigate = useNavigate()
-  const { t, formData, loading, error, success, handleChange, handleSubmit } =
-    useEditProfile({ userId })
+  const {
+    t,
+    formData,
+    avatarUrl,
+    loading,
+    error,
+    success,
+    handleChange,
+    handleAvatarChange,
+    handleSubmit
+  } = useEditProfile({ userId })
 
   useEffect(() => {
     document.body.style.backgroundColor = '#121212'
@@ -154,6 +163,22 @@ function EditProfile({ userId }) {
                 }
                 required
                 placeholder={t('Enter email')}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <Label>{t('Avatar')}</Label>
+              {avatarUrl && (
+                <img
+                  src={avatarUrl}
+                  alt="avatar"
+                  style={{ width: '80px', borderRadius: '50%', marginBottom: '0.5rem' }}
+                />
+              )}
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleAvatarChange(e.target.files[0])}
               />
             </FormGroup>
 

@@ -3,6 +3,7 @@ CREATE TABLE users (
   username VARCHAR(100) NOT NULL,
   email VARCHAR(150) UNIQUE NOT NULL,
   password TEXT NOT NULL,
+  avatar_url TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE salons (
