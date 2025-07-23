@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
+import ErrorBoundary from './ErrorBoundary.jsx'
 // Layout
 import Navbar from './components/layout/Navbar'
 
@@ -71,6 +72,7 @@ const App = () => {
           maxWidth: '100%'
         }}
       >
+        <ErrorBoundary>
         <Routes>
           <Route
             path="/"
@@ -112,6 +114,7 @@ const App = () => {
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </ErrorBoundary>
       </div>
     </div>
   )
