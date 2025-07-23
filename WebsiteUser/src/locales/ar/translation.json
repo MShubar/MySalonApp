@@ -61,6 +61,8 @@
   "No services available": "لا توجد خدمات متاحة",
   "Book Now": "احجز الآن",
   "Salon not found": "لم يتم العثور على الصالون",
+  "Address": "العنوان",
+  "Opening Hours": "ساعات العمل",
   "Failed to load salon data": "فشل في تحميل بيانات الصالون",
   "Please select a date and time": "يرجى تحديد التاريخ والوقت",
   "Please select at least one service": "يرجى تحديد خدمة واحدة على الأقل",

@@ -98,6 +98,24 @@ const SalonDetails = () => {
           <span style={{ color: '#ddd' }}>{salon.rating} ⭐</span>
         </div>
 
+        <div style={styles.detailRow}>
+          <strong style={{ color: '#f0e68c' }}>{t('Address')}:</strong>{' '}
+          <span style={{ color: '#ddd' }}>
+            {latitude && longitude
+              ? `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`
+              : t('N/A')}
+          </span>
+        </div>
+
+        {salon.opening_time && salon.closing_time && (
+          <div style={styles.detailRow}>
+            <strong style={{ color: '#f0e68c' }}>{t('Opening Hours')}:</strong>{' '}
+            <span style={{ color: '#ddd' }}>
+              {salon.opening_time.slice(0, 5)} - {salon.closing_time.slice(0, 5)}
+            </span>
+          </div>
+        )}
+
         {salon.services && salon.services.length > 0 ? (
           <div style={styles.servicesContainer}>
             <strong style={{ color: '#f0e68c' }}>{t('Services')}:</strong>
