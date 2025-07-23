@@ -63,6 +63,8 @@
   "No services available": "No services available",
   "Book Now": "Book Now",
   "Salon not found": "Salon not found",
+  "Address": "Address",
+  "Opening Hours": "Opening Hours",
   "Failed to load salon data": "Failed to load salon data",
   "Please select a date and time": "Please select a date and time",
   "Please select at least one service": "Please select at least one service",
