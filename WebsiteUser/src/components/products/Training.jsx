@@ -5,6 +5,10 @@ import Navbar from '../layout/Navbar'
 
 const Container = styled.div`
   padding: 1rem;
+
+  @media (min-width: var(--breakpoint-md)) {
+    padding: 2rem;
+  }
 `
 
 const HeaderRow = styled.div`
@@ -12,12 +16,22 @@ const HeaderRow = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5rem;
+
+  @media (max-width: var(--breakpoint-sm)) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 `
 
 const Title = styled.h6`
   font-weight: 700;
   margin: 0;
   color: #f0f8ff;
+
+  @media (max-width: var(--breakpoint-sm)) {
+    font-size: 1rem;
+  }
 `
 
 const FilterButton = styled.button`
@@ -34,6 +48,11 @@ const FilterButton = styled.button`
     background: #4f8ef7;
     color: #fff;
     border-color: #4f8ef7;
+  }
+
+  @media (max-width: var(--breakpoint-sm)) {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
   }
 `
 
