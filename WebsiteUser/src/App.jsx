@@ -29,14 +29,16 @@ import BookingDetailsPage from './components/orders/BookingDetailsPage';
 import OrderDetailsPage from './components/orders/OrderDetailsPage';
 
 // Products & Packages
-import Products from './components/products/Products';
-import Packages from './components/products/Packages';
-import Favorites from './components/products/Favorites';
-import Training from './components/products/Training';
-import About from './components/About';
-import ContactUs from './components/contact/ContactUs';
+import Products from './components/products/Products'
+import Packages from './components/products/Packages'
+import Favorites from './components/products/Favorites'
+import Training from './components/products/Training'
+import ProductDetails from './components/products/ProductDetails'
+import About from './components/About'
+import ContactUs from './components/contact/ContactUs'
 import Terms from './components/legal/Terms';
 import Faq from './components/Faq';
+
 
 // Cart & Checkout
 import Cart from './components/cart/Cart';
@@ -114,6 +116,7 @@ const App = () => {
           <Route path="/orders/:id" element={<OrderDetailsPage />} />
 
           <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/packages" element={<Packages />} />
           <Route
             path="/favorites"
