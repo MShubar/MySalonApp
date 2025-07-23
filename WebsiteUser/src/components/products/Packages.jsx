@@ -2,16 +2,47 @@ import React, { useState } from 'react'
 import LoadingSpinner from '../LoadingSpinner'
 import { Helmet } from 'react-helmet'
 import { useTranslation } from 'react-i18next'
+import styled from 'styled-components'
 import usePackages from '../../functionality/products/UsePackages'
 import ServerError from '../ServerError'
 
+const CheckOverlay = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #28a745;
+  color: #fff;
+  border-radius: 50%;
+  padding: 4px;
+  font-size: 1.1rem;
+  animation: fadeOut 1s forwards;
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+`
+
 const Packages = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
+  const [showFilters, setShowFilters] = useState(false)
+  const [addedIds, setAddedIds] = useState([])
+
+  const showCheckmark = (id) => {
+    setAddedIds((prev) => [...prev, id])
+    setTimeout(
+      () => setAddedIds((prev) => prev.filter((itemId) => itemId !== id)),
+      1000
+    )
+  }
   const currencyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'BHD',
   });
-  const [showFilters, setShowFilters] = useState(false);
 
   const {
     packages,
@@ -145,6 +176,11 @@ const Packages = () => {
                       {t('Sold Out')}
                     </span>
                   )}
+                  {addedIds.includes(pack.id) && (
+                    <CheckOverlay>
+                      <i className="bi bi-check-lg"></i>
+                    </CheckOverlay>
+                  )}
                 </div>
 
                 <div className="card-body d-flex flex-column">
@@ -211,7 +247,10 @@ const Packages = () => {
 
                   <button
                     className="btn btn-success w-100 mt-auto"
-                    onClick={() => handleAddToCart(pack, pack.selectedQty || 1)}
+                    onClick={() => {
+                      handleAddToCart(pack, pack.selectedQty || 1)
+                      showCheckmark(pack.id)
+                    }}
                     disabled={pack.quantity <= 0}
                   >
                     <i className="bi bi-cart-plus me-2"></i> {t('Add to Cart')}
