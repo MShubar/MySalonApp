@@ -27,6 +27,7 @@ import Favorites from './components/products/Favorites'
 import Training from './components/products/Training'
 import About from './components/About'
 import ContactUs from './components/contact/ContactUs'
+import Footer from './components/layout/Footer'
 
 // Cart & Checkout
 import Cart from './components/cart/Cart'
@@ -113,6 +114,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
+      <Footer />
     </div>
   )
 }
