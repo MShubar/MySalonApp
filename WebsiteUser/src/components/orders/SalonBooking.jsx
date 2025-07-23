@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { Spinner, Button, Alert, Row, Col, Card } from 'react-bootstrap'
+import { Button, Alert, Row, Col, Card } from 'react-bootstrap'
+import LoadingSpinner from '../LoadingSpinner'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
 import PropTypes from 'prop-types'
@@ -30,11 +31,7 @@ const SalonBooking = ({ userId }) => {
   } = useSalonBooking({ salonId: id, userId, t, navigate })
 
   if (loading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center mt-5">
-        <Spinner animation="border" variant="light" />
-      </div>
-    )
+    return <LoadingSpinner className="mt-5" />
   }
 
   if (!salon) {

@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { API_URL } from '../config'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { API_URL } from '../config';
 
 function SignupStep2() {
-  const [name, setName] = useState('')
-  const [types, setTypes] = useState([])
-  const [selectedTypes, setSelectedTypes] = useState([])
-  const [services, setServices] = useState([])
-  const [selectedServices, setSelectedServices] = useState([])
-  const navigate = useNavigate()
+  const [name, setName] = useState('');
+  const [types, setTypes] = useState([]);
+  const [selectedTypes, setSelectedTypes] = useState([]);
+  const [services, setServices] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${API_URL}/types`).then((res) => setTypes(res.data))
-    axios
-      .get(`${API_URL}/services`)
-      .then((res) => setServices(res.data))
-  }, [])
+    axios.get(`${API_URL}/types`).then((res) => setTypes(res.data));
+    axios.get(`${API_URL}/services`).then((res) => {
+      console.log('SERVICES RESPONSE:', res.data);
+      setServices(res.data);
+    });
+  }, []);
 
   const handleNext = () => {
     localStorage.setItem(
       'signupStep2',
       JSON.stringify({ name, selectedTypes, selectedServices })
-    )
-    navigate('/signup/step3')
-  }
+    );
+    navigate('/signup/step3');
+  };
 
   return (
     <div className="d-flex vh-100 justify-content-center align-items-center bg-light">
@@ -35,8 +36,8 @@ function SignupStep2() {
         <h3 className="mb-4 text-center">Sign Up - Step 2/3</h3>
         <form
           onSubmit={(e) => {
-            e.preventDefault()
-            handleNext()
+            e.preventDefault();
+            handleNext();
           }}
         >
           <div className="mb-3">
@@ -113,7 +114,7 @@ function SignupStep2() {
         </form>
       </div>
     </div>
-  )
+  );
 }
 
-export default SignupStep2
+export default SignupStep2;

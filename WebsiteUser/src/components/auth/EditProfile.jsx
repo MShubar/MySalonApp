@@ -119,8 +119,17 @@ const Preview = styled.img`
 
 function EditProfile({ userId }) {
   const navigate = useNavigate()
-  const { t, formData, loading, error, success, handleChange, handleSubmit } =
-    useEditProfile({ userId })
+  const {
+    t,
+    formData,
+    avatarUrl,
+    loading,
+    error,
+    success,
+    handleChange,
+    handleAvatarChange,
+    handleSubmit
+  } = useEditProfile({ userId })
 
   const [imageSrc, setImageSrc] = useState('')
   const [crop, setCrop] = useState({ x: 0, y: 0 })
