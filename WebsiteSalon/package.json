@@ -16,6 +16,7 @@
     "bootstrap": "^5.3.6",
     "bootstrap-icons": "^1.13.1",
     "chart.js": "^4.4.9",
+    "antd": "^5.26.6",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.525.0",
     "prop-types": "^15.8.1",
