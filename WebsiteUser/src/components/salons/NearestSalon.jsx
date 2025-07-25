@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet'
 import { useNavigate } from 'react-router-dom'
-import Button from '../../../../src/shared/ui/Button'
 import { motion as Motion } from 'framer-motion'
 import styled, { keyframes } from 'styled-components'
 import PropTypes from 'prop-types'
@@ -164,15 +163,15 @@ const NearestSalon = ({ userType, userId }) => {
 
       {/* Filter and Sort Buttons */}
       <div className="d-flex justify-content-between mb-3 align-items-center gap-2 flex-wrap">
-        <Button
+        <button
           className="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"
           onClick={() => setShowFilters(!showFilters)}
           aria-expanded={showFilters}
         >
           <i className="bi bi-funnel-fill fs-5"></i> {t('Filters')}
-        </Button>
+        </button>
 
-        <Button
+        <button
           className="btn btn-outline-primary btn-sm"
           onClick={() =>
             setSortBy((prev) => (prev === 'distance' ? 'rating' : 'distance'))
@@ -187,7 +186,7 @@ const NearestSalon = ({ userType, userId }) => {
               <i className="bi bi-star-fill"></i> {t('Sort by Rating')}
             </>
           )}
-        </Button>
+        </button>
       </div>
 
       {showFilters && (
@@ -307,7 +306,7 @@ const NearestSalon = ({ userType, userId }) => {
                     )}
 
                     <div className="mt-auto d-flex gap-2">
-                      <Button
+                      <button
                         onClick={() => toggleFavorite(salon.id)}
                         className="btn btn-outline-warning flex-fill"
                       >
@@ -317,19 +316,19 @@ const NearestSalon = ({ userType, userId }) => {
                           }
                         ></i>{' '}
                         {isFavorited ? t('Saved') : t('Save')}
-                      </Button>
-                      <Button
+                      </button>
+                      <button
                         className="btn btn-primary flex-fill"
                         onClick={() => navigate(`/salon/${salon.id}`)}
                       >
                         {t('View')}
-                      </Button>
-                      <Button
+                      </button>
+                      <button
                         className="btn btn-success flex-fill"
                         onClick={() => navigate(`/salon/${salon.id}/book`)}
                       >
                         {t('Book')}
-                      </Button>
+                      </button>
                     </div>
                   </div>
                 </CardStyled>
