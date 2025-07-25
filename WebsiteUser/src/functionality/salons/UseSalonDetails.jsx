@@ -1,28 +1,28 @@
-import { useState, useEffect } from 'react'
-import useFetch from '../../hooks/useFetch'
-import { API_URL } from '../../config'
+import { useState, useEffect } from 'react';
+import useFetch from '../../hooks/useFetch';
+import { API_URL } from '../../config';
 
 export default function useSalonDetails(id) {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   // Responsive check
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const {
     data: salon,
     loading,
     error,
-    retry
-  } = useFetch(id ? `${API_URL}/salons/${id}` : null, [id])
+    retry,
+  } = useFetch(id ? `${API_URL}/salons/${id}` : null, [id]);
 
   const latitude =
-    salon?.latitude || salon?.location?.latitude || salon?.location?.lat
+    salon?.latitude || salon?.location?.latitude || salon?.location?.lat;
   const longitude =
-    salon?.longitude || salon?.location?.longitude || salon?.location?.lng
+    salon?.longitude || salon?.location?.longitude || salon?.location?.lng;
 
   return {
     salon,
@@ -31,6 +31,6 @@ export default function useSalonDetails(id) {
     retry,
     isMobile,
     latitude,
-    longitude
-  }
+    longitude,
+  };
 }

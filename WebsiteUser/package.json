@@ -12,6 +12,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "antd": "^5.26.6",
     "axios": "^1.9.0",
     "azure-maps-control": "^3.6.1",
     "bootstrap": "^5.3.5",
@@ -24,16 +25,15 @@
     "moment-timezone": "^0.6.0",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
-    "antd": "^5.26.6",
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
     "react-dom": "^19.0.0",
+    "react-easy-crop": "^5.5.0",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.60.0",
     "react-i18next": "^15.4.1",
     "react-icons": "^5.5.0",
-    "react-easy-crop": "^5.5.0",
     "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.5.1",
     "styled-components": "^6.1.19"
