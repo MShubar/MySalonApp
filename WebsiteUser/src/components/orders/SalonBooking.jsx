@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { Button, Alert, Row, Col, Card } from 'react-bootstrap'
+import { Helmet } from 'react-helmet'
 import LoadingSpinner from '../LoadingSpinner'
 import { useTranslation } from 'react-i18next'
 import moment from 'moment'
@@ -77,6 +78,11 @@ const SalonBooking = ({ userId }) => {
         borderRadius: '12px'
       }}
     >
+      <Helmet>
+        <title>
+          {t('Book Appointment at')} {salon.name}
+        </title>
+      </Helmet>
       <Button
         variant="outline-light"
         className="mb-3"

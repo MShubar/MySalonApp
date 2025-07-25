@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import useAccount from '../../functionality/auth/UseAccount'
+import { Helmet } from 'react-helmet'
 
 const Container = styled.div`
   margin-top: 2rem;
@@ -35,6 +36,9 @@ function Account() {
 
   return (
     <Container>
+      <Helmet>
+        <title>{t('Account Settings')}</title>
+      </Helmet>
       <Heading>{t('Account Settings')}</Heading>
 
       <StyledCard onClick={goToEditProfile}>{t('Edit Profile')}</StyledCard>

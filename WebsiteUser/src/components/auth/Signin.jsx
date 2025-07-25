@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { Helmet } from 'react-helmet';
 import TopBar from '../layout/TopBar';
 import useSignIn from '../../functionality/auth/UseSignIn';
 import { useForm } from 'react-hook-form';
@@ -101,6 +102,10 @@ const SignIn = () => {
   return (
     <>
       <TopBar />
+      <Helmet>
+        <title>{t('Sign In')}</title>
+      </Helmet>
+
       <Container>
         <Heading>{t('Sign In')}</Heading>
 

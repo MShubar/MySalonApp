@@ -1,4 +1,6 @@
+import React from 'react';
 import styled from 'styled-components';
+import { Helmet } from 'react-helmet';
 import TopBar from '../layout/TopBar';
 import useSignUp from '../../functionality/auth/UseSignUp';
 import { useForm } from 'react-hook-form';
@@ -84,6 +86,7 @@ const SignInLink = styled.a`
 
 const SignUp = () => {
   const { t, error, handleSignUp } = useSignUp();
+
   const {
     register,
     handleSubmit,
@@ -102,6 +105,9 @@ const SignUp = () => {
   return (
     <>
       <TopBar />
+      <Helmet>
+        <title>{t('Sign Up')}</title>
+      </Helmet>
       <Container>
         <Heading>{t('Sign Up')}</Heading>
 
@@ -112,6 +118,9 @@ const SignUp = () => {
               placeholder={t('Username')}
               {...register('username', { required: true })}
             />
+            {errors.username && (
+              <ErrorText>{t('Username is required')}</ErrorText>
+            )}
           </FormGroup>
 
           <FormGroup>
@@ -120,6 +129,9 @@ const SignUp = () => {
               placeholder={t('Email Address')}
               {...register('email', { required: true })}
             />
+            {errors.email && (
+              <ErrorText>{t('Email is required')}</ErrorText>
+            )}
           </FormGroup>
 
           <FormGroup>
@@ -128,6 +140,9 @@ const SignUp = () => {
               placeholder={t('Password')}
               {...register('password', { required: true })}
             />
+            {errors.password && (
+              <ErrorText>{t('Password is required')}</ErrorText>
+            )}
           </FormGroup>
 
           <FormGroup>
@@ -136,6 +151,9 @@ const SignUp = () => {
               placeholder={t('Confirm Password')}
               {...register('confirmPassword', { required: true })}
             />
+            {errors.confirmPassword && (
+              <ErrorText>{t('Confirm Password is required')}</ErrorText>
+            )}
           </FormGroup>
 
           {error && <ErrorText>{error}</ErrorText>}

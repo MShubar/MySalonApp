@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import useCheckout from '../../functionality/cart/UseCheckout'
+import { Helmet } from 'react-helmet'
 
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -131,6 +132,9 @@ const Checkout = () => {
 
   return (
     <PageContainer>
+      <Helmet>
+        <title>{t('Checkout')}</title>
+      </Helmet>
       {logoutMsg && (
         <AlertOverlay>
           {typeof logoutMsg === 'string'

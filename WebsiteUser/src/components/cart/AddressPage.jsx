@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import useAddressPage from '../../functionality/cart/UseAddressPage'
+import { Helmet } from 'react-helmet'
 
 // Fix Leaflet icons
 delete L.Icon.Default.prototype._getIconUrl
@@ -119,6 +120,9 @@ const AddressPage = () => {
 
   return (
     <PageContainer>
+      <Helmet>
+        <title>{t('Enter Your Address')}</title>
+      </Helmet>
       <Heading>{t('Enter Your Address')}</Heading>
 
       <StyledMapContainer center={latLng} zoom={13}>
