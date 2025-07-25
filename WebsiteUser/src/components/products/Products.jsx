@@ -2,18 +2,19 @@ import React, { useState } from 'react'
 import LoadingSpinner from '../LoadingSpinner'
 import { Helmet } from 'react-helmet'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import useProducts from '../../functionality/products/UseProducts'
 import ServerError from '../ServerError'
 
 const Container = styled.div`
   color: #ddd;
-`;
+`
 
 const Header = styled.h2`
   color: #222;
   font-weight: 700;
-`;
+`
 
 const SuccessOverlay = styled.div`
   position: fixed;
@@ -29,7 +30,7 @@ const SuccessOverlay = styled.div`
   text-align: center;
   font-size: 1.1rem;
   font-weight: 500;
-`;
+`
 
 const CheckOverlay = styled.div`
   position: absolute;
@@ -59,38 +60,40 @@ const CardStyled = styled.div`
   opacity: ${(props) => (props.$soldOut ? 0.5 : 1)};
   background-color: #1f1f1f;
   color: #ddd;
-`;
+  cursor: pointer;
+`
 
 const ProductImage = styled.img`
   height: 180px;
   object-fit: cover;
   border-bottom: 1px solid #444;
-`;
+`
 
 const Placeholder = styled.div`
   height: 180px;
   font-size: 48px;
-`;
+`
 
 const ProductTitle = styled.h5`
   color: #a3c1f7;
   font-weight: 600;
-`;
+`
 
 const ProductDescription = styled.p`
   font-size: 0.9rem;
   color: #bbb;
   min-height: 48px;
-`;
+`
 
 const Price = styled.div`
   font-size: 1rem;
   font-weight: 600;
   color: #f0e68c;
-`;
+`
 
 const Products = () => {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const [showFilters, setShowFilters] = useState(false)
   const [addedIds, setAddedIds] = useState([])
 
@@ -101,10 +104,12 @@ const Products = () => {
       1000
     )
   }
+
   const currencyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'BHD',
-  });
+  })
+
   const [searchTerm, setSearchTerm] = useState('')
 
   const {
@@ -118,7 +123,7 @@ const Products = () => {
     getSortedProducts,
     adjustQty,
     handleAddToCart,
-  } = useProducts(t);
+  } = useProducts(t)
 
   const filteredProducts = getSortedProducts().filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -130,27 +135,26 @@ const Products = () => {
 
   if (error) {
     if (error.response?.status === 500) {
-      return <ServerError onRetry={retry} />;
+      return <ServerError onRetry={retry} />
     }
     return (
       <div className="text-center mt-5 text-danger">
         {t('Failed to load products')}
       </div>
-    );
+    )
   }
 
-    return (
-      <Container className="container mt-4">
-        <Helmet>
-          <title>{t('Products')}</title>
-          <meta
-            name="description"
-            content="Browse our range of beauty products available at MySalon."
-          />
-        </Helmet>
+  return (
+    <Container className="container mt-4">
+      <Helmet>
+        <title>{t('Products')}</title>
+        <meta
+          name="description"
+          content="Browse our range of beauty products available at MySalon."
+        />
+      </Helmet>
 
-      <Header className="text-center mb-4"> {t('Products')} </Header>
-
+      <Header className="text-center mb-4">{t('Products')}</Header>
 
       {successMessage && (
         <SuccessOverlay>
@@ -209,6 +213,7 @@ const Products = () => {
               <CardStyled
                 className="card h-100 shadow-sm"
                 $soldOut={product.quantity <= 0}
+                onClick={() => navigate(`/products/${product.id}`)}
               >
                 <div style={{ position: 'relative' }}>
                   {product.image_url ? (
@@ -257,7 +262,10 @@ const Products = () => {
                         <div className="d-flex align-items-center">
                           <button
                             className="btn btn-outline-secondary btn-sm"
-                            onClick={() => adjustQty(product.id, -1)}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              adjustQty(product.id, -1)
+                            }}
                             disabled={product.selectedQty <= 1}
                           >
                             –
@@ -267,7 +275,10 @@ const Products = () => {
                           </span>
                           <button
                             className="btn btn-outline-secondary btn-sm"
-                            onClick={() => adjustQty(product.id, 1)}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              adjustQty(product.id, 1)
+                            }}
                             disabled={product.selectedQty >= product.quantity}
                           >
                             +
@@ -283,7 +294,8 @@ const Products = () => {
 
                   <button
                     className="btn btn-success w-100 mt-auto"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation()
                       handleAddToCart(product, product.selectedQty || 1)
                       showCheckmark(product.id)
                     }}
@@ -298,7 +310,7 @@ const Products = () => {
         </div>
       )}
     </Container>
-  );
-};
+  )
+}
 
-export default Products;
+export default Products

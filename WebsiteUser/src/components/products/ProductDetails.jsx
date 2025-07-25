@@ -98,7 +98,6 @@ const ProductDetails = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { t } = useTranslation()
-
   const { product, loading, error, retry, isMobile } = useProductDetails(id)
 
   const [activeIndex, setActiveIndex] = useState(0)
