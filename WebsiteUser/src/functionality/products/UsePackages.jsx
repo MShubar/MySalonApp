@@ -33,6 +33,13 @@ export default function usePackages(t) {
       return sorted.sort((a, b) => a.price - b.price)
     if (sortOption === 'name')
       return sorted.sort((a, b) => a.name.localeCompare(b.name))
+    if (sortOption === 'newest')
+      return sorted.sort((a, b) => {
+        const dateA = new Date(a.created_at || a.createdAt || 0)
+        const dateB = new Date(b.created_at || b.createdAt || 0)
+        if (isNaN(dateA) || isNaN(dateB)) return b.id - a.id
+        return dateB - dateA
+      })
     return sorted
   }
 

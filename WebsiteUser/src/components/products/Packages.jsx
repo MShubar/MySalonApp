@@ -67,22 +67,17 @@ const Packages = () => {
           <i className="bi bi-funnel-fill me-1"></i> {t('Filters')}
         </button>
         {showFilters && (
-          <div className="d-flex flex-wrap gap-2 mb-2">
-            {['priceHigh', 'priceLow', 'name'].map((option) => (
-              <button
-                key={option}
-                onClick={() => handleSort(option)}
-                className={`btn btn-sm ${
-                  sortOption === option
-                    ? 'btn-primary'
-                    : 'btn-outline-secondary'
-                }`}
-              >
-                {option === 'priceHigh' && t('High to low')}
-                {option === 'priceLow' && t('Low to high')}
-                {option === 'name' && t('A-Z')}
-              </button>
-            ))}
+          <div className="mb-2" style={{ minWidth: 160 }}>
+            <select
+              className="form-select form-select-sm"
+              value={sortOption}
+              onChange={(e) => handleSort(e.target.value)}
+            >
+              <option value="">{t('Filters')}</option>
+              <option value="priceHigh">{t('High to low')}</option>
+              <option value="priceLow">{t('Low to high')}</option>
+              <option value="newest">{t('Newest')}</option>
+            </select>
           </div>
         )}
       </div>
