@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, Link } from 'react-router-dom'
 import styled from 'styled-components'
+import Button from '../../../../src/shared/ui/Button'
 import useProducts from '../../functionality/products/UseProducts'
 import ServerError from '../ServerError'
 import QuickViewModal from './QuickViewModal'
@@ -185,24 +186,24 @@ const Products = () => {
 
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
         <div className="d-flex gap-2 mb-2">
-          <button
+          <Button
             className="btn btn-outline-primary btn-sm"
             onClick={() => setShowFilters(!showFilters)}
             aria-expanded={showFilters}
           >
             <i className="bi bi-funnel-fill me-1"></i> {t('Filters')}
-          </button>
-          <button
+          </Button>
+          <Button
             className="btn btn-outline-secondary btn-sm"
             onClick={clearFilters}
           >
             <i className="bi bi-x-circle me-1"></i> {t('Clear Filters')}
-          </button>
+          </Button>
         </div>
         {showFilters && (
           <div className="d-flex flex-wrap gap-2 mb-2">
             {['priceHigh', 'priceLow', 'name'].map((option) => (
-              <button
+              <Button
                 key={option}
                 onClick={() => handleSort(option)}
                 className={`btn btn-sm ${
@@ -214,7 +215,7 @@ const Products = () => {
                 {option === 'priceHigh' && t('High to low')}
                 {option === 'priceLow' && t('Low to high')}
                 {option === 'name' && t('A-Z')}
-              </button>
+              </Button>
             ))}
           </div>
         )}
@@ -287,7 +288,7 @@ const Products = () => {
                       <div className="d-flex align-items-center justify-content-between">
                         <small style={{ color: '#ccc' }}>{t('Adding')}</small>
                         <div className="d-flex align-items-center">
-                          <button
+                          <Button
                             className="btn btn-outline-secondary btn-sm"
                             onClick={(e) => {
                               e.stopPropagation()
@@ -296,11 +297,11 @@ const Products = () => {
                             disabled={product.selectedQty <= 1}
                           >
                             –
-                          </button>
+                          </Button>
                           <span className="mx-2">
                             {product.selectedQty || 1}
                           </span>
-                          <button
+                          <Button
                             className="btn btn-outline-secondary btn-sm"
                             onClick={(e) => {
                               e.stopPropagation()
@@ -309,7 +310,7 @@ const Products = () => {
                             disabled={product.selectedQty >= product.quantity}
                           >
                             +
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -319,7 +320,7 @@ const Products = () => {
                     {currencyFormatter.format(product.price)}
                   </Price>
 
-                  <button
+                  <Button
                     className="btn btn-outline-info w-100 mb-2"
                     onClick={(e) => {
                       e.stopPropagation()
@@ -327,9 +328,9 @@ const Products = () => {
                     }}
                   >
                     <i className="bi bi-eye me-2"></i> {t('Quick View')}
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button
                     className="btn btn-success w-100 mt-auto"
                     onClick={(e) => {
                       e.stopPropagation()
@@ -339,7 +340,7 @@ const Products = () => {
                     disabled={product.quantity <= 0}
                   >
                     <i className="bi bi-cart-plus me-2"></i> {t('Add to Cart')}
-                  </button>
+                  </Button>
                 </div>
               </CardStyled>
             </div>
