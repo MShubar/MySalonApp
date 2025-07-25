@@ -178,13 +178,17 @@ const OrderDetailsPage = () => {
     )
   }
 
-  return (
-    <Container>
-      <Helmet>
-        <title>{`${t('Order')} #${order.id || t('Unknown')} ${t(
-          'Details'
-        )}`}</title>
-      </Helmet>
+    return (
+      <Container>
+        <Helmet>
+          <title>{`${t('Order')} #${order.id || t('Unknown')} ${t(
+            'Details'
+          )}`}</title>
+          <meta
+            name="description"
+            content="Detailed view of your order at MySalon."
+          />
+        </Helmet>
 
       <Card>
         <Heading>

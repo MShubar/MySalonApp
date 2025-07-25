@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Spinner } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
-import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import useProducts from '../../functionality/products/UseProducts';
-import ServerError from '../ServerError';
+import React, { useState } from 'react'
+import LoadingSpinner from '../LoadingSpinner'
+import { Helmet } from 'react-helmet'
+import { useTranslation } from 'react-i18next'
+import { useNavigate, Link } from 'react-router-dom'
+import styled from 'styled-components'
+import useProducts from '../../functionality/products/UseProducts'
+import ServerError from '../ServerError'
 
 const Container = styled.div`
   color: #ddd;
@@ -32,6 +32,27 @@ const SuccessOverlay = styled.div`
   font-weight: 500;
 `;
 
+const CheckOverlay = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #28a745;
+  color: #fff;
+  border-radius: 50%;
+  padding: 4px;
+  font-size: 1.1rem;
+  animation: fadeOut 1s forwards;
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+`;
+
 const CardStyled = styled.div`
   border: 1px solid #333;
   border-radius: 12px;
@@ -39,6 +60,7 @@ const CardStyled = styled.div`
   opacity: ${(props) => (props.$soldOut ? 0.5 : 1)};
   background-color: #1f1f1f;
   color: #ddd;
+  cursor: pointer;
 `;
 
 const ProductImage = styled.img`
@@ -70,8 +92,11 @@ const Price = styled.div`
 `;
 
 const Products = () => {
-  const { t } = useTranslation();
-  const [showFilters, setShowFilters] = useState(false);
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const [showFilters, setShowFilters] = useState(false)
+  const [addedIds, setAddedIds] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
 
   const {
     products,
@@ -84,34 +109,51 @@ const Products = () => {
     getSortedProducts,
     adjustQty,
     handleAddToCart,
-  } = useProducts(t);
+  } = useProducts(t)
+
+  const showCheckmark = (id) => {
+    setAddedIds((prev) => [...prev, id])
+    setTimeout(
+      () => setAddedIds((prev) => prev.filter((itemId) => itemId !== id)),
+      1000
+    )
+  }
+
+  const currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'BHD',
+  })
+
+  const filteredProducts = getSortedProducts().filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
   if (loading) {
-    return (
-      <div className="d-flex justify-content-center my-5">
-        <Spinner animation="border" variant="light" />
-      </div>
-    );
+    return <LoadingSpinner className="my-5" />
   }
 
   if (error) {
     if (error.response?.status === 500) {
-      return <ServerError onRetry={retry} />;
+      return <ServerError onRetry={retry} />
     }
     return (
       <div className="text-center mt-5 text-danger">
         {t('Failed to load products')}
       </div>
-    );
+    )
   }
 
   return (
     <Container className="container mt-4">
       <Helmet>
         <title>{t('Products')}</title>
+        <meta
+          name="description"
+          content="Browse our range of beauty products available at MySalon."
+        />
       </Helmet>
 
-      <Header className="text-center mb-4"> {t('Products')} </Header>
+      <Header className="text-center mb-4">{t('Products')}</Header>
 
       {successMessage && (
         <SuccessOverlay>
@@ -119,6 +161,16 @@ const Products = () => {
           {successMessage}
         </SuccessOverlay>
       )}
+
+      <div className="mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder={t('Search products')}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
 
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
         <button
@@ -149,13 +201,13 @@ const Products = () => {
         )}
       </div>
 
-      {products.length === 0 ? (
+      {filteredProducts.length === 0 ? (
         <p className="text-center text-muted fst-italic">
           {t('no_products_found')}
         </p>
       ) : (
         <div className="row">
-          {getSortedProducts().map((product) => (
+          {filteredProducts.map((product) => (
             <div key={product.id} className="col-6 mb-4">
               <CardStyled
                 className="card h-100 shadow-sm"
@@ -181,6 +233,11 @@ const Products = () => {
                       <span className="badge bg-danger position-absolute top-0 end-0 m-2">
                         {t('Sold Out')}
                       </span>
+                    )}
+                    {addedIds.includes(product.id) && (
+                      <CheckOverlay>
+                        <i className="bi bi-check-lg"></i>
+                      </CheckOverlay>
                     )}
                   </div>
                 </Link>
@@ -213,7 +270,10 @@ const Products = () => {
                         <div className="d-flex align-items-center">
                           <button
                             className="btn btn-outline-secondary btn-sm"
-                            onClick={() => adjustQty(product.id, -1)}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              adjustQty(product.id, -1)
+                            }}
                             disabled={product.selectedQty <= 1}
                           >
                             –
@@ -223,7 +283,10 @@ const Products = () => {
                           </span>
                           <button
                             className="btn btn-outline-secondary btn-sm"
-                            onClick={() => adjustQty(product.id, 1)}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              adjustQty(product.id, 1)
+                            }}
                             disabled={product.selectedQty >= product.quantity}
                           >
                             +
@@ -234,14 +297,16 @@ const Products = () => {
                   </div>
 
                   <Price className="mb-2">
-                    {Number(product.price).toFixed(2)} BHD
+                    {currencyFormatter.format(product.price)}
                   </Price>
 
                   <button
                     className="btn btn-success w-100 mt-auto"
-                    onClick={() =>
+                    onClick={(e) => {
+                      e.stopPropagation()
                       handleAddToCart(product, product.selectedQty || 1)
-                    }
+                      showCheckmark(product.id)
+                    }}
                     disabled={product.quantity <= 0}
                   >
                     <i className="bi bi-cart-plus me-2"></i> {t('Add to Cart')}
