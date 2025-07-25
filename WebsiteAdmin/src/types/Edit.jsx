@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { API_URL } from '../config'
-import Button from '../../../src/shared/ui/Button'
 
 function Edit() {
   const [typeName, setTypeName] = useState('')
@@ -90,9 +89,9 @@ function Edit() {
             </div>
           )}
         </div>
-        <Button type="submit" className="btn btn-primary mt-3">
+        <button type="submit" className="btn btn-primary mt-3">
           Update Service Type
-        </Button>
+        </button>
       </form>
     </div>
   )
