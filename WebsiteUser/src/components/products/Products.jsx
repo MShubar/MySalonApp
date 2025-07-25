@@ -2,19 +2,19 @@ import React, { useState } from 'react'
 import LoadingSpinner from '../LoadingSpinner'
 import { Helmet } from 'react-helmet'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import styled from 'styled-components'
 import useProducts from '../../functionality/products/UseProducts'
 import ServerError from '../ServerError'
 
 const Container = styled.div`
   color: #ddd;
-`
+`;
 
 const Header = styled.h2`
   color: #222;
   font-weight: 700;
-`
+`;
 
 const SuccessOverlay = styled.div`
   position: fixed;
@@ -30,7 +30,7 @@ const SuccessOverlay = styled.div`
   text-align: center;
   font-size: 1.1rem;
   font-weight: 500;
-`
+`;
 
 const CheckOverlay = styled.div`
   position: absolute;
@@ -51,7 +51,7 @@ const CheckOverlay = styled.div`
       opacity: 0;
     }
   }
-`
+`;
 
 const CardStyled = styled.div`
   border: 1px solid #333;
@@ -61,55 +61,41 @@ const CardStyled = styled.div`
   background-color: #1f1f1f;
   color: #ddd;
   cursor: pointer;
-`
+`;
 
 const ProductImage = styled.img`
   height: 180px;
   object-fit: cover;
   border-bottom: 1px solid #444;
-`
+`;
 
 const Placeholder = styled.div`
   height: 180px;
   font-size: 48px;
-`
+`;
 
 const ProductTitle = styled.h5`
   color: #a3c1f7;
   font-weight: 600;
-`
+`;
 
 const ProductDescription = styled.p`
   font-size: 0.9rem;
   color: #bbb;
   min-height: 48px;
-`
+`;
 
 const Price = styled.div`
   font-size: 1rem;
   font-weight: 600;
   color: #f0e68c;
-`
+`;
 
 const Products = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [showFilters, setShowFilters] = useState(false)
   const [addedIds, setAddedIds] = useState([])
-
-  const showCheckmark = (id) => {
-    setAddedIds((prev) => [...prev, id])
-    setTimeout(
-      () => setAddedIds((prev) => prev.filter((itemId) => itemId !== id)),
-      1000
-    )
-  }
-
-  const currencyFormatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'BHD',
-  })
-
   const [searchTerm, setSearchTerm] = useState('')
 
   const {
@@ -124,6 +110,19 @@ const Products = () => {
     adjustQty,
     handleAddToCart,
   } = useProducts(t)
+
+  const showCheckmark = (id) => {
+    setAddedIds((prev) => [...prev, id])
+    setTimeout(
+      () => setAddedIds((prev) => prev.filter((itemId) => itemId !== id)),
+      1000
+    )
+  }
+
+  const currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'BHD',
+  })
 
   const filteredProducts = getSortedProducts().filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -213,35 +212,44 @@ const Products = () => {
               <CardStyled
                 className="card h-100 shadow-sm"
                 $soldOut={product.quantity <= 0}
-                onClick={() => navigate(`/products/${product.id}`)}
               >
-                <div style={{ position: 'relative' }}>
-                  {product.image_url ? (
-                    <ProductImage
-                      src={product.image_url}
-                      alt={product.name}
-                      className="card-img-top"
-                    />
-                  ) : (
-                    <Placeholder className="d-flex justify-content-center align-items-center bg-secondary text-white">
-                      {product.name.charAt(0)}
-                    </Placeholder>
-                  )}
-                  {product.quantity <= 0 && (
-                    <span className="badge bg-danger position-absolute top-0 end-0 m-2">
-                      {t('Sold Out')}
-                    </span>
-                  )}
-                  {addedIds.includes(product.id) && (
-                    <CheckOverlay>
-                      <i className="bi bi-check-lg"></i>
-                    </CheckOverlay>
-                  )}
-                </div>
+                <Link
+                  to={`/products/${product.id}`}
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div style={{ position: 'relative' }}>
+                    {product.image_url ? (
+                      <ProductImage
+                        src={product.image_url}
+                        alt={product.name}
+                        className="card-img-top"
+                      />
+                    ) : (
+                      <Placeholder className="d-flex justify-content-center align-items-center bg-secondary text-white">
+                        {product.name.charAt(0)}
+                      </Placeholder>
+                    )}
+                    {product.quantity <= 0 && (
+                      <span className="badge bg-danger position-absolute top-0 end-0 m-2">
+                        {t('Sold Out')}
+                      </span>
+                    )}
+                    {addedIds.includes(product.id) && (
+                      <CheckOverlay>
+                        <i className="bi bi-check-lg"></i>
+                      </CheckOverlay>
+                    )}
+                  </div>
+                </Link>
 
                 <div className="card-body d-flex flex-column">
                   <ProductTitle className="card-title mb-2">
-                    {product.name}
+                    <Link
+                      to={`/products/${product.id}`}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      {product.name}
+                    </Link>
                   </ProductTitle>
 
                   <ProductDescription className="card-text mb-2">
@@ -310,7 +318,7 @@ const Products = () => {
         </div>
       )}
     </Container>
-  )
-}
+  );
+};
 
-export default Products
+export default Products;

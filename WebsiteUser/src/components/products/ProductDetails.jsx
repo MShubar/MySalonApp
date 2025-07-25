@@ -4,6 +4,7 @@ import { Spinner, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
+import { FaFacebook, FaTwitter } from 'react-icons/fa';
 import useProductDetails from '../../functionality/products/UseProductDetails';
 import ServerError from '../ServerError';
 
@@ -94,6 +95,12 @@ const Description = styled.p`
   color: #ccc;
 `;
 
+const ShareButtons = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+`;
+
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -149,6 +156,19 @@ const ProductDetails = () => {
 
   const Layout = isMobile ? ContainerMobile : Container;
 
+  const shareUrl = window.location.href;
+  const share = (platform) => {
+    const url = encodeURIComponent(shareUrl);
+    const text = encodeURIComponent(product.name || '');
+    let link = '';
+    if (platform === 'facebook') {
+      link = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    } else if (platform === 'twitter') {
+      link = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+    }
+    window.open(link, '_blank', 'noopener');
+  };
+
   return (
     <div className="container">
       <Helmet>
@@ -187,6 +207,7 @@ const ProductDetails = () => {
           <Title>{product.name}</Title>
           <Description>{product.description}</Description>
           <Price>{Number(product.price).toFixed(2)} BHD</Price>
+
           {product.quantity !== undefined && (
             <div style={{ marginTop: '0.5rem' }}>
               <strong>{t('Available')}:</strong> {product.quantity}
@@ -197,6 +218,23 @@ const ProductDetails = () => {
               <strong>{t('Salon')}:</strong> {product.salon_name}
             </div>
           )}
+
+          <ShareButtons>
+            <button
+              className="btn btn-primary"
+              onClick={() => share('facebook')}
+              aria-label="Share on Facebook"
+            >
+              <FaFacebook className="me-1" /> {t('Share')}
+            </button>
+            <button
+              className="btn btn-info text-white"
+              onClick={() => share('twitter')}
+              aria-label="Share on Twitter"
+            >
+              <FaTwitter className="me-1" /> {t('Tweet')}
+            </button>
+          </ShareButtons>
         </InfoSection>
       </Layout>
     </div>
