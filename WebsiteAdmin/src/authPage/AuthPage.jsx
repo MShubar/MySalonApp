@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { API_URL } from '../config'
+import Button from '../../../src/shared/ui/Button'
 
 const AuthPage = ({ setIsAuthenticated, setAuthToken }) => {
   const [username, setUsername] = useState('')
@@ -57,9 +58,9 @@ const AuthPage = ({ setIsAuthenticated, setAuthToken }) => {
             required
           />
         </div>
-        <button type="submit" className="btn-login">
+        <Button type="submit" className="btn-login">
           Login
-        </button>
+        </Button>
       </form>
     </div>
   )
