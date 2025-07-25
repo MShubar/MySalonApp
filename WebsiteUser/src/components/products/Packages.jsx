@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
-import { Spinner } from 'react-bootstrap'
-import { Helmet } from 'react-helmet'
-import { useTranslation } from 'react-i18next'
-import usePackages from '../../functionality/products/UsePackages'
-import ServerError from '../ServerError'
+import React, { useState } from 'react';
+import { Spinner } from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
+import { useTranslation } from 'react-i18next';
+import usePackages from '../../functionality/products/UsePackages';
+import ServerError from '../ServerError';
 
 const Packages = () => {
-  const { t } = useTranslation()
-  const [showFilters, setShowFilters] = useState(false)
+  const { t } = useTranslation();
+  const [showFilters, setShowFilters] = useState(false);
+  const [isGridView, setIsGridView] = useState(true);
 
   const {
     packages,
@@ -19,8 +20,8 @@ const Packages = () => {
     handleSort,
     getSortedPackages,
     adjustQty,
-    handleAddToCart
-  } = usePackages(t)
+    handleAddToCart,
+  } = usePackages(t);
 
   return (
     <div className="container mt-4" style={{ color: '#ddd' }}>
@@ -50,7 +51,7 @@ const Packages = () => {
             boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
             textAlign: 'center',
             fontSize: '1.1rem',
-            fontWeight: '500'
+            fontWeight: '500',
           }}
         >
           <i className="bi bi-check-circle me-2"></i>
@@ -59,13 +60,25 @@ const Packages = () => {
       )}
 
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-        <button
-          className="btn btn-outline-primary btn-sm mb-2"
-          onClick={() => setShowFilters(!showFilters)}
-          aria-expanded={showFilters}
-        >
-          <i className="bi bi-funnel-fill me-1"></i> {t('Filters')}
-        </button>
+        <div className="d-flex gap-2 mb-2">
+          <button
+            className="btn btn-outline-primary btn-sm"
+            onClick={() => setShowFilters(!showFilters)}
+            aria-expanded={showFilters}
+          >
+            <i className="bi bi-funnel-fill me-1"></i> {t('Filters')}
+          </button>
+          <button
+            className="btn btn-outline-secondary btn-sm"
+            onClick={() => setIsGridView((prev) => !prev)}
+            aria-label={
+              isGridView ? 'Switch to list view' : 'Switch to grid view'
+            }
+          >
+            <i className={`bi ${isGridView ? 'bi-list' : 'bi-grid'} me-1`}></i>
+            {isGridView ? t('List View') : t('Grid View')}
+          </button>
+        </div>
         {showFilters && (
           <div className="d-flex flex-wrap gap-2 mb-2">
             {['priceHigh', 'priceLow', 'name'].map((option) => (
@@ -106,16 +119,19 @@ const Packages = () => {
       ) : (
         <div className="row">
           {getSortedPackages().map((pack) => (
-            <div key={pack.id} className="col-6 mb-4">
+            <div
+              key={pack.id}
+              className={`${isGridView ? 'col-6' : 'col-12'} mb-4`}
+            >
               <div
-                className="card h-100 shadow-sm"
+                className={`card h-100 shadow-sm ${isGridView ? '' : 'd-md-flex flex-md-row'}`}
                 style={{
                   border: '1px solid #333',
                   borderRadius: '12px',
                   overflow: 'hidden',
                   opacity: pack.quantity <= 0 ? 0.5 : 1,
                   backgroundColor: '#1f1f1f',
-                  color: '#ddd'
+                  color: '#ddd',
                 }}
               >
                 <div style={{ position: 'relative' }}>
@@ -123,17 +139,24 @@ const Packages = () => {
                     <img
                       src={pack.image_url}
                       alt={pack.title}
-                      className="card-img-top"
+                      className={`card-img-top ${isGridView ? '' : 'h-100'}`}
                       style={{
-                        height: '180px',
+                        height: isGridView ? '180px' : '100%',
+                        width: isGridView ? '100%' : '180px',
                         objectFit: 'cover',
-                        borderBottom: '1px solid #444'
+                        borderBottom: isGridView ? '1px solid #444' : '',
+                        borderRight: isGridView ? '' : '1px solid #444',
                       }}
                     />
                   ) : (
                     <div
                       className="d-flex justify-content-center align-items-center bg-secondary text-white"
-                      style={{ height: '180px', fontSize: '48px' }}
+                      style={{
+                        height: '180px',
+                        width: isGridView ? '100%' : '180px',
+                        fontSize: '48px',
+                        borderRight: isGridView ? '' : '1px solid #444',
+                      }}
                     >
                       {pack.title.charAt(0)}
                     </div>
@@ -145,7 +168,9 @@ const Packages = () => {
                   )}
                 </div>
 
-                <div className="card-body d-flex flex-column">
+                <div
+                  className={`card-body d-flex flex-column ${isGridView ? '' : 'flex-grow-1'}`}
+                >
                   <h5
                     className="card-title mb-2"
                     style={{ color: '#a3c1f7', fontWeight: '600' }}
@@ -158,7 +183,7 @@ const Packages = () => {
                     style={{
                       fontSize: '0.9rem',
                       color: '#bbb',
-                      minHeight: '48px'
+                      minHeight: '48px',
                     }}
                   >
                     {pack.description?.length > 60
@@ -201,7 +226,7 @@ const Packages = () => {
                     style={{
                       fontSize: '1rem',
                       fontWeight: '600',
-                      color: '#f0e68c'
+                      color: '#f0e68c',
                     }}
                   >
                     {Number(pack.price).toFixed(2)} BHD
@@ -221,7 +246,7 @@ const Packages = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Packages
+export default Packages;
