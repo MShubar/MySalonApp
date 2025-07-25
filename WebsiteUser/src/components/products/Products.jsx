@@ -111,6 +111,12 @@ const Products = () => {
     handleAddToCart,
   } = useProducts(t)
 
+  const clearFilters = () => {
+    setSearchTerm('')
+    handleSort('')
+    setShowFilters(false)
+  }
+
   const showCheckmark = (id) => {
     setAddedIds((prev) => [...prev, id])
     setTimeout(
@@ -173,13 +179,21 @@ const Products = () => {
       </div>
 
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-        <button
-          className="btn btn-outline-primary btn-sm mb-2"
-          onClick={() => setShowFilters(!showFilters)}
-          aria-expanded={showFilters}
-        >
-          <i className="bi bi-funnel-fill me-1"></i> {t('Filters')}
-        </button>
+        <div className="d-flex gap-2 mb-2">
+          <button
+            className="btn btn-outline-primary btn-sm"
+            onClick={() => setShowFilters(!showFilters)}
+            aria-expanded={showFilters}
+          >
+            <i className="bi bi-funnel-fill me-1"></i> {t('Filters')}
+          </button>
+          <button
+            className="btn btn-outline-secondary btn-sm"
+            onClick={clearFilters}
+          >
+            <i className="bi bi-x-circle me-1"></i> {t('Clear Filters')}
+          </button>
+        </div>
         {showFilters && (
           <div className="d-flex flex-wrap gap-2 mb-2">
             {['priceHigh', 'priceLow', 'name'].map((option) => (
