@@ -1,9 +1,9 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
-import ErrorBoundary from './ErrorBoundary.jsx'
-import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
-NProgress.configure({ showSpinner: false })
+import React, { useState, useContext, useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import ErrorBoundary from './ErrorBoundary.jsx';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+NProgress.configure({ showSpinner: false });
 import './styles/variables.css';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -29,17 +29,13 @@ import BookingDetailsPage from './components/orders/BookingDetailsPage';
 import OrderDetailsPage from './components/orders/OrderDetailsPage';
 
 // Products & Packages
-import Products from './components/products/Products'
-import ProductDetails from './components/products/ProductDetails'
-import Packages from './components/products/Packages'
-import Favorites from './components/products/Favorites'
-import Training from './components/products/Training'
-import ProductDetails from './components/products/ProductDetails'
-import About from './components/About'
-import ContactUs from './components/contact/ContactUs'
-import Terms from './components/legal/Terms';
-import Faq from './components/Faq';
-
+import Products from './components/products/Products';
+import Packages from './components/products/Packages';
+import Favorites from './components/products/Favorites';
+import Training from './components/products/Training';
+import ProductDetails from './components/products/ProductDetails';
+import About from './components/About';
+import ContactUs from './components/contact/ContactUs';
 
 // Cart & Checkout
 import Cart from './components/cart/Cart';
@@ -60,14 +56,14 @@ const App = () => {
   const { user, authLoaded } = useContext(AppContext);
 
   useEffect(() => {
-    NProgress.start()
+    NProgress.start();
     const timer = setTimeout(() => {
-      NProgress.done()
-    }, 300)
-    return () => clearTimeout(timer)
-  }, [location.pathname])
+      NProgress.done();
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
 
-  const showNavbar = !['/signin', '/signup'].includes(location.pathname)
+  const showNavbar = !['/signin', '/signup'].includes(location.pathname);
 
   const userId = user?.id;
   if (!authLoaded) return null;
@@ -95,57 +91,60 @@ const App = () => {
         }}
       >
         <ErrorBoundary>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={location.pathname}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-        <Routes>
-          <Route
-            path="/"
-            element={<NearestSalon userType={userType} userId={userId} />}
-          />
-          <Route path="/salon/:id" element={<SalonDetails userId={userId} />} />
-          <Route
-            path="/salon/:id/book"
-            element={<SalonBooking userId={userId} />}
-          />
-          <Route path="/bookings" element={<MyBookings />} />
-          <Route path="/bookings/:id" element={<BookingDetailsPage />} />
-          <Route path="/orders/:id" element={<OrderDetailsPage />} />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <Routes>
+                <Route
+                  path="/"
+                  element={<NearestSalon userType={userType} userId={userId} />}
+                />
+                <Route
+                  path="/salon/:id"
+                  element={<SalonDetails userId={userId} />}
+                />
+                <Route
+                  path="/salon/:id/book"
+                  element={<SalonBooking userId={userId} />}
+                />
+                <Route path="/bookings" element={<MyBookings />} />
+                <Route path="/bookings/:id" element={<BookingDetailsPage />} />
+                <Route path="/orders/:id" element={<OrderDetailsPage />} />
 
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:id" element={<ProductDetails />} />
-          <Route path="/packages" element={<Packages />} />
-          <Route
-            path="/favorites"
-            element={<Favorites userId={userId} userType={userType} />}
-          />
-          <Route path="/about" element={<About />} />
-          <Route path="/training" element={<Training />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/account" element={<Account user={user} />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/products/:id" element={<ProductDetails />} />
+                <Route path="/packages" element={<Packages />} />
+                <Route
+                  path="/favorites"
+                  element={<Favorites userId={userId} userType={userType} />}
+                />
+                <Route path="/about" element={<About />} />
+                <Route path="/training" element={<Training />} />
+                <Route path="/contact" element={<ContactUs />} />
+                <Route path="/account" element={<Account user={user} />} />
 
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route
-            path="/edit-profile"
-            element={<EditProfile userId={userId} />}
-          />
-          <Route
-            path="/change-password"
-            element={<ChangePassword userId={userId} />}
-          />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/address" element={<AddressPage />} />
-          <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-         </motion.div>
-        </AnimatePresence>
+                <Route path="/signin" element={<SignIn />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route
+                  path="/edit-profile"
+                  element={<EditProfile userId={userId} />}
+                />
+                <Route
+                  path="/change-password"
+                  element={<ChangePassword userId={userId} />}
+                />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/address" element={<AddressPage />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </motion.div>
+          </AnimatePresence>
         </ErrorBoundary>
       </div>
       <ScrollToTop />
