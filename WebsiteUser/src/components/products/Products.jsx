@@ -6,6 +6,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import styled from 'styled-components'
 import useProducts from '../../functionality/products/UseProducts'
 import ServerError from '../ServerError'
+import QuickViewModal from './QuickViewModal'
 
 const Container = styled.div`
   color: #ddd;
@@ -97,6 +98,7 @@ const Products = () => {
   const [showFilters, setShowFilters] = useState(false)
   const [addedIds, setAddedIds] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
+  const [quickViewProduct, setQuickViewProduct] = useState(null)
 
   const {
     products,
@@ -124,6 +126,9 @@ const Products = () => {
       1000
     )
   }
+
+  const openQuickView = (product) => setQuickViewProduct(product)
+  const closeQuickView = () => setQuickViewProduct(null)
 
   const currencyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -315,6 +320,16 @@ const Products = () => {
                   </Price>
 
                   <button
+                    className="btn btn-outline-info w-100 mb-2"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      openQuickView(product)
+                    }}
+                  >
+                    <i className="bi bi-eye me-2"></i> {t('Quick View')}
+                  </button>
+
+                  <button
                     className="btn btn-success w-100 mt-auto"
                     onClick={(e) => {
                       e.stopPropagation()
@@ -331,6 +346,15 @@ const Products = () => {
           ))}
         </div>
       )}
+      <QuickViewModal
+        show={!!quickViewProduct}
+        onHide={closeQuickView}
+        product={quickViewProduct}
+        onAddToCart={(prod, qty) => {
+          handleAddToCart(prod, qty)
+          showCheckmark(prod.id)
+        }}
+      />
     </Container>
   );
 };
