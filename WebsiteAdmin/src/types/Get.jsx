@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { API_URL } from '../config'
-import Button from '../../../src/shared/ui/Button'
 
 function Get() {
   const [types, setTypes] = useState([])
@@ -59,15 +58,15 @@ function Get() {
               <strong>{typeToDelete.type_name}</strong>?
             </p>
             <div className="modal-buttons">
-              <Button className="btn-action delete" onClick={confirmDelete}>
+              <button className="btn-action delete" onClick={confirmDelete}>
                 Confirm Delete
-              </Button>
-              <Button
+              </button>
+              <button
                 className="btn-action"
                 onClick={() => setTypeToDelete(null)}
               >
                 Cancel
-              </Button>
+              </button>
             </div>
           </div>
         </div>
@@ -119,18 +118,18 @@ function Get() {
                 </td>
                 <td>{type.type_name}</td>
                 <td>
-                  <Button
+                  <button
                     className="btn-action"
                     onClick={() => handleEdit(type.id)}
                   >
                     Edit
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     className="btn-action delete"
                     onClick={() => setTypeToDelete(type)}
                   >
                     Delete
-                  </Button>
+                  </button>
                 </td>
               </tr>
             ))}

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../config'
-import Button from '../../../src/shared/ui/Button'
 
 function Create() {
   const [typeName, setTypeName] = useState('')
@@ -69,9 +68,9 @@ function Create() {
           />
         </div>
         {error && <div className="alert alert-danger mt-2">{error}</div>}
-        <Button type="submit" className="btn btn-primary mt-3">
+        <button type="submit" className="btn btn-primary mt-3">
           Create Type
-        </Button>
+        </button>
       </form>
     </div>
   )
