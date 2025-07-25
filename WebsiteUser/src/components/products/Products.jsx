@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Spinner } from 'react-bootstrap'
+import LoadingSpinner from '../LoadingSpinner'
 import { Helmet } from 'react-helmet'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -30,6 +30,27 @@ const SuccessOverlay = styled.div`
   text-align: center;
   font-size: 1.1rem;
   font-weight: 500;
+`
+
+const CheckOverlay = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #28a745;
+  color: #fff;
+  border-radius: 50%;
+  padding: 4px;
+  font-size: 1.1rem;
+  animation: fadeOut 1s forwards;
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
 `
 
 const CardStyled = styled.div`
@@ -74,6 +95,22 @@ const Products = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [showFilters, setShowFilters] = useState(false)
+  const [addedIds, setAddedIds] = useState([])
+
+  const showCheckmark = (id) => {
+    setAddedIds((prev) => [...prev, id])
+    setTimeout(
+      () => setAddedIds((prev) => prev.filter((itemId) => itemId !== id)),
+      1000
+    )
+  }
+
+  const currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'BHD',
+  })
+
+  const [searchTerm, setSearchTerm] = useState('')
 
   const {
     products,
@@ -85,15 +122,15 @@ const Products = () => {
     handleSort,
     getSortedProducts,
     adjustQty,
-    handleAddToCart
+    handleAddToCart,
   } = useProducts(t)
 
+  const filteredProducts = getSortedProducts().filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   if (loading) {
-    return (
-      <div className="d-flex justify-content-center my-5">
-        <Spinner animation="border" variant="light" />
-      </div>
-    )
+    return <LoadingSpinner className="my-5" />
   }
 
   if (error) {
@@ -111,9 +148,13 @@ const Products = () => {
     <Container className="container mt-4">
       <Helmet>
         <title>{t('Products')}</title>
+        <meta
+          name="description"
+          content="Browse our range of beauty products available at MySalon."
+        />
       </Helmet>
 
-      <Header className="text-center mb-4"> {t('Products')} </Header>
+      <Header className="text-center mb-4">{t('Products')}</Header>
 
       {successMessage && (
         <SuccessOverlay>
@@ -121,6 +162,16 @@ const Products = () => {
           {successMessage}
         </SuccessOverlay>
       )}
+
+      <div className="mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder={t('Search products')}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
 
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
         <button
@@ -151,13 +202,13 @@ const Products = () => {
         )}
       </div>
 
-      {products.length === 0 ? (
+      {filteredProducts.length === 0 ? (
         <p className="text-center text-muted fst-italic">
           {t('no_products_found')}
         </p>
       ) : (
         <div className="row">
-          {getSortedProducts().map((product) => (
+          {filteredProducts.map((product) => (
             <div key={product.id} className="col-6 mb-4">
               <CardStyled
                 className="card h-100 shadow-sm"
@@ -180,6 +231,11 @@ const Products = () => {
                     <span className="badge bg-danger position-absolute top-0 end-0 m-2">
                       {t('Sold Out')}
                     </span>
+                  )}
+                  {addedIds.includes(product.id) && (
+                    <CheckOverlay>
+                      <i className="bi bi-check-lg"></i>
+                    </CheckOverlay>
                   )}
                 </div>
 
@@ -233,7 +289,7 @@ const Products = () => {
                   </div>
 
                   <Price className="mb-2">
-                    {Number(product.price).toFixed(2)} BHD
+                    {currencyFormatter.format(product.price)}
                   </Price>
 
                   <button
@@ -241,6 +297,7 @@ const Products = () => {
                     onClick={(e) => {
                       e.stopPropagation()
                       handleAddToCart(product, product.selectedQty || 1)
+                      showCheckmark(product.id)
                     }}
                     disabled={product.quantity <= 0}
                   >

@@ -1,80 +1,115 @@
+import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
+import { Spinner, Button } from 'react-bootstrap'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet'
 import useProductDetails from '../../functionality/products/UseProductDetails'
 import ServerError from '../ServerError'
 
 const Container = styled.div`
-  max-width: 800px;
-  margin: 2rem auto;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  background-color: #1f1f1f;
   color: #f0f8ff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 123, 255, 0.1);
+  margin-top: 2rem;
 `
 
-const Card = styled.div`
-  background-color: #1f1f1f;
-  border: 1px solid #333;
-  border-radius: 16px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  padding: 1.5rem;
+const ContainerMobile = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  background-color: #1f1f1f;
+  color: #f0f8ff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 123, 255, 0.1);
+  margin-top: 1rem;
 `
 
-const Image = styled.img`
+const ImageSection = styled.div`
+  flex: 1;
+`
+
+const MainImage = styled.img`
   width: 100%;
-  max-height: 300px;
+  height: 400px;
   object-fit: cover;
   border-radius: 12px;
-  border: 1px solid #444;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
+`
+
+const Thumbnails = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+`
+
+const Thumb = styled.img`
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid ${({ $active }) => ($active ? '#00bcd4' : 'transparent')};
 `
 
 const Placeholder = styled.div`
   width: 100%;
-  height: 300px;
-  background-color: #555;
+  height: 400px;
+  background-color: #444;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #ddd;
   font-size: 3rem;
-  color: #ccc;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
+`
+
+const InfoSection = styled.div`
+  flex: 2;
+  display: flex;
+  flex-direction: column;
 `
 
 const Title = styled.h2`
+  font-size: 2rem;
   color: #a3c1f7;
-  margin: 0;
+  margin-bottom: 1rem;
 `
 
-const Price = styled.p`
+const Price = styled.div`
+  font-size: 1.2rem;
   color: #f0e68c;
   font-weight: 600;
-  font-size: 1.2rem;
-  margin: 0;
+  margin-top: 0.5rem;
 `
 
-const BackButton = styled.button`
-  align-self: flex-start;
-  background: transparent;
-  color: #f0f8ff;
-  border: 1px solid #ccc;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
+const Description = styled.p`
+  font-size: 1rem;
+  color: #ccc;
 `
 
 const ProductDetails = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const { product, loading, error, retry, isMobile } = useProductDetails(id)
 
-  const { product, loading, error, retry } = useProductDetails(id)
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  useEffect(() => {
+    setActiveIndex(0)
+  }, [product])
 
   if (loading) {
     return (
-      <div className="text-center mt-5">
-        {t('Loading product details...')}
+      <div style={{ display: 'flex', height: '60vh', justifyContent: 'center', alignItems: 'center' }}>
+        <Spinner animation="border" variant="info" />
       </div>
     )
   }
@@ -84,49 +119,71 @@ const ProductDetails = () => {
       return <ServerError onRetry={retry} />
     }
     return (
-      <div className="text-center mt-5 text-danger">
-        {t('Failed to load product')}
-      </div>
+      <p style={{ textAlign: 'center', color: '#bbb' }}>{t('Product not found')}</p>
     )
   }
 
   if (!product) {
     return (
-      <div className="text-center mt-5 text-muted">
-        {t('Product not found')}
-      </div>
+      <p style={{ textAlign: 'center', color: '#bbb' }}>{t('Product not found')}</p>
     )
   }
 
+  const images = Array.isArray(product.images) && product.images.length > 0
+    ? product.images
+    : product.image_url
+    ? [product.image_url]
+    : []
+
+  const Layout = isMobile ? ContainerMobile : Container
+
   return (
-    <Container>
+    <div className="container">
       <Helmet>
         <title>{product.name}</title>
       </Helmet>
-      <BackButton onClick={() => navigate(-1)}>← {t('Back')}</BackButton>
-      <Card>
-        {product.image_url ? (
-          <Image src={product.image_url} alt={product.name} />
-        ) : (
-          <Placeholder>{product.name.charAt(0)}</Placeholder>
-        )}
-        <div>
-          <Title>{product.name}</Title>
-          <p>{product.description}</p>
-          <Price>{Number(product.price).toFixed(2)} BHD</Price>
-          {product.salon_name && (
-            <p>
-              <strong>{t('Salon')}: </strong>
-              {product.salon_name}
-            </p>
+      <Layout>
+        <ImageSection>
+          {images[activeIndex] ? (
+            <MainImage src={images[activeIndex]} alt={product.name} />
+          ) : (
+            <Placeholder>{product.name.charAt(0)}</Placeholder>
           )}
-          <p>
-            <strong>{t('Available')}: </strong>
-            {product.quantity}
-          </p>
-        </div>
-      </Card>
-    </Container>
+          {images.length > 1 && (
+            <Thumbnails>
+              {images.map((img, idx) => (
+                <Thumb
+                  key={idx}
+                  src={img}
+                  alt={`thumb-${idx}`}
+                  onClick={() => setActiveIndex(idx)}
+                  $active={idx === activeIndex}
+                />
+              ))}
+            </Thumbnails>
+          )}
+        </ImageSection>
+
+        <InfoSection>
+          <Button variant="outline-light" onClick={() => navigate(-1)} style={{ marginBottom: '1rem', alignSelf: 'flex-start' }}>
+            ← {t('Back')}
+          </Button>
+          <Title>{product.name}</Title>
+          <Description>{product.description}</Description>
+          <Price>{Number(product.price).toFixed(2)} BHD</Price>
+          {product.quantity !== undefined && (
+            <div style={{ marginTop: '0.5rem' }}>
+              <strong>{t('Available')}:</strong> {product.quantity}
+            </div>
+          )}
+          {product.salon_name && (
+            <div style={{ marginTop: '0.5rem' }}>
+              <strong>{t('Salon')}:</strong> {product.salon_name}
+            </div>
+          )}
+        </InfoSection>
+      </Layout>
+    </div>
   )
 }
 
