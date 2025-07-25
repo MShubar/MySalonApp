@@ -36,6 +36,8 @@ import Training from './components/products/Training';
 import ProductDetails from './components/products/ProductDetails';
 import About from './components/About';
 import ContactUs from './components/contact/ContactUs';
+import FAQ from './components/FAQ';
+import Privacy from './components/legal/Privacy';
 
 // Cart & Checkout
 import Cart from './components/cart/Cart';
@@ -43,12 +45,12 @@ import Checkout from './components/cart/Checkout';
 import AddressPage from './components/cart/AddressPage';
 import PaymentSuccess from './components/cart/PaymentSuccessful';
 import NotFound from './components/NotFound';
-import Privacy from './components/legal/Privacy';
 
 // Misc
 import backgroundImage from './assets/Background.png';
 import { AppContext } from './context/AppContext';
 import ScrollToTop from './components/ScrollToTop';
+import PageTransition from './components/PageTransition.jsx';
 
 const App = () => {
   const location = useLocation();
@@ -63,10 +65,30 @@ const App = () => {
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
-  const showNavbar = !['/signin', '/signup', '/checkout', '/address'].includes(
-    location.pathname
-  );
-  const showTopBar = ['/checkout', '/address'].includes(location.pathname);
+  const showNavbar = ![
+    '/signin',
+    '/signup',
+    '/checkout',
+    '/address',
+    '/about',
+    '/account',
+    '/faq',
+    '/contact',
+    '/edit-profile',
+    '/change-password',
+    '/privacy',
+  ].includes(location.pathname);
+  const showTopBar = [
+    '/faq',
+    '/account',
+    '/about',
+    '/checkout',
+    '/address',
+    '/contact',
+    '/edit-profile',
+    '/change-password',
+    '/privacy',
+  ].includes(location.pathname);
 
   const userId = user?.id;
 
@@ -91,57 +113,208 @@ const App = () => {
       <div style={{ padding: '1rem', paddingBottom: '80px', maxWidth: '100%' }}>
         <ErrorBoundary>
           <AnimatePresence mode="wait">
-            <motion.div
-              key={location.pathname}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <Routes>
-                <Route
-                  path="/"
-                  element={<NearestSalon userType={userType} userId={userId} />}
-                />
-                <Route
-                  path="/salon/:id"
-                  element={<SalonDetails userId={userId} />}
-                />
-                <Route
-                  path="/salon/:id/book"
-                  element={<SalonBooking userId={userId} />}
-                />
-                <Route path="/bookings" element={<MyBookings />} />
-                <Route path="/bookings/:id" element={<BookingDetailsPage />} />
-                <Route path="/orders/:id" element={<OrderDetailsPage />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/products/:id" element={<ProductDetails />} />
-                <Route path="/packages" element={<Packages />} />
-                <Route
-                  path="/favorites"
-                  element={<Favorites userId={userId} userType={userType} />}
-                />
-                <Route path="/about" element={<About />} />
-                <Route path="/training" element={<Training />} />
-                <Route path="/contact" element={<ContactUs />} />
-                <Route path="/account" element={<Account user={user} />} />
-                <Route path="/signin" element={<SignIn />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route
-                  path="/edit-profile"
-                  element={<EditProfile userId={userId} />}
-                />
-                <Route
-                  path="/change-password"
-                  element={<ChangePassword userId={userId} />}
-                />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/address" element={<AddressPage />} />
-                <Route path="/payment-success" element={<PaymentSuccess />} />
-                <Route path="/privacy" element={<Privacy />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </motion.div>
+            <Routes location={location} key={location.pathname}>
+              <Route
+                path="/"
+                element={
+                  <PageTransition>
+                    <NearestSalon userType={userType} userId={userId} />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/salon/:id"
+                element={
+                  <PageTransition>
+                    <SalonDetails userId={userId} />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/salon/:id/book"
+                element={
+                  <PageTransition>
+                    <SalonBooking userId={userId} />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/bookings"
+                element={
+                  <PageTransition>
+                    <MyBookings />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/bookings/:id"
+                element={
+                  <PageTransition>
+                    <BookingDetailsPage />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/orders/:id"
+                element={
+                  <PageTransition>
+                    <OrderDetailsPage />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/products"
+                element={
+                  <PageTransition>
+                    <Products />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/products/:id"
+                element={
+                  <PageTransition>
+                    <ProductDetails />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/packages"
+                element={
+                  <PageTransition>
+                    <Packages />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/favorites"
+                element={
+                  <PageTransition>
+                    <Favorites userId={userId} userType={userType} />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/about"
+                element={
+                  <PageTransition>
+                    <About />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/faq"
+                element={
+                  <PageTransition>
+                    <FAQ />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/training"
+                element={
+                  <PageTransition>
+                    <Training />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/contact"
+                element={
+                  <PageTransition>
+                    <ContactUs />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/account"
+                element={
+                  <PageTransition>
+                    <Account user={user} />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/signin"
+                element={
+                  <PageTransition>
+                    <SignIn />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/signup"
+                element={
+                  <PageTransition>
+                    <SignUp />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/edit-profile"
+                element={
+                  <PageTransition>
+                    <EditProfile userId={userId} />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/change-password"
+                element={
+                  <PageTransition>
+                    <ChangePassword userId={userId} />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/cart"
+                element={
+                  <PageTransition>
+                    <Cart />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/checkout"
+                element={
+                  <PageTransition>
+                    <Checkout />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/address"
+                element={
+                  <PageTransition>
+                    <AddressPage />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/payment-success"
+                element={
+                  <PageTransition>
+                    <PaymentSuccess />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="/privacy"
+                element={
+                  <PageTransition>
+                    <Privacy />
+                  </PageTransition>
+                }
+              />
+              <Route
+                path="*"
+                element={
+                  <PageTransition>
+                    <NotFound />
+                  </PageTransition>
+                }
+              />
+            </Routes>
           </AnimatePresence>
         </ErrorBoundary>
       </div>

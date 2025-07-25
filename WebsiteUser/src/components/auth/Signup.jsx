@@ -5,9 +5,17 @@ import TopBar from '../layout/TopBar';
 import useSignUp from '../../functionality/auth/UseSignUp';
 import { useForm } from 'react-hook-form';
 
+const Wrapper = styled.div`
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+`;
+
 const Container = styled.div`
+  width: 100%;
   max-width: 500px;
-  margin: 5rem auto;
   padding: 2rem;
   background-color: #1f1f1f;
   border-radius: 1rem;
@@ -48,7 +56,7 @@ const Input = styled.input`
 const ErrorText = styled.div`
   color: #f44336;
   font-size: 0.85rem;
-  margin-bottom: 1rem;
+  margin-top: 0.25rem;
   font-style: italic;
 `;
 
@@ -108,64 +116,65 @@ const SignUp = () => {
       <Helmet>
         <title>{t('Sign Up')}</title>
       </Helmet>
-      <Container>
-        <Heading>{t('Sign Up')}</Heading>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormGroup>
-            <Input
-              type="text"
-              placeholder={t('Username')}
-              {...register('username', { required: true })}
-            />
-            {errors.username && (
-              <ErrorText>{t('Username is required')}</ErrorText>
-            )}
-          </FormGroup>
+      <Wrapper>
+        <Container>
+          <Heading>{t('Sign Up')}</Heading>
 
-          <FormGroup>
-            <Input
-              type="email"
-              placeholder={t('Email Address')}
-              {...register('email', { required: true })}
-            />
-            {errors.email && (
-              <ErrorText>{t('Email is required')}</ErrorText>
-            )}
-          </FormGroup>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FormGroup>
+              <Input
+                type="text"
+                placeholder={t('Username')}
+                {...register('username', { required: true })}
+              />
+              {errors.username && (
+                <ErrorText>{t('Username is required')}</ErrorText>
+              )}
+            </FormGroup>
 
-          <FormGroup>
-            <Input
-              type="password"
-              placeholder={t('Password')}
-              {...register('password', { required: true })}
-            />
-            {errors.password && (
-              <ErrorText>{t('Password is required')}</ErrorText>
-            )}
-          </FormGroup>
+            <FormGroup>
+              <Input
+                type="email"
+                placeholder={t('Email Address')}
+                {...register('email', { required: true })}
+              />
+              {errors.email && <ErrorText>{t('Email is required')}</ErrorText>}
+            </FormGroup>
 
-          <FormGroup>
-            <Input
-              type="password"
-              placeholder={t('Confirm Password')}
-              {...register('confirmPassword', { required: true })}
-            />
-            {errors.confirmPassword && (
-              <ErrorText>{t('Confirm Password is required')}</ErrorText>
-            )}
-          </FormGroup>
+            <FormGroup>
+              <Input
+                type="password"
+                placeholder={t('Password')}
+                {...register('password', { required: true })}
+              />
+              {errors.password && (
+                <ErrorText>{t('Password is required')}</ErrorText>
+              )}
+            </FormGroup>
 
-          {error && <ErrorText>{error}</ErrorText>}
+            <FormGroup>
+              <Input
+                type="password"
+                placeholder={t('Confirm Password')}
+                {...register('confirmPassword', { required: true })}
+              />
+              {errors.confirmPassword && (
+                <ErrorText>{t('Confirm Password is required')}</ErrorText>
+              )}
+            </FormGroup>
 
-          <SubmitButton type="submit">{t('Sign Up')}</SubmitButton>
-        </form>
+            {error && <ErrorText>{error}</ErrorText>}
 
-        <FooterText>
-          {t('Already have an account?')}{' '}
-          <SignInLink href="/signin">{t('Sign In')}</SignInLink>
-        </FooterText>
-      </Container>
+            <SubmitButton type="submit">{t('Sign Up')}</SubmitButton>
+          </form>
+
+          <FooterText>
+            {t('Already have an account?')}{' '}
+            <SignInLink href="/signin">{t('Sign In')}</SignInLink>
+          </FooterText>
+        </Container>
+      </Wrapper>
     </>
   );
 };

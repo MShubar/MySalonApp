@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Helmet } from 'react-helmet'
-import styled from 'styled-components'
-import Navbar from '../layout/Navbar'
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet';
+import styled from 'styled-components';
+import Navbar from '../layout/Navbar';
 
 const Container = styled.div`
   padding: 1rem;
@@ -10,7 +10,7 @@ const Container = styled.div`
   @media (min-width: var(--breakpoint-md)) {
     padding: 2rem;
   }
-`
+`;
 
 const HeaderRow = styled.div`
   display: flex;
@@ -23,7 +23,7 @@ const HeaderRow = styled.div`
     align-items: flex-start;
     gap: 0.5rem;
   }
-`
+`;
 
 const Title = styled.h6`
   font-weight: 700;
@@ -33,7 +33,7 @@ const Title = styled.h6`
   @media (max-width: var(--breakpoint-sm)) {
     font-size: 1rem;
   }
-`
+`;
 
 const FilterButton = styled.button`
   background: transparent;
@@ -55,13 +55,13 @@ const FilterButton = styled.button`
     padding: 0.2rem 0.5rem;
     font-size: 0.8rem;
   }
-`
+`;
 
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1rem;
-`
+`;
 
 const Card = styled.div`
   background-color: #242424;
@@ -69,53 +69,53 @@ const Card = styled.div`
   border: 1px solid #444;
   border-radius: 12px;
   overflow: hidden;
-`
+`;
 
 const CardImage = styled.img`
   height: 180px;
   object-fit: cover;
   width: 100%;
   border-bottom: 1px solid #444;
-`
+`;
 
 const Placeholder = styled.div`
   height: 180px;
   font-size: 64px;
   color: #ddd;
   border-bottom: 1px solid #444;
-`
+`;
 
 const CardTitle = styled.h5`
   color: #a3c1f7;
   font-weight: 600;
-`
+`;
 
 const CardDescription = styled.p`
   color: #bbb;
   font-size: 0.9rem;
-`
+`;
 
 const Training = () => {
-  const [showFilters, setShowFilters] = useState(false)
-  const { t } = useTranslation()
+  const [showFilters, setShowFilters] = useState(false);
+  const { t } = useTranslation();
 
   const trainingPrograms = [
     {
       id: 1,
       title: 'Hair Styling Basics',
-      description: 'Learn fundamental hair styling techniques.'
+      description: 'Learn fundamental hair styling techniques.',
     },
     {
       id: 2,
       title: 'Advanced Makeup',
-      description: 'Master advanced makeup application skills.'
+      description: 'Master advanced makeup application skills.',
     },
     {
       id: 3,
       title: 'Nail Art Workshop',
-      description: 'Create stunning nail art designs.'
-    }
-  ]
+      description: 'Create stunning nail art designs.',
+    },
+  ];
 
   return (
     <Container>
@@ -126,7 +126,6 @@ const Training = () => {
           content="Explore training sessions and tutorials provided by MySalon."
         />
       </Helmet>
-      <Navbar />
       <HeaderRow>
         <Title>{t('training')}</Title>
         <FilterButton
@@ -164,7 +163,7 @@ const Training = () => {
         ))}
       </Grid>
     </Container>
-  )
-}
+  );
+};
 
-export default Training
+export default Training;

@@ -6,10 +6,19 @@ import useSignIn from '../../functionality/auth/UseSignIn';
 import { useForm } from 'react-hook-form';
 import { AppContext } from '../../context/AppContext';
 
+const Wrapper = styled.div`
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: transparent;
+`;
+
 const Container = styled.div`
-  max-width: 500px;
-  margin: 5rem auto;
-  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem;
   background-color: #1f1f1f;
   border-radius: 1rem;
   box-shadow: 0 10px 30px rgba(79, 142, 247, 0.2);
@@ -18,13 +27,13 @@ const Container = styled.div`
 
 const Heading = styled.h2`
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   color: #4f8ef7;
   font-weight: 700;
 `;
 
 const FormGroup = styled.div`
-  margin-bottom: 1.2rem;
+  margin-bottom: 1rem;
 `;
 
 const Input = styled.input`
@@ -106,42 +115,44 @@ const SignIn = () => {
         <title>{t('Sign In')}</title>
       </Helmet>
 
-      <Container>
-        <Heading>{t('Sign In')}</Heading>
+      <Wrapper>
+        <Container>
+          <Heading>{t('Sign In')}</Heading>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormGroup>
-            <Input
-              type="text"
-              placeholder={t('Username')}
-              {...register('username', { required: true })}
-            />
-            {errors.username && (
-              <ErrorText>{t('Username is required')}</ErrorText>
-            )}
-          </FormGroup>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FormGroup>
+              <Input
+                type="text"
+                placeholder={t('Username')}
+                {...register('username', { required: true })}
+              />
+              {errors.username && (
+                <ErrorText>{t('Username is required')}</ErrorText>
+              )}
+            </FormGroup>
 
-          <FormGroup>
-            <Input
-              type="password"
-              placeholder={t('Password')}
-              {...register('password', { required: true })}
-            />
-            {errors.password && (
-              <ErrorText>{t('Password is required')}</ErrorText>
-            )}
-          </FormGroup>
+            <FormGroup>
+              <Input
+                type="password"
+                placeholder={t('Password')}
+                {...register('password', { required: true })}
+              />
+              {errors.password && (
+                <ErrorText>{t('Password is required')}</ErrorText>
+              )}
+            </FormGroup>
 
-          {error && <ErrorText>{error}</ErrorText>}
+            {error && <ErrorText>{error}</ErrorText>}
 
-          <SubmitButton type="submit">{t('Sign In')}</SubmitButton>
-        </form>
+            <SubmitButton type="submit">{t('Sign In')}</SubmitButton>
+          </form>
 
-        <FooterText>
-          {t("Don't have an account?")}{' '}
-          <SignUpLink href="/signup">{t('Sign Up')}</SignUpLink>
-        </FooterText>
-      </Container>
+          <FooterText>
+            {t("Don't have an account?")}{' '}
+            <SignUpLink href="/signup">{t('Sign Up')}</SignUpLink>
+          </FooterText>
+        </Container>
+      </Wrapper>
     </>
   );
 };

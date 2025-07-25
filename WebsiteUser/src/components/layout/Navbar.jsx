@@ -1,6 +1,6 @@
-import Dropdown from 'react-bootstrap/Dropdown'
-import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types'
+import Dropdown from 'react-bootstrap/Dropdown';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import {
   MapPin,
   CalendarCheck,
@@ -9,10 +9,10 @@ import {
   Heart,
   Info,
   Mail,
-  GraduationCap
-} from 'lucide-react'
-import useNavbar from '../../functionality/layout/UseNavbar'
-import capitalizeName from '../../utils/capitalizeName'
+  GraduationCap,
+} from 'lucide-react';
+import useNavbar from '../../functionality/layout/UseNavbar';
+import capitalizeName from '../../utils/capitalizeName';
 const Navbar = ({ setUserType, userType, user }) => {
   const {
     t,
@@ -23,8 +23,8 @@ const Navbar = ({ setUserType, userType, user }) => {
     toggleLanguage,
     handleLogout,
     navLinks,
-    location
-  } = useNavbar({ userType, setUserType })
+    location,
+  } = useNavbar({ userType, setUserType });
 
   const iconMap = {
     '/': MapPin,
@@ -32,10 +32,8 @@ const Navbar = ({ setUserType, userType, user }) => {
     '/products': ShoppingBag,
     '/packages': Package,
     '/favorites': Heart,
-    '/about': Info,
-    '/contact': Mail,
-    '/training': GraduationCap
-  }
+    '/training': GraduationCap,
+  };
 
   return (
     <>
@@ -47,7 +45,7 @@ const Navbar = ({ setUserType, userType, user }) => {
           position: 'sticky',
           top: 0,
           zIndex: 1100,
-          boxShadow: '0 2px 8px rgb(0 0 0 / 0.7)'
+          boxShadow: '0 2px 8px rgb(0 0 0 / 0.7)',
         }}
         aria-label={t('Main Navigation')}
       >
@@ -165,7 +163,7 @@ const Navbar = ({ setUserType, userType, user }) => {
                 backgroundColor: '#1f1f1f',
                 borderColor: '#333',
                 color: '#ddd',
-                transition: 'background-color 0.25s ease'
+                transition: 'background-color 0.25s ease',
               }}
               id="user-type-dropdown-toggle"
               aria-haspopup="true"
@@ -181,7 +179,7 @@ const Navbar = ({ setUserType, userType, user }) => {
                     height: 32,
                     borderRadius: '50%',
                     objectFit: 'cover',
-                    boxShadow: '0 0 8px rgba(79, 142, 247, 0.7)'
+                    boxShadow: '0 0 8px rgba(79, 142, 247, 0.7)',
                   }}
                 />
               ) : (
@@ -205,8 +203,8 @@ const Navbar = ({ setUserType, userType, user }) => {
                   <Dropdown.Item
                     key={index}
                     onClick={() => {
-                      setUserType(type.type_name)
-                      setCurrentIcon(type.image_url)
+                      setUserType(type.type_name);
+                      setCurrentIcon(type.image_url);
                     }}
                     className="d-flex align-items-center gap-3"
                     style={{ fontWeight: 500, color: '#ddd' }}
@@ -222,7 +220,7 @@ const Navbar = ({ setUserType, userType, user }) => {
                         height: 32,
                         borderRadius: '50%',
                         objectFit: 'cover',
-                        boxShadow: '0 0 5px rgba(79, 142, 247, 0.7)'
+                        boxShadow: '0 0 5px rgba(79, 142, 247, 0.7)',
                       }}
                     />
                     <span className="text-capitalize">{t(type.type_name)}</span>
@@ -262,13 +260,13 @@ const Navbar = ({ setUserType, userType, user }) => {
               paddingBottom: 14,
               scrollbarWidth: 'thin',
               msOverflowStyle: 'auto',
-              whiteSpace: 'normal'
+              whiteSpace: 'normal',
             }}
             tabIndex={0}
             aria-roledescription="scrollable list"
           >
             {navLinks.map(({ to, label }, idx) => {
-              const Icon = iconMap[to]
+              const Icon = iconMap[to];
               return (
                 <Link
                   key={idx}
@@ -280,41 +278,41 @@ const Navbar = ({ setUserType, userType, user }) => {
                     fontSize: '0.95rem',
                     borderRadius: '0.5rem',
                     borderColor: '#4f8ef7',
-                  whiteSpace: 'normal',
-                  height: 70,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  lineHeight: '1.2',
-                  userSelect: 'none',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.3s ease, color 0.3s ease',
-                  boxShadow:
-                    location.pathname === to ? '0 0 12px #4f8ef7' : 'none',
-                  backgroundColor:
-                    location.pathname === to ? '#4f8ef7' : 'transparent',
-                  color: location.pathname === to ? '#fff' : '#4f8ef7'
-                }}
+                    whiteSpace: 'normal',
+                    height: 70,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    lineHeight: '1.2',
+                    userSelect: 'none',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.3s ease, color 0.3s ease',
+                    boxShadow:
+                      location.pathname === to ? '0 0 12px #4f8ef7' : 'none',
+                    backgroundColor:
+                      location.pathname === to ? '#4f8ef7' : 'transparent',
+                    color: location.pathname === to ? '#fff' : '#4f8ef7',
+                  }}
                   aria-current={location.pathname === to ? 'page' : undefined}
                 >
                   {Icon && <Icon size={16} className="me-1" />}
                   {t(label)}
                 </Link>
-              )
+              );
             })}
           </div>
         </div>
       </nav>
     </>
-  )
-}
+  );
+};
 
 Navbar.propTypes = {
   setUserType: PropTypes.func.isRequired,
   userType: PropTypes.string,
   user: PropTypes.object,
-  setUser: PropTypes.func.isRequired
-}
+  setUser: PropTypes.func.isRequired,
+};
 
-export default Navbar
+export default Navbar;
