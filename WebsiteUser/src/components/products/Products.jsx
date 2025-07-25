@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Spinner } from 'react-bootstrap'
 import { Helmet } from 'react-helmet'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import useProducts from '../../functionality/products/UseProducts'
 import ServerError from '../ServerError'
@@ -38,6 +39,7 @@ const CardStyled = styled.div`
   opacity: ${(props) => (props.$soldOut ? 0.5 : 1)};
   background-color: #1f1f1f;
   color: #ddd;
+  cursor: pointer;
 `
 
 const ProductImage = styled.img`
@@ -70,6 +72,7 @@ const Price = styled.div`
 
 const Products = () => {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const [showFilters, setShowFilters] = useState(false)
 
   const {
@@ -159,6 +162,7 @@ const Products = () => {
               <CardStyled
                 className="card h-100 shadow-sm"
                 $soldOut={product.quantity <= 0}
+                onClick={() => navigate(`/products/${product.id}`)}
               >
                 <div style={{ position: 'relative' }}>
                   {product.image_url ? (
@@ -202,7 +206,10 @@ const Products = () => {
                         <div className="d-flex align-items-center">
                           <button
                             className="btn btn-outline-secondary btn-sm"
-                            onClick={() => adjustQty(product.id, -1)}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              adjustQty(product.id, -1)
+                            }}
                             disabled={product.selectedQty <= 1}
                           >
                             –
@@ -212,7 +219,10 @@ const Products = () => {
                           </span>
                           <button
                             className="btn btn-outline-secondary btn-sm"
-                            onClick={() => adjustQty(product.id, 1)}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              adjustQty(product.id, 1)
+                            }}
                             disabled={product.selectedQty >= product.quantity}
                           >
                             +
@@ -228,9 +238,10 @@ const Products = () => {
 
                   <button
                     className="btn btn-success w-100 mt-auto"
-                    onClick={() =>
+                    onClick={(e) => {
+                      e.stopPropagation()
                       handleAddToCart(product, product.selectedQty || 1)
-                    }
+                    }}
                     disabled={product.quantity <= 0}
                   >
                     <i className="bi bi-cart-plus me-2"></i> {t('Add to Cart')}
