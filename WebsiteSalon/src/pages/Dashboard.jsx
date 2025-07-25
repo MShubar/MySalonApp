@@ -15,6 +15,7 @@ import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import { API_URL } from '../config'
+import capitalizeName from '../utils/capitalizeName'
 
 ChartJS.register(
   BarElement,
@@ -94,7 +95,7 @@ export default function DashboardPage() {
     <>
       <Navbar />
       <div className="container mt-4">
-        <h2 className="mb-4 text-center">Welcome, {auth.name}</h2>
+        <h2 className="mb-4 text-center">Welcome, {capitalizeName(auth.name)}</h2>
 
         {/* Analytics Summary Cards */}
         <div className="row text-center mb-4 g-3">

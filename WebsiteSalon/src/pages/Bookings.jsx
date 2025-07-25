@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import { API_URL } from '../config'
+import capitalizeName from '../utils/capitalizeName'
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([])
@@ -81,7 +82,7 @@ export default function BookingsPage() {
         <div className="text-center mb-5">
           <h2 className="fw-bold text-dark">📅 All Bookings</h2>
           <p className="text-muted">
-            View and manage bookings for <strong>{auth.name}</strong>
+            View and manage bookings for <strong>{capitalizeName(auth.name)}</strong>
           </p>
         </div>
 
@@ -101,7 +102,7 @@ export default function BookingsPage() {
                   <div className="card-body d-flex flex-column justify-content-between">
                     <div className="d-flex justify-content-between align-items-center mb-3">
                       <div>
-                        <h5 className="mb-1">{b.user_name}</h5>
+                        <h5 className="mb-1">{capitalizeName(b.user_name)}</h5>
                         <p
                           className="text-light mb-0"
                           style={{ fontSize: '0.9rem' }}

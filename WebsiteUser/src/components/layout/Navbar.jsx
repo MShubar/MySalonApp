@@ -12,6 +12,7 @@ import {
   GraduationCap
 } from 'lucide-react'
 import useNavbar from '../../functionality/layout/UseNavbar'
+import capitalizeName from '../../utils/capitalizeName'
 const Navbar = ({ setUserType, userType, user }) => {
   const {
     t,
@@ -80,7 +81,7 @@ const Navbar = ({ setUserType, userType, user }) => {
                     className="fw-semibold fs-6"
                     style={{ color: '#4f8ef7' }}
                   >
-                    {user.username || t('User')}
+                    {capitalizeName(user.username) || t('User')}
                   </Dropdown.Header>
                   <Dropdown.Item
                     as={Link}
