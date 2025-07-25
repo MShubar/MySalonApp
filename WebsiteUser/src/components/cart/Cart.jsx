@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import useCart from '../../functionality/cart/UseCart'
+import { Helmet } from 'react-helmet'
 
 const Container = styled.div`
   max-width: 1200px;
@@ -182,6 +183,9 @@ const Cart = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>{t('Cart')}</title>
+      </Helmet>
       <Heading>🛒 {t('Cart')} 🛒</Heading>
 
       {groupedCart.length === 0 ? (

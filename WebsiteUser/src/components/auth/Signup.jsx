@@ -4,6 +4,7 @@ import useSignUp from '../../functionality/auth/UseSignUp'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Form from 'react-bootstrap/Form'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { Helmet } from 'react-helmet'
 
 
 const Container = styled.div`
@@ -87,6 +88,9 @@ const SignUp = () => {
   return (
     <>
       <TopBar />
+      <Helmet>
+        <title>{t('Sign Up')}</title>
+      </Helmet>
       <Container>
         <Heading>{t('Sign Up')}</Heading>
 

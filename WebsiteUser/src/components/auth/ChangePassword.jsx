@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import useChangePassword from '../../functionality/auth/useChangePassword'
+import { Helmet } from 'react-helmet'
 
 const PageContainer = styled.div`
   max-width: 600px;
@@ -118,6 +119,9 @@ function ChangePassword({ userId }) {
 
   return (
     <PageContainer>
+      <Helmet>
+        <title>{t('Change Password')}</title>
+      </Helmet>
       <BackButton onClick={() => navigate(-1)}>&larr; {t('Back')}</BackButton>
       <Heading>{t('Change Password')}</Heading>
 

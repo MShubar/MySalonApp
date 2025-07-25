@@ -4,6 +4,7 @@ import useSignIn from '../../functionality/auth/UseSignIn'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Form from 'react-bootstrap/Form'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { Helmet } from 'react-helmet'
 
 const Container = styled.div`
   max-width: 500px;
@@ -84,6 +85,9 @@ const SignIn = () => {
   return (
     <>
       <TopBar />
+      <Helmet>
+        <title>{t('Sign In')}</title>
+      </Helmet>
       <Container>
         <Heading>{t('Sign In')}</Heading>
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import usePaymentSuccess from '../../functionality/cart/UsePaymentSuccessful'
+import { Helmet } from 'react-helmet'
 
 const Container = styled.div`
   max-width: 600px;
@@ -48,6 +49,9 @@ const PaymentSuccess = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>Payment Successful</title>
+      </Helmet>
       <Card>
         <Heading>✅ Payment Successful</Heading>
         <Text>Thank you for your purchase!</Text>

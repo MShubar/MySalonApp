@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import useEditProfile from '../../functionality/auth/UseEditProfile'
 import Cropper from 'react-easy-crop'
+import { Helmet } from 'react-helmet'
 
 const PageContainer = styled.div`
   max-width: 600px;
@@ -190,6 +191,9 @@ function EditProfile({ userId }) {
 
   return (
     <PageContainer>
+      <Helmet>
+        <title>{t('Edit Profile')}</title>
+      </Helmet>
       <BackButton onClick={() => navigate(-1)}>&larr; {t('Back')}</BackButton>
       <Heading>{t('Edit Profile')}</Heading>
 

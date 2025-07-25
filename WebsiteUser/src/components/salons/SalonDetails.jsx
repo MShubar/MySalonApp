@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 import { useState } from 'react'
 import { Button } from 'react-bootstrap'
 import LoadingSpinner from '../LoadingSpinner'
@@ -60,6 +61,9 @@ const SalonDetails = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{salon ? salon.name : t('Salon Details')}</title>
+      </Helmet>
       <Breadcrumbs items={[{ label: t('Home'), to: '/' }, { label: salon.name }]} />
       <div style={layoutStyle}>
       <div style={styles.imageSection}>
