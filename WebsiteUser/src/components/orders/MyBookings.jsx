@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useMyBookings from '../../functionality/orders/UseMyBookings';
 import ServerError from '../ServerError';
+import capitalizeName from '../../utils/capitalizeName';
 
 const Container = styled.div`
   color: #ddd;
@@ -248,7 +249,7 @@ const MyBookings = () => {
                 <div className="card-body">
                   <CardTitle className="card-title mb-2">
                     {item.type === 'booking'
-                      ? `${t('Booking at')} ${item.salon_name}`
+                      ? `${t('Booking at')} ${capitalizeName(item.salon_name)}`
                       : `${t('Order')} #${item.id}`}
                   </CardTitle>
 

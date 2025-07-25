@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet';
 import { FaFacebook, FaTwitter } from 'react-icons/fa';
 import useProductDetails from '../../functionality/products/UseProductDetails';
 import ServerError from '../ServerError';
+import capitalizeName from '../../utils/capitalizeName';
 
 const Container = styled.div`
   display: flex;
@@ -215,7 +216,7 @@ const ProductDetails = () => {
           )}
           {product.salon_name && (
             <div style={{ marginTop: '0.5rem' }}>
-              <strong>{t('Salon')}:</strong> {product.salon_name}
+              <strong>{t('Salon')}:</strong> {capitalizeName(product.salon_name)}
             </div>
           )}
 

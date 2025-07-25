@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import useBookingDetails from '../../functionality/orders/UseBookingDetails'
 import ServerError from '../ServerError'
+import capitalizeName from '../../utils/capitalizeName'
 
 const Container = styled.div`
   max-width: 800px;
@@ -139,9 +140,9 @@ const BookingDetailsPage = () => {
           {t('Booking')} #{booking.id}
         </Title>
 
-        <p>
-          <Label>{t('Salon')}:</Label> {booking.salon_name}
-        </p>
+          <p>
+            <Label>{t('Salon')}:</Label> {capitalizeName(booking.salon_name)}
+          </p>
 
         <p>
           <Label>{t('Status')}:</Label>{' '}
