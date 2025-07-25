@@ -1,6 +1,10 @@
 import styled from 'styled-components'
 import TopBar from '../layout/TopBar'
 import useSignUp from '../../functionality/auth/UseSignUp'
+import FloatingLabel from 'react-bootstrap/FloatingLabel'
+import Form from 'react-bootstrap/Form'
+import 'bootstrap/dist/css/bootstrap.min.css'
+
 
 const Container = styled.div`
   max-width: 500px;
@@ -20,29 +24,9 @@ const Heading = styled.h2`
 `
 
 const FormGroup = styled.div`
-  margin-bottom: 1rem;
+  margin: 0 0 1.2rem;
 `
 
-const Label = styled.label`
-  display: block;
-  margin-bottom: 0.3rem;
-  font-size: 0.95rem;
-`
-
-const Input = styled.input`
-  width: 100%;
-  padding: 0.6rem 0.8rem;
-  border: 1px solid #444;
-  border-radius: 0.5rem;
-  background-color: #121212;
-  color: #f0f8ff;
-  font-size: 1rem;
-
-  &:focus {
-    outline: none;
-    border-color: #4f8ef7;
-  }
-`
 
 const ErrorText = styled.div`
   color: #f44336;
@@ -83,23 +67,21 @@ const SignInLink = styled.a`
   }
 `
 const SignUp = () => {
+  const { t, error, handleSignUp } = useSignUp()
   const {
-    t,
-    email,
-    setEmail,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    confirmPassword,
-    setConfirmPassword,
-    error,
-    handleSignUp
-  } = useSignUp()
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm()
 
-  const onSubmit = (e) => {
-    e.preventDefault()
-    handleSignUp()
+  const onSubmit = (data) => {
+    handleSignUp({
+      email: data.email,
+      username: data.username,
+      password: data.password,
+      confirmPassword: data.confirmPassword
+    })
   }
 
   return (
@@ -108,49 +90,60 @@ const SignUp = () => {
       <Container>
         <Heading>{t('Sign Up')}</Heading>
 
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
-            <Label>{t('Username')}</Label>
-            <Input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder={t('Enter your username')}
-              required
-            />
+            <FloatingLabel controlId="signupUsername" label={t('Username')}>
+              <Form.Control
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder=" "
+                className="bg-dark text-light border-secondary"
+                required
+              />
+            </FloatingLabel>
           </FormGroup>
 
           <FormGroup>
-            <Label>{t('Email Address')}</Label>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={t('Enter your email')}
-              required
-            />
+            <FloatingLabel controlId="signupEmail" label={t('Email Address')}>
+              <Form.Control
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder=" "
+                className="bg-dark text-light border-secondary"
+                required
+              />
+            </FloatingLabel>
           </FormGroup>
 
           <FormGroup>
-            <Label>{t('Password')}</Label>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder={t('Enter your password')}
-              required
-            />
+            <FloatingLabel controlId="signupPassword" label={t('Password')}>
+              <Form.Control
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder=" "
+                className="bg-dark text-light border-secondary"
+                required
+              />
+            </FloatingLabel>
           </FormGroup>
 
           <FormGroup>
-            <Label>{t('Confirm Password')}</Label>
-            <Input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder={t('Confirm your password')}
-              required
-            />
+            <FloatingLabel
+              controlId="signupConfirmPassword"
+              label={t('Confirm Password')}
+            >
+              <Form.Control
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder=" "
+                className="bg-dark text-light border-secondary"
+                required
+              />
+            </FloatingLabel>
           </FormGroup>
 
           {error && <ErrorText>{error}</ErrorText>}

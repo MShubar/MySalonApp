@@ -55,6 +55,10 @@ const Item = styled.li`
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 0.75rem;
+
+  &:nth-child(even) {
+    background-color: #252525;
+  }
 `
 
 const ItemImage = styled.img`
@@ -178,13 +182,17 @@ const OrderDetailsPage = () => {
     )
   }
 
-  return (
-    <Container>
-      <Helmet>
-        <title>{`${t('Order')} #${order.id || t('Unknown')} ${t(
-          'Details'
-        )}`}</title>
-      </Helmet>
+    return (
+      <Container>
+        <Helmet>
+          <title>{`${t('Order')} #${order.id || t('Unknown')} ${t(
+            'Details'
+          )}`}</title>
+          <meta
+            name="description"
+            content="Detailed view of your order at MySalon."
+          />
+        </Helmet>
 
       <Card>
         <Heading>

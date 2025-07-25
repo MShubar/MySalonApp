@@ -1,7 +1,10 @@
 import styled from 'styled-components'
 import TopBar from '../layout/TopBar'
-import PropTypes from 'prop-types'
 import useSignIn from '../../functionality/auth/UseSignIn'
+import FloatingLabel from 'react-bootstrap/FloatingLabel'
+import Form from 'react-bootstrap/Form'
+import 'bootstrap/dist/css/bootstrap.min.css'
+
 const Container = styled.div`
   max-width: 500px;
   margin: 5rem auto;
@@ -20,29 +23,9 @@ const Heading = styled.h2`
 `
 
 const FormGroup = styled.div`
-  margin-bottom: 1rem;
+  margin: 0 0 1.2rem;
 `
 
-const Label = styled.label`
-  display: block;
-  margin-bottom: 0.3rem;
-  font-size: 0.95rem;
-`
-
-const Input = styled.input`
-  width: 100%;
-  padding: 0.6rem 0.8rem;
-  border: 1px solid #444;
-  border-radius: 0.5rem;
-  background-color: #121212;
-  color: #f0f8ff;
-  font-size: 1rem;
-
-  &:focus {
-    outline: none;
-    border-color: #4f8ef7;
-  }
-`
 
 const ErrorText = styled.div`
   color: #f44336;
@@ -87,19 +70,15 @@ import { AppContext } from '../../context/AppContext'
 
 const SignIn = () => {
   const { setUser } = useContext(AppContext)
+  const { t, error, handleSignIn } = useSignIn()
   const {
-    t,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    error,
-    handleSignIn
-  } = useSignIn()
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm()
 
-  const onSubmit = (e) => {
-    e.preventDefault()
-    handleSignIn()
+  const onSubmit = (data) => {
+    handleSignIn({ username: data.username, password: data.password })
   }
 
   return (
@@ -108,27 +87,37 @@ const SignIn = () => {
       <Container>
         <Heading>{t('Sign In')}</Heading>
 
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
-            <Label>{t('Username')}</Label>
-            <Input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder={t('Enter your username')}
-              required
-            />
+            <FloatingLabel
+              controlId="signinUsername"
+              label={t('Username')}
+            >
+              <Form.Control
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder=" "
+                className="bg-dark text-light border-secondary"
+                required
+              />
+            </FloatingLabel>
           </FormGroup>
 
           <FormGroup>
-            <Label>{t('Password')}</Label>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder={t('Enter your password')}
-              required
-            />
+            <FloatingLabel
+              controlId="signinPassword"
+              label={t('Password')}
+            >
+              <Form.Control
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder=" "
+                className="bg-dark text-light border-secondary"
+                required
+              />
+            </FloatingLabel>
           </FormGroup>
 
           {error && <ErrorText>{error}</ErrorText>}
@@ -143,10 +132,6 @@ const SignIn = () => {
       </Container>
     </>
   )
-}
-
-SignIn.propTypes = {
-  setUser: PropTypes.func.isRequired
 }
 
 export default SignIn

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import ErrorBoundary from './ErrorBoundary.jsx'
 import Sidebar from './components/Sidebar'
 import ProtectedRoute from './authPage/ProtectedRoute'
 
@@ -63,7 +64,8 @@ function App() {
           </div>
         )}
         <div className="content">
-          <Routes>
+          <ErrorBoundary>
+            <Routes>
             {/* Public Login Page */}
             <Route
               path="/"
@@ -275,7 +277,8 @@ function App() {
               }
             />
             <Route path="*" element={<NotFound />} />
-          </Routes>
+            </Routes>
+          </ErrorBoundary>
         </div>
       </div>
     </Router>
