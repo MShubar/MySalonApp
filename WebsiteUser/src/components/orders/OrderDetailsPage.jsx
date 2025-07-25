@@ -55,6 +55,10 @@ const Item = styled.li`
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 0.75rem;
+
+  &:nth-child(even) {
+    background-color: #252525;
+  }
 `
 
 const ItemImage = styled.img`

@@ -46,6 +46,25 @@ const Total = styled.div`
   font-weight: 600;
 `;
 
+const ItemList = styled.ul`
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+`
+
+const ItemRow = styled.li`
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  background-color: #2a2a2a;
+
+  &:nth-child(even) {
+    background-color: #252525;
+  }
+`
+
 const MyBookings = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -249,12 +268,9 @@ const MyBookings = () => {
                   {item.type === 'order' && (
                     <div className="mb-2">
                       <span className="text-secondary">{t('Items')}:</span>
-                      <ul className="list-unstyled ms-2 mt-1">
+                      <ItemList className="ms-2 mt-1">
                         {groupOrderItems(item.items).map((itm, i) => (
-                          <li
-                            key={i}
-                            className="mb-1 d-flex align-items-center"
-                          >
+                          <ItemRow key={i}>
                             {itm.image_url && (
                               <OrderItemImage
                                 src={itm.image_url}
@@ -270,9 +286,9 @@ const MyBookings = () => {
                                 BHD
                               </div>
                             </div>
-                          </li>
+                          </ItemRow>
                         ))}
-                      </ul>
+                      </ItemList>
                     </div>
                   )}
 
