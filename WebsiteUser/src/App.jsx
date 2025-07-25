@@ -49,6 +49,7 @@ import Privacy from './components/legal/Privacy';
 import backgroundImage from './assets/Background.png';
 import { AppContext } from './context/AppContext';
 import ScrollToTop from './components/ScrollToTop';
+import CookieConsent from './components/CookieConsent';
 
 const App = () => {
   const location = useLocation();
@@ -93,24 +94,42 @@ const App = () => {
               exit={{ opacity: 0 }}
             >
               <Routes>
-                <Route path="/" element={<NearestSalon userType={userType} userId={userId} />} />
-                <Route path="/salon/:id" element={<SalonDetails userId={userId} />} />
-                <Route path="/salon/:id/book" element={<SalonBooking userId={userId} />} />
+                <Route
+                  path="/"
+                  element={<NearestSalon userType={userType} userId={userId} />}
+                />
+                <Route
+                  path="/salon/:id"
+                  element={<SalonDetails userId={userId} />}
+                />
+                <Route
+                  path="/salon/:id/book"
+                  element={<SalonBooking userId={userId} />}
+                />
                 <Route path="/bookings" element={<MyBookings />} />
                 <Route path="/bookings/:id" element={<BookingDetailsPage />} />
                 <Route path="/orders/:id" element={<OrderDetailsPage />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/:id" element={<ProductDetails />} />
                 <Route path="/packages" element={<Packages />} />
-                <Route path="/favorites" element={<Favorites userId={userId} userType={userType} />} />
+                <Route
+                  path="/favorites"
+                  element={<Favorites userId={userId} userType={userType} />}
+                />
                 <Route path="/about" element={<About />} />
                 <Route path="/training" element={<Training />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/account" element={<Account user={user} />} />
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/signup" element={<SignUp />} />
-                <Route path="/edit-profile" element={<EditProfile userId={userId} />} />
-                <Route path="/change-password" element={<ChangePassword userId={userId} />} />
+                <Route
+                  path="/edit-profile"
+                  element={<EditProfile userId={userId} />}
+                />
+                <Route
+                  path="/change-password"
+                  element={<ChangePassword userId={userId} />}
+                />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/address" element={<AddressPage />} />
@@ -125,6 +144,7 @@ const App = () => {
 
       <ScrollToTop />
       <Footer />
+      <CookieConsent />
     </div>
   );
 };
