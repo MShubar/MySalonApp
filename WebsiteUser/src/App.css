@@ -1,0 +1,10 @@
+:root {
+  --primary-color: #f5277e;
+}
+
+input:focus,
+button:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
