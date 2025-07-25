@@ -13,6 +13,11 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   z-index: 1;
+
+  @media (max-width: var(--breakpoint-sm)) {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 `
 
 const BackButton = styled.button`
@@ -44,6 +49,11 @@ const LangButton = styled.button`
   &:hover {
     background: #4f8ef7;
     color: #fff;
+  }
+
+  @media (max-width: var(--breakpoint-sm)) {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
   }
 `
 

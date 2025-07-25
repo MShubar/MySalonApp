@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 import TopBar from '../layout/TopBar'
-import PropTypes from 'prop-types'
 import useSignIn from '../../functionality/auth/UseSignIn'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Form from 'react-bootstrap/Form'
 import 'bootstrap/dist/css/bootstrap.min.css'
+
 const Container = styled.div`
   max-width: 500px;
   margin: 5rem auto;
@@ -23,7 +23,7 @@ const Heading = styled.h2`
 `
 
 const FormGroup = styled.div`
-  margin-bottom: 1rem;
+  margin: 0 0 1.2rem;
 `
 
 
@@ -70,19 +70,15 @@ import { AppContext } from '../../context/AppContext'
 
 const SignIn = () => {
   const { setUser } = useContext(AppContext)
+  const { t, error, handleSignIn } = useSignIn()
   const {
-    t,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    error,
-    handleSignIn
-  } = useSignIn()
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm()
 
-  const onSubmit = (e) => {
-    e.preventDefault()
-    handleSignIn()
+  const onSubmit = (data) => {
+    handleSignIn({ username: data.username, password: data.password })
   }
 
   return (
@@ -91,7 +87,7 @@ const SignIn = () => {
       <Container>
         <Heading>{t('Sign In')}</Heading>
 
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
             <FloatingLabel
               controlId="signinUsername"
@@ -136,10 +132,6 @@ const SignIn = () => {
       </Container>
     </>
   )
-}
-
-SignIn.propTypes = {
-  setUser: PropTypes.func.isRequired
 }
 
 export default SignIn

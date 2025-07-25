@@ -1,13 +1,48 @@
 import React, { useState } from 'react'
-import { Spinner } from 'react-bootstrap'
+import LoadingSpinner from '../LoadingSpinner'
 import { Helmet } from 'react-helmet'
 import { useTranslation } from 'react-i18next'
+import styled from 'styled-components'
 import usePackages from '../../functionality/products/UsePackages'
 import ServerError from '../ServerError'
+
+const CheckOverlay = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #28a745;
+  color: #fff;
+  border-radius: 50%;
+  padding: 4px;
+  font-size: 1.1rem;
+  animation: fadeOut 1s forwards;
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+`
 
 const Packages = () => {
   const { t } = useTranslation()
   const [showFilters, setShowFilters] = useState(false)
+  const [addedIds, setAddedIds] = useState([])
+
+  const showCheckmark = (id) => {
+    setAddedIds((prev) => [...prev, id])
+    setTimeout(
+      () => setAddedIds((prev) => prev.filter((itemId) => itemId !== id)),
+      1000
+    )
+  }
+  const currencyFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'BHD',
+  });
 
   const {
     packages,
@@ -19,14 +54,18 @@ const Packages = () => {
     handleSort,
     getSortedPackages,
     adjustQty,
-    handleAddToCart
-  } = usePackages(t)
+    handleAddToCart,
+  } = usePackages(t);
 
-  return (
-    <div className="container mt-4" style={{ color: '#ddd' }}>
-      <Helmet>
-        <title>{t('Packages')}</title>
-      </Helmet>
+    return (
+      <div className="container mt-4" style={{ color: '#ddd' }}>
+        <Helmet>
+          <title>{t('Packages')}</title>
+          <meta
+            name="description"
+            content="Check out special packages and offers from MySalon."
+          />
+        </Helmet>
 
       <h2
         className="text-center mb-4"
@@ -50,7 +89,7 @@ const Packages = () => {
             boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
             textAlign: 'center',
             fontSize: '1.1rem',
-            fontWeight: '500'
+            fontWeight: '500',
           }}
         >
           <i className="bi bi-check-circle me-2"></i>
@@ -67,30 +106,23 @@ const Packages = () => {
           <i className="bi bi-funnel-fill me-1"></i> {t('Filters')}
         </button>
         {showFilters && (
-          <div className="d-flex flex-wrap gap-2 mb-2">
-            {['priceHigh', 'priceLow', 'name'].map((option) => (
-              <button
-                key={option}
-                onClick={() => handleSort(option)}
-                className={`btn btn-sm ${
-                  sortOption === option
-                    ? 'btn-primary'
-                    : 'btn-outline-secondary'
-                }`}
-              >
-                {option === 'priceHigh' && t('High to low')}
-                {option === 'priceLow' && t('Low to high')}
-                {option === 'name' && t('A-Z')}
-              </button>
-            ))}
+          <div className="mb-2" style={{ minWidth: 160 }}>
+            <select
+              className="form-select form-select-sm"
+              value={sortOption}
+              onChange={(e) => handleSort(e.target.value)}
+            >
+              <option value="">{t('Filters')}</option>
+              <option value="priceHigh">{t('High to low')}</option>
+              <option value="priceLow">{t('Low to high')}</option>
+              <option value="newest">{t('Newest')}</option>
+            </select>
           </div>
         )}
       </div>
 
       {loading ? (
-        <div className="d-flex justify-content-center my-5">
-          <Spinner animation="border" variant="light" />
-        </div>
+        <LoadingSpinner className="my-5" />
       ) : error ? (
         error.response?.status === 500 ? (
           <ServerError onRetry={retry} />
@@ -115,19 +147,19 @@ const Packages = () => {
                   overflow: 'hidden',
                   opacity: pack.quantity <= 0 ? 0.5 : 1,
                   backgroundColor: '#1f1f1f',
-                  color: '#ddd'
+                  color: '#ddd',
                 }}
               >
                 <div style={{ position: 'relative' }}>
                   {pack.image_url ? (
                     <img
                       src={pack.image_url}
-                      alt={pack.title}
+                      alt={`${pack.title} package image`}
                       className="card-img-top"
                       style={{
                         height: '180px',
                         objectFit: 'cover',
-                        borderBottom: '1px solid #444'
+                        borderBottom: '1px solid #444',
                       }}
                     />
                   ) : (
@@ -142,6 +174,11 @@ const Packages = () => {
                     <span className="badge bg-danger position-absolute top-0 end-0 m-2">
                       {t('Sold Out')}
                     </span>
+                  )}
+                  {addedIds.includes(pack.id) && (
+                    <CheckOverlay>
+                      <i className="bi bi-check-lg"></i>
+                    </CheckOverlay>
                   )}
                 </div>
 
@@ -158,7 +195,7 @@ const Packages = () => {
                     style={{
                       fontSize: '0.9rem',
                       color: '#bbb',
-                      minHeight: '48px'
+                      minHeight: '48px',
                     }}
                   >
                     {pack.description?.length > 60
@@ -201,15 +238,18 @@ const Packages = () => {
                     style={{
                       fontSize: '1rem',
                       fontWeight: '600',
-                      color: '#f0e68c'
+                      color: '#f0e68c',
                     }}
                   >
-                    {Number(pack.price).toFixed(2)} BHD
+                    {currencyFormatter.format(pack.price)}
                   </div>
 
                   <button
                     className="btn btn-success w-100 mt-auto"
-                    onClick={() => handleAddToCart(pack, pack.selectedQty || 1)}
+                    onClick={() => {
+                      handleAddToCart(pack, pack.selectedQty || 1)
+                      showCheckmark(pack.id)
+                    }}
                     disabled={pack.quantity <= 0}
                   >
                     <i className="bi bi-cart-plus me-2"></i> {t('Add to Cart')}
@@ -221,7 +261,7 @@ const Packages = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Packages
+export default Packages;

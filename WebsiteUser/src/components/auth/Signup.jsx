@@ -5,6 +5,7 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import Form from 'react-bootstrap/Form'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
+
 const Container = styled.div`
   max-width: 500px;
   margin: 5rem auto;
@@ -23,7 +24,7 @@ const Heading = styled.h2`
 `
 
 const FormGroup = styled.div`
-  margin-bottom: 1rem;
+  margin: 0 0 1.2rem;
 `
 
 
@@ -66,23 +67,21 @@ const SignInLink = styled.a`
   }
 `
 const SignUp = () => {
+  const { t, error, handleSignUp } = useSignUp()
   const {
-    t,
-    email,
-    setEmail,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    confirmPassword,
-    setConfirmPassword,
-    error,
-    handleSignUp
-  } = useSignUp()
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm()
 
-  const onSubmit = (e) => {
-    e.preventDefault()
-    handleSignUp()
+  const onSubmit = (data) => {
+    handleSignUp({
+      email: data.email,
+      username: data.username,
+      password: data.password,
+      confirmPassword: data.confirmPassword
+    })
   }
 
   return (
@@ -91,7 +90,7 @@ const SignUp = () => {
       <Container>
         <Heading>{t('Sign Up')}</Heading>
 
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
             <FloatingLabel controlId="signupUsername" label={t('Username')}>
               <Form.Control
