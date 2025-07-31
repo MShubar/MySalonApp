@@ -31,11 +31,11 @@ app.use(cors());
 
 app.use(bodyParser.json());
 app.use(express.json());
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
-app.use(limiter);
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max: 100,
+// });
+// app.use(limiter);
 
 // Log requests in development mode
 if (process.env.NODE_ENV === 'development') {
@@ -59,6 +59,8 @@ const favoriteRoutes = require('./routes/favorites');
 const serviceRouter = require('./routes/service');
 const cartRouter = require('./routes/cart');
 const orderRouter = require('./routes/orders');
+const trainingRouter = require('./routes/training');
+
 app.use('/users', userAuthRoutes);
 app.use('/admins', adminAuthRoutes);
 app.use('/salons', salonAuthRoutes);
@@ -72,6 +74,7 @@ app.use('/approval', approvalRouter);
 app.use('/favorites', favoriteRoutes);
 app.use('/cart', cartRouter);
 app.use('/orders', orderRouter);
+app.use('/trainings', trainingRouter);
 
 // 404 handler
 app.use((req, res) => res.status(404).json({ message: 'Not Found' }));

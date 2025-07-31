@@ -6,7 +6,11 @@ import styled from 'styled-components';
 import useMyBookings from '../../functionality/orders/UseMyBookings';
 import ServerError from '../ServerError';
 import capitalizeName from '../../utils/capitalizeName';
-
+import FilterButton from '../FilterButton';
+import SearchBar from '../SearchBar';
+import { useSearchFilter } from '../../functionality/UseSearchFilter';
+import NoDataView from '../NoDataView';
+import ButtonWithIcon from '../ButtonWithIcon';
 const Container = styled.div`
   color: #ddd;
 `;
@@ -51,7 +55,7 @@ const ItemList = styled.ul`
   list-style: none;
   padding-left: 0;
   margin-left: 0;
-`
+`;
 
 const ItemRow = styled.li`
   display: flex;
@@ -64,7 +68,7 @@ const ItemRow = styled.li`
   &:nth-child(even) {
     background-color: #252525;
   }
-`
+`;
 
 const MyBookings = () => {
   const { t } = useTranslation();
@@ -84,7 +88,7 @@ const MyBookings = () => {
     ordersLoading,
     bookingsError,
     ordersError,
-    filteredData,
+    filteredData: bookingsAndOrders,
     formatDate,
     formatTime,
     groupOrderItems,
@@ -93,6 +97,16 @@ const MyBookings = () => {
     bookingsRetry,
     ordersRetry,
   } = useMyBookings(t, user);
+
+  // Integrating the search filter with the filtered data
+  const {
+    searchQuery,
+    setSearchQuery,
+    filteredData: searchFilteredData,
+  } = useSearchFilter(
+    bookingsAndOrders,
+    'salon_name' // Adjust the field for filtering as needed
+  );
 
   const typeFilters = ['All', 'Bookings', 'Orders'];
   const dateFilters = ['All', 'Today', 'Upcoming', 'Past'];
@@ -173,6 +187,13 @@ const MyBookings = () => {
     );
   }
 
+  // Filter the bookings and orders based on search query
+  const filteredBookingsAndOrders = searchFilteredData.filter((item) =>
+    item.type === 'booking'
+      ? item.salon_name.toLowerCase().includes(searchQuery.toLowerCase())
+      : item.id.toString().includes(searchQuery)
+  );
+
   return (
     <Container className="container mt-4">
       <Helmet>
@@ -187,13 +208,18 @@ const MyBookings = () => {
         📖 {t('My Bookings & Orders')} 📖
       </Header>
 
+      {/* Search Bar */}
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        placeholderKey="Search bookings and orders"
+      />
+
       <div className="d-flex justify-content-between mb-3">
-        <button
-          className="btn btn-outline-primary btn-sm"
-          onClick={() => setShowFilters(!showFilters)}
-        >
-          <i className="bi bi-funnel-fill fs-5"></i> {t('Filters')}
-        </button>
+        <FilterButton
+          showFilters={showFilters}
+          toggleFilters={() => setShowFilters(!showFilters)}
+        />
       </div>
 
       {showFilters && (
@@ -227,13 +253,11 @@ const MyBookings = () => {
         </div>
       )}
 
-      {filteredData.length === 0 ? (
-        <p className="text-center text-muted fst-italic">
-          {t('No Bookings or Orders Found')}
-        </p>
+      {filteredBookingsAndOrders.length === 0 ? (
+        <NoDataView message={t('No Bookings or Orders Found')} />
       ) : (
         <div className="row">
-          {filteredData.map((item, idx) => (
+          {filteredBookingsAndOrders.map((item, idx) => (
             <div
               key={item.id || idx}
               className="col-md-4 mb-4"
@@ -308,28 +332,24 @@ const MyBookings = () => {
                     ['active', 'pending'].includes(
                       item.status?.toLowerCase()
                     ) && (
-                      <button
-                        className="btn btn-danger mt-3 w-100"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRequestCancel(item.id);
-                        }}
+                      <ButtonWithIcon
+                        type="cancel"
+                        onClick={handleRequestCancel}
+                        width="100%"
                       >
                         {t('Cancel')}
-                      </button>
+                      </ButtonWithIcon>
                     )}
 
                   {item.type === 'order' &&
                     item.status?.toLowerCase() === 'pending' && (
-                      <button
-                        className="btn btn-danger w-100 mt-3"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRequestCancelOrder(item.id);
-                        }}
+                      <ButtonWithIcon
+                        type="cancel"
+                        onClick={handleRequestCancel}
+                        width="100%"
                       >
                         {t('Cancel')}
-                      </button>
+                      </ButtonWithIcon>
                     )}
                 </div>
               </CardStyled>

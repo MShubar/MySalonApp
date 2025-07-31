@@ -51,6 +51,7 @@ import backgroundImage from './assets/Background.png';
 import { AppContext } from './context/AppContext';
 import ScrollToTop from './components/ScrollToTop';
 import PageTransition from './components/PageTransition.jsx';
+import TrainingDetails from './components/products/TrainingDetails.jsx';
 
 const App = () => {
   const location = useLocation();
@@ -218,6 +219,15 @@ const App = () => {
                   </PageTransition>
                 }
               />
+              <Route
+                path="/training/:id"
+                element={
+                  <PageTransition>
+                    <TrainingDetails />
+                  </PageTransition>
+                }
+              />
+
               <Route
                 path="/contact"
                 element={

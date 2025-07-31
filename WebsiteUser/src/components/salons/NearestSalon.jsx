@@ -1,25 +1,31 @@
-import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Helmet } from 'react-helmet'
-import { useNavigate } from 'react-router-dom'
-import { motion as Motion } from 'framer-motion'
-import styled, { keyframes } from 'styled-components'
-import PropTypes from 'prop-types'
-import useNearestSalons from '../../functionality/salons/useNearestSalons'
-import ServerError from '../ServerError'
+import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet';
+import { useNavigate } from 'react-router-dom';
+import { motion as Motion } from 'framer-motion';
+import styled, { keyframes } from 'styled-components';
+import PropTypes from 'prop-types';
+import useNearestSalons from '../../functionality/salons/useNearestSalons';
+import ServerError from '../ServerError';
+import LoadingView from '../LoadingView';
+import NoDataView from '../NoDataView';
+import FilterButton from '../FilterButton';
+import SearchBar from '../SearchBar';
+import { useSearchFilter } from '../../functionality/UseSearchFilter';
+import ButtonWithIcon from '../ButtonWithIcon';
 
 const Container = styled.div`
   color: #ddd;
-`
+`;
 
 const Header = styled.h2`
   color: #222;
   font-weight: 700;
-`
+`;
 
 const FilterContainer = styled.div`
   background-color: #2a2a2a;
-`
+`;
 
 const CardStyled = styled.div`
   background-color: #242424;
@@ -27,40 +33,40 @@ const CardStyled = styled.div`
   border: 1px solid #444;
   border-radius: 16px;
   overflow: hidden;
-`
+`;
 
 const CardImage = styled.img`
   height: 200px;
   object-fit: cover;
-`
+`;
 
 const Placeholder = styled.div`
   height: 200px;
   font-size: 72px;
   color: #ddd;
-`
+`;
 
 const CardTitle = styled.h5`
   color: #a3c1f7;
   font-weight: bold;
-`
+`;
 
 const RatingDistance = styled.div`
   font-size: 0.95rem;
-`
+`;
 
 const ServiceBadge = styled.span`
   border-radius: 20px;
   background-color: #254d8f;
   color: #f0f8ff;
   font-size: 0.8rem;
-`
+`;
 
 const shimmer = keyframes`
   100% {
     transform: translateX(100%);
   }
-`
+`;
 
 const LoadingCard = styled.div`
   height: 250px;
@@ -76,16 +82,20 @@ const LoadingCard = styled.div`
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
     animation: ${shimmer} 1.5s infinite;
   }
-`
+`;
 
 const NearestSalon = ({ userType, userId }) => {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-  const [showFilters, setShowFilters] = useState(false)
-  const [searchQuery, setSearchQuery] = useState('')
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [showFilters, setShowFilters] = useState(false);
 
   const {
     loading,
@@ -99,77 +109,64 @@ const NearestSalon = ({ userType, userId }) => {
     sortBy,
     setSortBy,
     toggleFavorite,
-    retry
-  } = useNearestSalons(userType, userId)
+    retry,
+  } = useNearestSalons(userType, userId);
+
+  const { searchQuery, setSearchQuery, filteredData } = useSearchFilter(
+    salons,
+    'name'
+  );
+
+  const sortedSalons = useMemo(() => {
+    return [...filteredData].sort((a, b) => {
+      if (sortBy === 'distance') {
+        return a.distance - b.distance;
+      }
+      if (sortBy === 'rating') {
+        return b.rating - a.rating;
+      }
+      return 0;
+    });
+  }, [filteredData, sortBy]);
 
   if (loading) {
-    return (
-      <Container className="container mt-4">
-        <div className="row">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="col-md-4 mb-4">
-              <LoadingCard />
-            </div>
-          ))}
-        </div>
-      </Container>
-    )
+    return <LoadingView count={6} />;
   }
 
   if (error) {
     if (error.response?.status === 500) {
-      return <ServerError onRetry={retry} />
+      return <ServerError onRetry={retry} />;
     }
     return (
       <div className="text-center mt-5 text-danger">
         {t('Failed to load salons')}
       </div>
-    )
+    );
   }
 
-  // Filter and sort
-  const filteredSalons = salons.filter((salon) => {
-    const meetsRating = salon.rating >= minRating
-    const meetsDistance =
-      salon.distance !== null ? salon.distance <= maxDistance : false
-    const nameMatches = salon.name
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase())
-    return meetsRating && meetsDistance && nameMatches
-  })
-
-  const sortedSalons = [...filteredSalons].sort((a, b) => {
-    if (sortBy === 'distance') {
-      if (a.distance === null) return 1
-      if (b.distance === null) return -1
-      return a.distance - b.distance
-    } else if (sortBy === 'rating') {
-      return b.rating - a.rating
-    }
-    return 0
-  })
-
-    return (
-      <Container className="container mt-4">
-        <Helmet>
-          <title>{t('Nearest Salons')}</title>
-          <meta
-            name="description"
-            content="Find salons closest to you and book an appointment."
-          />
-        </Helmet>
+  return (
+    <Container className="container mt-4">
+      <Helmet>
+        <title>{t('Nearest Salons')}</title>
+        <meta
+          name="description"
+          content="Find salons closest to you and book an appointment."
+        />
+      </Helmet>
 
       <Header className="text-center mb-4"> {t('Nearest Salons')} </Header>
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        placeholderKey="Search salons"
+      />
 
       {/* Filter and Sort Buttons */}
       <div className="d-flex justify-content-between mb-3 align-items-center gap-2 flex-wrap">
-        <button
-          className="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"
-          onClick={() => setShowFilters(!showFilters)}
-          aria-expanded={showFilters}
-        >
-          <i className="bi bi-funnel-fill fs-5"></i> {t('Filters')}
-        </button>
+        <FilterButton
+          showFilters={showFilters}
+          toggleFilters={() => setShowFilters(!showFilters)}
+        />
 
         <button
           className="btn btn-outline-primary btn-sm"
@@ -233,23 +230,13 @@ const NearestSalon = ({ userType, userId }) => {
         </FilterContainer>
       )}
 
-      <input
-        type="text"
-        className="form-control mb-3"
-        placeholder={t('Search salons')}
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-
       {/* Salon Cards */}
       {sortedSalons.length === 0 ? (
-        <p className="text-center text-muted fst-italic">
-          {t('No Salons Found')}
-        </p>
+        <NoDataView message={t('No Salons Found')} />
       ) : (
         <div className="row">
           {sortedSalons.map((salon) => {
-            const isFavorited = favorites.has(salon.id)
+            const isFavorited = favorites.has(salon.id);
             return (
               <Motion.div
                 key={salon.id}
@@ -306,44 +293,47 @@ const NearestSalon = ({ userType, userId }) => {
                     )}
 
                     <div className="mt-auto d-flex gap-2">
-                      <button
+                      <ButtonWithIcon
+                        type="save"
                         onClick={() => toggleFavorite(salon.id)}
-                        className="btn btn-outline-warning flex-fill"
+                        width="100%"
                       >
-                        <i
-                          className={
-                            isFavorited ? 'bi bi-star-fill' : 'bi bi-star'
-                          }
-                        ></i>{' '}
-                        {isFavorited ? t('Saved') : t('Save')}
-                      </button>
-                      <button
-                        className="btn btn-primary flex-fill"
+                        {t('Save')}
+                      </ButtonWithIcon>
+                      <ButtonWithIcon
+                        type="view"
                         onClick={() => navigate(`/salon/${salon.id}`)}
+                        width="100%"
                       >
                         {t('View')}
-                      </button>
-                      <button
-                        className="btn btn-success flex-fill"
+                      </ButtonWithIcon>
+
+                      <ButtonWithIcon
+                        type="book"
                         onClick={() => navigate(`/salon/${salon.id}/book`)}
+                        width="100%"
                       >
                         {t('Book')}
-                      </button>
+                      </ButtonWithIcon>
                     </div>
                   </div>
                 </CardStyled>
               </Motion.div>
-            )
+            );
           })}
         </div>
       )}
     </Container>
-  )
-}
+  );
+};
 
 NearestSalon.propTypes = {
   userType: PropTypes.string,
-  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
-}
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
 
-export default NearestSalon
+NearestSalon.defaultProps = {
+  userType: 'regular', // Default value for userType
+};
+
+export default NearestSalon;

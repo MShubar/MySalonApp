@@ -1,26 +1,29 @@
-import React, { useState } from 'react'
-import LoadingSpinner from '../LoadingSpinner'
-import { useTranslation } from 'react-i18next'
-import { Helmet } from 'react-helmet'
-import { useNavigate } from 'react-router-dom'
-import { motion as Motion } from 'framer-motion'
-import styled from 'styled-components'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import useFavorites from '../../functionality/products/UseFavorites'
-import ServerError from '../ServerError'
+import React, { useState } from 'react';
+import LoadingSpinner from '../LoadingSpinner';
+import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet';
+import { useNavigate } from 'react-router-dom';
+import { motion as Motion } from 'framer-motion';
+import styled from 'styled-components';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import useFavorites from '../../functionality/products/UseFavorites';
+import ServerError from '../ServerError';
+import LoadingView from '../LoadingView';
+import NoDataView from '../NoDataView';
+import ButtonWithIcon from '../ButtonWithIcon';
 
 const Container = styled.div`
   color: #ddd;
-`
+`;
 
 const Header = styled.h2`
   color: #222;
   font-weight: 700;
-`
+`;
 
 const FilterContainer = styled.div`
   background-color: #2a2a2a;
-`
+`;
 
 const CardStyled = styled.div`
   background-color: #242424;
@@ -28,108 +31,112 @@ const CardStyled = styled.div`
   border: 1px solid #444;
   border-radius: 16px;
   overflow: hidden;
-`
+`;
 
 const CardImage = styled.img`
   height: 200px;
   object-fit: cover;
-`
+`;
 
 const Placeholder = styled.div`
   height: 200px;
   font-size: 72px;
   color: #ddd;
-`
+`;
 
 const CardTitle = styled.h5`
   color: #a3c1f7;
   font-weight: bold;
-`
+`;
 
 const RatingDistance = styled.div`
   font-size: 0.95rem;
-`
+`;
 
 const ServiceBadge = styled.span`
   border-radius: 20px;
   background-color: #254d8f;
   color: #f0f8ff;
   font-size: 0.8rem;
-`
+`;
 
 const Favorites = ({ userId, userType }) => {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-  const [minRating, setMinRating] = useState(0)
-  const [maxDistance, setMaxDistance] = useState(100)
-  const [sortBy, setSortBy] = useState('distance')
-  const [showFilters, setShowFilters] = useState(false)
-  const [categoryFilter, setCategoryFilter] = useState('')
-  const [minPrice, setMinPrice] = useState('')
-  const [maxPrice, setMaxPrice] = useState('')
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [minRating, setMinRating] = useState(0);
+  const [maxDistance, setMaxDistance] = useState(100);
+  const [sortBy, setSortBy] = useState('distance');
+  const [showFilters, setShowFilters] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
 
   const { favorites, loading, error, toggleFavorite, retry } = useFavorites(
     userId,
     userType
-  )
+  );
 
   if (loading) {
-    return <LoadingSpinner className="py-4" />
+    return <LoadingView className="py-4" />;
   }
 
   if (error) {
     if (error.response?.status === 500) {
-      return <ServerError onRetry={retry} />
+      return <ServerError onRetry={retry} />;
     }
     return (
       <div className="text-center mt-5 text-danger">
         {t('Failed to load favorites')}
       </div>
-    )
+    );
   }
 
   const categories = Array.from(
     new Set(favorites.map((p) => p.category).filter(Boolean))
-  )
+  );
 
   const filteredFavorites = favorites.filter((product) => {
     const meetsCategory =
-      categoryFilter === '' || product.category === categoryFilter
-    const price = Number(product.price)
+      categoryFilter === '' || product.category === categoryFilter;
+    const price = Number(product.price);
     const meetsMinPrice =
-      minPrice === '' || (!isNaN(price) && price >= Number(minPrice))
+      minPrice === '' || (!isNaN(price) && price >= Number(minPrice));
     const meetsMaxPrice =
-      maxPrice === '' || (!isNaN(price) && price <= Number(maxPrice))
+      maxPrice === '' || (!isNaN(price) && price <= Number(maxPrice));
 
-    const meetsRating = product.rating >= minRating
+    const meetsRating = product.rating >= minRating;
     const meetsDistance =
-      product.distance !== null ? product.distance <= maxDistance : false
+      product.distance !== null ? product.distance <= maxDistance : false;
 
     return (
-      meetsCategory && meetsMinPrice && meetsMaxPrice && meetsRating && meetsDistance
-    )
-  })
+      meetsCategory &&
+      meetsMinPrice &&
+      meetsMaxPrice &&
+      meetsRating &&
+      meetsDistance
+    );
+  });
 
   const sortedFavorites = [...filteredFavorites].sort((a, b) => {
     if (sortBy === 'distance') {
-      if (a.distance === null) return 1
-      if (b.distance === null) return -1
-      return a.distance - b.distance
+      if (a.distance === null) return 1;
+      if (b.distance === null) return -1;
+      return a.distance - b.distance;
     } else if (sortBy === 'rating') {
-      return b.rating - a.rating
+      return b.rating - a.rating;
     }
-    return 0
-  })
+    return 0;
+  });
 
-    return (
-      <Container className="container mt-4">
-        <Helmet>
-          <title>{t('Favorites')}</title>
-          <meta
-            name="description"
-            content="Your saved salons and products at MySalon."
-          />
-        </Helmet>
+  return (
+    <Container className="container mt-4">
+      <Helmet>
+        <title>{t('Favorites')}</title>
+        <meta
+          name="description"
+          content="Your saved salons and products at MySalon."
+        />
+      </Helmet>
 
       <Header className="text-center mb-4"> {t('Favorites')} </Header>
 
@@ -205,7 +212,11 @@ const Favorites = ({ userId, userType }) => {
 
           {categories.length > 0 && (
             <div className="mb-3">
-              <label htmlFor="categoryFilter" className="form-label" style={{ color: '#ccc' }}>
+              <label
+                htmlFor="categoryFilter"
+                className="form-label"
+                style={{ color: '#ccc' }}
+              >
                 {t('Category')}
               </label>
               <select
@@ -225,7 +236,11 @@ const Favorites = ({ userId, userType }) => {
           )}
 
           <div className="mb-3">
-            <label htmlFor="minPrice" className="form-label" style={{ color: '#ccc' }}>
+            <label
+              htmlFor="minPrice"
+              className="form-label"
+              style={{ color: '#ccc' }}
+            >
               {t('Min Price')}
             </label>
             <input
@@ -239,7 +254,11 @@ const Favorites = ({ userId, userType }) => {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="maxPrice" className="form-label" style={{ color: '#ccc' }}>
+            <label
+              htmlFor="maxPrice"
+              className="form-label"
+              style={{ color: '#ccc' }}
+            >
               {t('Max Price')}
             </label>
             <input
@@ -255,9 +274,7 @@ const Favorites = ({ userId, userType }) => {
       )}
 
       {sortedFavorites.length === 0 ? (
-        <p className="text-center text-muted fst-italic">
-          {t('No Salons Found')}
-        </p>
+        <NoDataView message={'No Salons Found'} />
       ) : (
         <div className="row">
           {sortedFavorites.map((salon) => (
@@ -314,24 +331,28 @@ const Favorites = ({ userId, userType }) => {
                   )}
 
                   <div className="mt-auto d-flex gap-2">
-                    <button
+                    <ButtonWithIcon
+                      type="save"
                       onClick={() => toggleFavorite(salon.id)}
-                      className="btn btn-outline-warning flex-fill"
+                      width="100%"
                     >
-                      <i className="bi bi-star-fill"></i> {t('Saved')}
-                    </button>
-                    <button
-                      className="btn btn-primary flex-fill"
+                      {t('Save')}
+                    </ButtonWithIcon>
+                    <ButtonWithIcon
+                      type="view"
                       onClick={() => navigate(`/salon/${salon.id}`)}
+                      width="100%"
                     >
                       {t('View')}
-                    </button>
-                    <button
-                      className="btn btn-success flex-fill"
+                    </ButtonWithIcon>
+
+                    <ButtonWithIcon
+                      type="book"
                       onClick={() => navigate(`/salon/${salon.id}/book`)}
+                      width="100%"
                     >
                       {t('Book')}
-                    </button>
+                    </ButtonWithIcon>
                   </div>
                 </div>
               </CardStyled>
@@ -340,7 +361,7 @@ const Favorites = ({ userId, userType }) => {
         </div>
       )}
     </Container>
-  )
-}
+  );
+};
 
-export default Favorites
+export default Favorites;

@@ -1,16 +1,19 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { Button, Alert, Row, Col, Card } from 'react-bootstrap'
-import { Helmet } from 'react-helmet'
-import LoadingSpinner from '../LoadingSpinner'
-import { useTranslation } from 'react-i18next'
-import moment from 'moment'
-import PropTypes from 'prop-types'
-import { useSalonBooking } from '../../functionality/orders/UseSalonBooking'
+import { useParams, useNavigate } from 'react-router-dom';
+import { Button, Alert, Row, Col, Card } from 'react-bootstrap';
+import { Helmet } from 'react-helmet';
+import LoadingSpinner from '../LoadingSpinner';
+import { useTranslation } from 'react-i18next';
+import moment from 'moment';
+import PropTypes from 'prop-types';
+import { useSalonBooking } from '../../functionality/orders/UseSalonBooking';
+import NoDataView from '../NoDataView';
+import LoadingView from '../LoadingView';
+import ButtonWithIcon from '../ButtonWithIcon';
 
 const SalonBooking = ({ userId }) => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const { t } = useTranslation()
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const {
     salon,
@@ -29,13 +32,13 @@ const SalonBooking = ({ userId }) => {
     error,
     success,
     slotsWithStatus,
-    handleBookingSubmit
-  } = useSalonBooking({ salonId: id, userId, t, navigate })
+    handleBookingSubmit,
+  } = useSalonBooking({ salonId: id, userId, t, navigate });
 
   const handleAddToCalendar = () => {
-    if (!salon || !date || !time) return
-    const start = moment(`${date} ${time}`, 'YYYY-MM-DD HH:mm')
-    const end = start.clone().add(totalDuration || 60, 'minutes')
+    if (!salon || !date || !time) return;
+    const start = moment(`${date} ${time}`, 'YYYY-MM-DD HH:mm');
+    const end = start.clone().add(totalDuration || 60, 'minutes');
     const icsContent = [
       'BEGIN:VCALENDAR',
       'VERSION:2.0',
@@ -48,23 +51,25 @@ const SalonBooking = ({ userId }) => {
       `SUMMARY:Appointment at ${salon.name}`,
       `DESCRIPTION:${notes || ''}`,
       'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\r\n')
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = 'booking.ics'
-    link.click()
-    URL.revokeObjectURL(url)
-  }
+      'END:VCALENDAR',
+    ].join('\r\n');
+    const blob = new Blob([icsContent], {
+      type: 'text/calendar;charset=utf-8',
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'booking.ics';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   if (loading) {
-    return <LoadingSpinner className="mt-5" />
+    return <LoadingView className="mt-5" />;
   }
 
   if (!salon) {
-    return <p className="text-center text-muted mt-5">{t('Salon not found')}</p>
+    return <NoDataView message={'No Salon Found'} />;
   }
 
   return (
@@ -75,7 +80,7 @@ const SalonBooking = ({ userId }) => {
         backgroundColor: '#1f1f1f',
         minHeight: '80vh',
         padding: '1.5rem',
-        borderRadius: '12px'
+        borderRadius: '12px',
       }}
     >
       <Helmet>
@@ -99,13 +104,13 @@ const SalonBooking = ({ userId }) => {
       {success && (
         <>
           <Alert variant="success">{success}</Alert>
-          <Button
-            variant="outline-light"
-            className="mb-3"
+          <ButtonWithIcon
+            type="book"
             onClick={handleAddToCalendar}
+            width="100%"
           >
             {t('Add to calendar')}
-          </Button>
+          </ButtonWithIcon>
         </>
       )}
 
@@ -128,7 +133,7 @@ const SalonBooking = ({ userId }) => {
                 style={{
                   backgroundColor: '#333',
                   border: '1px solid #555',
-                  color: '#f0f8ff'
+                  color: '#f0f8ff',
                 }}
               />
             </Card>
@@ -145,7 +150,7 @@ const SalonBooking = ({ userId }) => {
                 style={{
                   overflowX: 'auto',
                   whiteSpace: 'nowrap',
-                  paddingBottom: '0.5rem'
+                  paddingBottom: '0.5rem',
                 }}
               >
                 {slotsWithStatus.map(
@@ -168,7 +173,7 @@ const SalonBooking = ({ userId }) => {
                         flex: '0 0 auto',
                         padding: '8px 12px',
                         opacity: disabled ? 0.6 : 1,
-                        fontWeight: withinSelectedRange ? 'bold' : 'normal'
+                        fontWeight: withinSelectedRange ? 'bold' : 'normal',
                       }}
                     >
                       <input
@@ -215,7 +220,7 @@ const SalonBooking = ({ userId }) => {
                       cursor: 'pointer',
                       flex: '1 0 45%',
                       border: '1px solid #555',
-                      textAlign: 'center'
+                      textAlign: 'center',
                     }}
                   >
                     <strong>{t(service.name)}</strong>
@@ -247,33 +252,23 @@ const SalonBooking = ({ userId }) => {
                 style={{
                   backgroundColor: '#333',
                   border: '1px solid #555',
-                  color: '#f0f8ff'
+                  color: '#f0f8ff',
                 }}
               />
             </Card>
           </Col>
         </Row>
 
-        <Button
-          type="submit"
-          variant="success"
-          className="mt-4 w-100"
-          style={{
-            backgroundColor: '#00bcd4',
-            border: 'none',
-            fontWeight: 'bold',
-            boxShadow: '0 0 10px rgba(0, 188, 212, 0.6)'
-          }}
-        >
+        <ButtonWithIcon type="book" onClick={handleAddToCalendar} width="100%">
           {t('Confirm Booking')}
-        </Button>
+        </ButtonWithIcon>
       </form>
     </div>
-  )
-}
+  );
+};
 
 SalonBooking.propTypes = {
-  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired
-}
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
 
-export default SalonBooking
+export default SalonBooking;

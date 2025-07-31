@@ -1,11 +1,12 @@
-import React from 'react'
-import { useParams, useLocation } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
-import styled from 'styled-components'
-import { useTranslation } from 'react-i18next'
-import { API_URL } from '../../config'
-import useFetch from '../../hooks/useFetch'
-import ServerError from '../ServerError'
+import React from 'react';
+import { useParams, useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
+import { API_URL } from '../../config';
+import useFetch from '../../hooks/useFetch';
+import ServerError from '../ServerError';
+import NoDataView from '../NoDataView';
 
 const Container = styled.div`
   max-width: 800px;
@@ -13,7 +14,7 @@ const Container = styled.div`
   padding: 1rem;
   color: #f0f8ff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-`
+`;
 
 const Card = styled.div`
   background-color: #1f1f1f;
@@ -21,17 +22,17 @@ const Card = styled.div`
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   padding: 1.5rem;
-`
+`;
 
 const Heading = styled.h2`
   margin-bottom: 1rem;
   text-transform: capitalize;
   color: #f0f8ff;
-`
+`;
 
 const Text = styled.p`
   margin: 0.5rem 0;
-`
+`;
 const Status = styled.span`
   color: ${({ $status }) =>
     $status === 'cancelled'
@@ -40,13 +41,13 @@ const Status = styled.span`
       ? '#4caf50'
       : '#f0e68c'};
   text-transform: capitalize;
-`
+`;
 
 const ItemList = styled.ul`
   list-style: none;
   padding: 0;
   margin-top: 1rem;
-`
+`;
 
 const Item = styled.li`
   display: flex;
@@ -59,7 +60,7 @@ const Item = styled.li`
   &:nth-child(even) {
     background-color: #252525;
   }
-`
+`;
 
 const ItemImage = styled.img`
   width: 50px;
@@ -68,7 +69,7 @@ const ItemImage = styled.img`
   border-radius: 8px;
   margin-right: 10px;
   border: 1px solid #444;
-`
+`;
 
 const Placeholder = styled.div`
   width: 50px;
@@ -81,7 +82,7 @@ const Placeholder = styled.div`
   justify-content: center;
   color: #aaa;
   font-size: 0.8rem;
-`
+`;
 
 const CancelButton = styled.button`
   background: #dc3545;
@@ -96,74 +97,69 @@ const CancelButton = styled.button`
   &:hover {
     background: #c82333;
   }
-`
+`;
 
 const OrderDetailsPage = () => {
-  const { t } = useTranslation()
-  const { id } = useParams()
-  const { state } = useLocation()
+  const { t } = useTranslation();
+  const { id } = useParams();
+  const { state } = useLocation();
 
   const {
     data: orderData,
     loading,
     error,
-    retry
+    retry,
   } = useFetch(
-    state?.order
-      ? null
-      : id
-      ? `${API_URL}/orders/order/${id}`
-      : null,
+    state?.order ? null : id ? `${API_URL}/orders/order/${id}` : null,
     [id]
-  )
+  );
 
-  const order = state?.order || orderData
+  const order = state?.order || orderData;
 
   const groupOrderItems = (items) => {
-    const grouped = {}
+    const grouped = {};
     items.forEach((item) => {
-      const key = item.id || item.name
+      const key = item.id || item.name;
       if (!grouped[key]) {
-        grouped[key] = { ...item, quantity: Number(item.quantity) }
+        grouped[key] = { ...item, quantity: Number(item.quantity) };
       } else {
-        grouped[key].quantity += Number(item.quantity)
+        grouped[key].quantity += Number(item.quantity);
       }
-    })
-    return Object.values(grouped)
-  }
+    });
+    return Object.values(grouped);
+  };
 
   const handleCancelOrder = async () => {
     try {
-      const res = await fetch(
-        `${API_URL}/orders/order/${id}/cancel`,
-        { method: 'PATCH' }
-      )
-      if (!res.ok) throw new Error(`HTTP error ${res.status}`)
-      window.location.reload()
+      const res = await fetch(`${API_URL}/orders/order/${id}/cancel`, {
+        method: 'PATCH',
+      });
+      if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+      window.location.reload();
     } catch (err) {
-      console.error('Error cancelling order:', err)
-      alert(t('Failed to cancel order.'))
+      console.error('Error cancelling order:', err);
+      alert(t('Failed to cancel order.'));
     }
-  }
+  };
 
   const formatDate = (dateStr) =>
     new Date(dateStr).toLocaleDateString('en-GB', {
       day: '2-digit',
       month: 'short',
-      year: 'numeric'
-    })
+      year: 'numeric',
+    });
 
   if (loading) {
     return (
       <Container>
         <Text>{t('Loading order details...')}</Text>
       </Container>
-    )
+    );
   }
 
   if (error) {
     if (error.response?.status === 500) {
-      return <ServerError onRetry={retry} />
+      return <ServerError onRetry={retry} />;
     }
     return (
       <Container>
@@ -171,28 +167,24 @@ const OrderDetailsPage = () => {
           {t('Failed to load order details.')}
         </Text>
       </Container>
-    )
+    );
   }
 
   if (!order) {
-    return (
-      <Container>
-        <Text>{t('No order found.')}</Text>
-      </Container>
-    )
+    return <NoDataView message={t('No order found.')} />;
   }
 
-    return (
-      <Container>
-        <Helmet>
-          <title>{`${t('Order')} #${order.id || t('Unknown')} ${t(
-            'Details'
-          )}`}</title>
-          <meta
-            name="description"
-            content="Detailed view of your order at MySalon."
-          />
-        </Helmet>
+  return (
+    <Container>
+      <Helmet>
+        <title>{`${t('Order')} #${order.id || t('Unknown')} ${t(
+          'Details'
+        )}`}</title>
+        <meta
+          name="description"
+          content="Detailed view of your order at MySalon."
+        />
+      </Helmet>
 
       <Card>
         <Heading>
@@ -254,13 +246,17 @@ const OrderDetailsPage = () => {
 
         {order.status?.toLowerCase() !== 'cancelled' &&
           order.status?.toLowerCase() !== 'completed' && (
-            <CancelButton onClick={handleCancelOrder}>
-              {t('Cancel Order')}
-            </CancelButton>
+            <ButtonWithIcon
+              type="cancel"
+              onClick={handleCancelOrder}
+              width="100%"
+            >
+              {t('Cancel')}
+            </ButtonWithIcon>
           )}
       </Card>
     </Container>
-  )
-}
+  );
+};
 
-export default OrderDetailsPage
+export default OrderDetailsPage;

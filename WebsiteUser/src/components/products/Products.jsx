@@ -1,12 +1,16 @@
-import React, { useState } from 'react'
-import LoadingSpinner from '../LoadingSpinner'
-import { Helmet } from 'react-helmet'
-import { useTranslation } from 'react-i18next'
-import { useNavigate, Link } from 'react-router-dom'
-import styled from 'styled-components'
-import useProducts from '../../functionality/products/UseProducts'
-import ServerError from '../ServerError'
-import QuickViewModal from './QuickViewModal'
+import React, { useState, useMemo } from 'react';
+import { Helmet } from 'react-helmet';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, Link } from 'react-router-dom';
+import styled from 'styled-components';
+import useProducts from '../../functionality/products/UseProducts';
+import ServerError from '../ServerError';
+import QuickViewModal from './QuickViewModal';
+import FilterButton from '../FilterButton';
+import SearchBar from '../SearchBar';
+import LoadingView from '../LoadingView';
+import NoDataView from '../NoDataView';
+import ButtonWithIcon from '../ButtonWithIcon';
 
 const Container = styled.div`
   color: #ddd;
@@ -93,12 +97,12 @@ const Price = styled.div`
 `;
 
 const Products = () => {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-  const [showFilters, setShowFilters] = useState(false)
-  const [addedIds, setAddedIds] = useState([])
-  const [searchTerm, setSearchTerm] = useState('')
-  const [quickViewProduct, setQuickViewProduct] = useState(null)
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [showFilters, setShowFilters] = useState(false);
+  const [addedIds, setAddedIds] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [quickViewProduct, setQuickViewProduct] = useState(null);
 
   const {
     products,
@@ -111,47 +115,44 @@ const Products = () => {
     getSortedProducts,
     adjustQty,
     handleAddToCart,
-  } = useProducts(t)
-
-  const clearFilters = () => {
-    setSearchTerm('')
-    handleSort('')
-    setShowFilters(false)
-  }
+  } = useProducts(t);
 
   const showCheckmark = (id) => {
-    setAddedIds((prev) => [...prev, id])
+    setAddedIds((prev) => [...prev, id]);
     setTimeout(
       () => setAddedIds((prev) => prev.filter((itemId) => itemId !== id)),
       1000
-    )
-  }
+    );
+  };
 
-  const openQuickView = (product) => setQuickViewProduct(product)
-  const closeQuickView = () => setQuickViewProduct(null)
+  const openQuickView = (product) => setQuickViewProduct(product);
+  const closeQuickView = () => setQuickViewProduct(null);
 
   const currencyFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'BHD',
-  })
+  });
 
-  const filteredProducts = getSortedProducts().filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredProducts = useMemo(() => {
+    const sortedProducts = getSortedProducts();
+    return sortedProducts.filter((product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [getSortedProducts, searchQuery]);
 
   if (loading) {
-    return <LoadingSpinner className="my-5" />
+    return <LoadingView className="my-5" />;
   }
 
   if (error) {
     if (error.response?.status === 500) {
-      return <ServerError onRetry={retry} />
+      return <ServerError onRetry={retry} />;
     }
     return (
       <div className="text-center mt-5 text-danger">
         {t('Failed to load products')}
       </div>
-    )
+    );
   }
 
   return (
@@ -173,31 +174,18 @@ const Products = () => {
         </SuccessOverlay>
       )}
 
-      <div className="mb-3">
-        <input
-          type="text"
-          className="form-control"
-          placeholder={t('Search products')}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
+      <SearchBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        placeholderKey="Search products"
+      />
 
       <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap">
         <div className="d-flex gap-2 mb-2">
-          <button
-            className="btn btn-outline-primary btn-sm"
-            onClick={() => setShowFilters(!showFilters)}
-            aria-expanded={showFilters}
-          >
-            <i className="bi bi-funnel-fill me-1"></i> {t('Filters')}
-          </button>
-          <button
-            className="btn btn-outline-secondary btn-sm"
-            onClick={clearFilters}
-          >
-            <i className="bi bi-x-circle me-1"></i> {t('Clear Filters')}
-          </button>
+          <FilterButton
+            showFilters={showFilters}
+            toggleFilters={() => setShowFilters(!showFilters)}
+          />
         </div>
         {showFilters && (
           <div className="d-flex flex-wrap gap-2 mb-2">
@@ -221,9 +209,7 @@ const Products = () => {
       </div>
 
       {filteredProducts.length === 0 ? (
-        <p className="text-center text-muted fst-italic">
-          {t('no_products_found')}
-        </p>
+        <NoDataView message={t('No Products Found')} />
       ) : (
         <div className="row">
           {filteredProducts.map((product) => (
@@ -290,8 +276,8 @@ const Products = () => {
                           <button
                             className="btn btn-outline-secondary btn-sm"
                             onClick={(e) => {
-                              e.stopPropagation()
-                              adjustQty(product.id, -1)
+                              e.stopPropagation();
+                              adjustQty(product.id, -1);
                             }}
                             disabled={product.selectedQty <= 1}
                           >
@@ -303,8 +289,8 @@ const Products = () => {
                           <button
                             className="btn btn-outline-secondary btn-sm"
                             onClick={(e) => {
-                              e.stopPropagation()
-                              adjustQty(product.id, 1)
+                              e.stopPropagation();
+                              adjustQty(product.id, 1);
                             }}
                             disabled={product.selectedQty >= product.quantity}
                           >
@@ -319,27 +305,29 @@ const Products = () => {
                     {currencyFormatter.format(product.price)}
                   </Price>
 
-                  <button
-                    className="btn btn-outline-info w-100 mb-2"
+                  <ButtonWithIcon
+                    type="quickview"
                     onClick={(e) => {
-                      e.stopPropagation()
-                      openQuickView(product)
+                      e.stopPropagation();
+                      openQuickView(product);
                     }}
+                    width="100%"
                   >
-                    <i className="bi bi-eye me-2"></i> {t('Quick View')}
-                  </button>
+                    {t('Quick View')}
+                  </ButtonWithIcon>
 
-                  <button
-                    className="btn btn-success w-100 mt-auto"
+                  <ButtonWithIcon
+                    type="addtocart"
                     onClick={(e) => {
-                      e.stopPropagation()
-                      handleAddToCart(product, product.selectedQty || 1)
-                      showCheckmark(product.id)
+                      e.stopPropagation();
+                      handleAddToCart(product, product.selectedQty || 1);
+                      showCheckmark(product.id);
                     }}
                     disabled={product.quantity <= 0}
+                    width="100%"
                   >
-                    <i className="bi bi-cart-plus me-2"></i> {t('Add to Cart')}
-                  </button>
+                    {t('Add to Cart')}
+                  </ButtonWithIcon>
                 </div>
               </CardStyled>
             </div>
@@ -351,8 +339,8 @@ const Products = () => {
         onHide={closeQuickView}
         product={quickViewProduct}
         onAddToCart={(prod, qty) => {
-          handleAddToCart(prod, qty)
-          showCheckmark(prod.id)
+          handleAddToCart(prod, qty);
+          showCheckmark(prod.id);
         }}
       />
     </Container>

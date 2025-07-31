@@ -1,17 +1,19 @@
-import { useParams } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
-import styled from 'styled-components'
-import { useTranslation } from 'react-i18next'
-import useBookingDetails from '../../functionality/orders/UseBookingDetails'
-import ServerError from '../ServerError'
-import capitalizeName from '../../utils/capitalizeName'
+import { useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import styled from 'styled-components';
+import { useTranslation } from 'react-i18next';
+import useBookingDetails from '../../functionality/orders/UseBookingDetails';
+import ServerError from '../ServerError';
+import capitalizeName from '../../utils/capitalizeName';
+import NoDataView from '../NoDataView';
+import ButtonWithIcon from '../ButtonWithIcon';
 
 const Container = styled.div`
   max-width: 800px;
   margin: 2rem auto;
   color: #f0f8ff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-`
+`;
 
 const Card = styled.div`
   background-color: #1f1f1f;
@@ -20,16 +22,16 @@ const Card = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   padding: 1.5rem;
   margin-bottom: 2rem;
-`
+`;
 
 const Title = styled.h2`
   text-transform: capitalize;
   margin-bottom: 1rem;
-`
+`;
 
 const Label = styled.span`
   font-weight: 600;
-`
+`;
 
 const Status = styled.span`
   color: ${(props) =>
@@ -39,19 +41,19 @@ const Status = styled.span`
       ? '#4caf50'
       : '#f0e68c'};
   text-transform: capitalize;
-`
+`;
 
 const ServiceList = styled.ul`
   list-style: none;
   padding: 0;
-`
+`;
 
 const ServiceItem = styled.li`
   background-color: #2a2a2a;
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 0.5rem;
-`
+`;
 
 const Button = styled.button`
   background-color: #f44336;
@@ -66,25 +68,25 @@ const Button = styled.button`
   &:hover {
     background-color: #d32f2f;
   }
-`
+`;
 
 const ErrorText = styled.p`
   color: #f44336;
   margin-top: 1rem;
-`
+`;
 
 const InfoText = styled.p`
   color: #ccc;
-`
+`;
 
 const LoadingContainer = styled.div`
   text-align: center;
   margin-top: 5rem;
-`
+`;
 
 const BookingDetailsPage = () => {
-  const { t } = useTranslation()
-  const { id } = useParams()
+  const { t } = useTranslation();
+  const { id } = useParams();
 
   const {
     booking,
@@ -93,56 +95,52 @@ const BookingDetailsPage = () => {
     retry,
     cancelError,
     handleCancelBooking,
-    formatDate
-  } = useBookingDetails(id, t)
+    formatDate,
+  } = useBookingDetails(id, t);
 
   if (loading) {
     return (
       <LoadingContainer>
         <p>{t('Loading booking details...')}</p>
       </LoadingContainer>
-    )
+    );
   }
 
   if (error) {
     if (error.response?.status === 500) {
-      return <ServerError onRetry={retry} />
+      return <ServerError onRetry={retry} />;
     }
     return (
       <LoadingContainer>
         <ErrorText>{t('Failed to load booking details.')}</ErrorText>
       </LoadingContainer>
-    )
+    );
   }
 
   if (!booking) {
-    return (
-      <LoadingContainer>
-        <p>{t('No booking found.')}</p>
-      </LoadingContainer>
-    )
+    return <NoDataView message={t('No booking found.')} />;
   }
 
-    return (
-      <Container>
-        <Helmet>
-          <title>{`${t('Booking')} #${booking.id || t('Unknown')} ${t(
-            'Details'
-          )}`}</title>
-          <meta
-            name="description"
-            content="Detailed view of your booking at MySalon."
-          />
-        </Helmet>
+  return (
+    <Container>
+      <Helmet>
+        <title>{`${t('Booking')} #${booking.id || t('Unknown')} ${t(
+          'Details'
+        )}`}</title>
+        <meta
+          name="description"
+          content="Detailed view of your booking at MySalon."
+        />
+      </Helmet>
 
       <Card>
         <Title>
           {t('Booking')} #{booking.id}
         </Title>
 
-          <p>
-            <Label>{t('Salon')}:</Label> {capitalizeName(booking.salon_name)}
-          </p>
+        <p>
+          <Label>{t('Salon')}:</Label> {capitalizeName(booking.salon_name)}
+        </p>
 
         <p>
           <Label>{t('Status')}:</Label>{' '}
@@ -179,11 +177,17 @@ const BookingDetailsPage = () => {
 
         {booking.status.toLowerCase() !== 'cancelled' &&
           booking.status.toLowerCase() !== 'completed' && (
-            <Button onClick={handleCancelBooking}>{t('Cancel Booking')}</Button>
+            <ButtonWithIcon
+              type="cancel"
+              onClick={handleCancelBooking}
+              width="100%"
+            >
+              {t('Cancel')}
+            </ButtonWithIcon>
           )}
       </Card>
     </Container>
-  )
-}
+  );
+};
 
-export default BookingDetailsPage
+export default BookingDetailsPage;

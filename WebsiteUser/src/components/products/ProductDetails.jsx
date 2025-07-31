@@ -8,6 +8,7 @@ import { FaFacebook, FaTwitter } from 'react-icons/fa';
 import useProductDetails from '../../functionality/products/UseProductDetails';
 import ServerError from '../ServerError';
 import capitalizeName from '../../utils/capitalizeName';
+import NoDataView from '../NoDataView';
 
 const Container = styled.div`
   display: flex;
@@ -141,11 +142,7 @@ const ProductDetails = () => {
   }
 
   if (!product) {
-    return (
-      <p style={{ textAlign: 'center', color: '#bbb' }}>
-        {t('Product not found')}
-      </p>
-    );
+    return <NoDataView message={'No Product Found'} />;
   }
 
   const images =
@@ -216,7 +213,8 @@ const ProductDetails = () => {
           )}
           {product.salon_name && (
             <div style={{ marginTop: '0.5rem' }}>
-              <strong>{t('Salon')}:</strong> {capitalizeName(product.salon_name)}
+              <strong>{t('Salon')}:</strong>{' '}
+              {capitalizeName(product.salon_name)}
             </div>
           )}
 
