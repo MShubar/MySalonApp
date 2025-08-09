@@ -1,45 +1,50 @@
-import { useState, useEffect, useCallback } from 'react'
-import axios from 'axios'
+import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 
 const useFetch = (url, deps = []) => {
-  const [data, setData] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchData = useCallback(async () => {
     if (!url) {
-      setData([])
-      setLoading(false)
-      return
+      setData([]);
+      setLoading(false);
+      return;
     }
 
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
 
     try {
-      console.log('🌐 Fetching from:', url)
-      const response = await axios.get(url)
-      console.log('✅ Fetched data:', response.data)
-      setData(response.data || [])
+      const response = await axios.get(url);
+      setData(response.data || []);
     } catch (err) {
+      // Silently handle network errors without logging to console
       if (axios.isAxiosError(err)) {
-        console.error('❌ Axios error:', err.response?.data || err.message)
+        if (!err.response) {
+          // If there's no response, this means it's a network issue (connection refused, server down, etc.)
+          setError('Unable to connect to the server. Please try again later.');
+        } else {
+          // Handle any other error response from the API
+          setError(err.message || 'An unexpected error occurred');
+        }
       } else {
-        console.error('❌ Unknown error:', err)
+        // Catch any other error (e.g., unexpected errors)
+        setError('An error occurred while fetching data.');
       }
-      setError(err)
-      setData([])
+      setData([]); // Clear any previous data on error
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [url])
+  }, [url]);
 
   useEffect(() => {
-    fetchData()
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchData, ...deps])
+  }, [fetchData, ...deps]);
 
-  return { data, loading, error, retry: fetchData, refetch: fetchData }
-}
+  return { data, loading, error, retry: fetchData, refetch: fetchData };
+};
 
-export default useFetch
+export default useFetch;

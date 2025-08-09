@@ -10,7 +10,7 @@ import ButtonWithIcon from '../ButtonWithIcon';
 
 const Container = styled.div`
   max-width: 800px;
-  margin: 2rem auto;
+  margin: 8rem auto;
   color: #f0f8ff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 `;
@@ -53,21 +53,6 @@ const ServiceItem = styled.li`
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 0.5rem;
-`;
-
-const Button = styled.button`
-  background-color: #f44336;
-  color: #fff;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: 600;
-  margin-top: 1rem;
-
-  &:hover {
-    background-color: #d32f2f;
-  }
 `;
 
 const ErrorText = styled.p`
@@ -156,7 +141,7 @@ const BookingDetailsPage = () => {
         </p>
 
         <p style={{ color: '#f0e68c', fontWeight: '600' }}>
-          {t('Total')}: {Number(booking.total).toFixed(2)} BHD
+          {t('Total')}: {Number(booking.total).toFixed(2)} {t('BHD')}
         </p>
 
         <h4>{t('Services')}:</h4>

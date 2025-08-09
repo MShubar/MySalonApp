@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Spinner, Button } from 'react-bootstrap';
+import { Spinner } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
@@ -9,6 +9,7 @@ import useProductDetails from '../../functionality/products/UseProductDetails';
 import ServerError from '../ServerError';
 import capitalizeName from '../../utils/capitalizeName';
 import NoDataView from '../NoDataView';
+import ButtonWithIcon from '../ButtonWithIcon';
 
 const Container = styled.div`
   display: flex;
@@ -20,21 +21,16 @@ const Container = styled.div`
   border-radius: 12px;
   box-shadow: 0 4px 24px rgba(0, 123, 255, 0.1);
   margin-top: 2rem;
-`;
 
-const ContainerMobile = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: #1f1f1f;
-  color: #f0f8ff;
-  padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 24px rgba(0, 123, 255, 0.1);
-  margin-top: 1rem;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 1rem;
+  }
 `;
 
 const ImageSection = styled.div`
   flex: 1;
+  position: relative;
 `;
 
 const MainImage = styled.img`
@@ -49,6 +45,7 @@ const Thumbnails = styled.div`
   display: flex;
   gap: 0.5rem;
   margin-top: 0.5rem;
+  overflow-x: scroll;
 `;
 
 const Thumb = styled.img`
@@ -77,16 +74,19 @@ const InfoSection = styled.div`
   flex: 2;
   display: flex;
   flex-direction: column;
+  padding: 1rem;
+  gap: 1rem;
 `;
 
 const Title = styled.h2`
-  font-size: 2rem;
+  font-size: 2.2rem;
   color: #a3c1f7;
   margin-bottom: 1rem;
+  font-weight: 700;
 `;
 
 const Price = styled.div`
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   color: #f0e68c;
   font-weight: 600;
   margin-top: 0.5rem;
@@ -95,6 +95,8 @@ const Price = styled.div`
 const Description = styled.p`
   font-size: 1rem;
   color: #ccc;
+  line-height: 1.5;
+  margin-bottom: 1rem;
 `;
 
 const ShareButtons = styled.div`
@@ -110,10 +112,15 @@ const ProductDetails = () => {
   const { product, loading, error, retry, isMobile } = useProductDetails(id);
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     setActiveIndex(0);
   }, [product]);
+
+  const adjustQty = (delta) => {
+    setQuantity((prevQuantity) => prevQuantity + delta);
+  };
 
   if (loading) {
     return (
@@ -146,13 +153,13 @@ const ProductDetails = () => {
   }
 
   const images =
-    Array.isArray(product.images) && product.images.length > 0
+    product.images && Array.isArray(product.images) && product.images.length > 0
       ? product.images
       : product.image_url
       ? [product.image_url]
       : [];
 
-  const Layout = isMobile ? ContainerMobile : Container;
+  const Layout = isMobile ? Container : Container;
 
   const shareUrl = window.location.href;
   const share = (platform) => {
@@ -195,13 +202,6 @@ const ProductDetails = () => {
         </ImageSection>
 
         <InfoSection>
-          <Button
-            variant="outline-light"
-            onClick={() => navigate(-1)}
-            style={{ marginBottom: '1rem', alignSelf: 'flex-start' }}
-          >
-            ← {t('Back')}
-          </Button>
           <Title>{product.name}</Title>
           <Description>{product.description}</Description>
           <Price>{Number(product.price).toFixed(2)} BHD</Price>
@@ -211,12 +211,19 @@ const ProductDetails = () => {
               <strong>{t('Available')}:</strong> {product.quantity}
             </div>
           )}
-          {product.salon_name && (
-            <div style={{ marginTop: '0.5rem' }}>
-              <strong>{t('Salon')}:</strong>{' '}
-              {capitalizeName(product.salon_name)}
+
+          <div style={{ marginTop: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <ButtonWithIcon
+                type="adjust"
+                adjustQty={adjustQty}
+                quantity={quantity}
+                width="auto"
+              >
+                {quantity}
+              </ButtonWithIcon>
             </div>
-          )}
+          </div>
 
           <ShareButtons>
             <button
@@ -234,6 +241,14 @@ const ProductDetails = () => {
               <FaTwitter className="me-1" /> {t('Tweet')}
             </button>
           </ShareButtons>
+
+          <ButtonWithIcon
+            type="book"
+            onClick={() => handleAddToCart(product, quantity)}
+            width="100%"
+          >
+            {t('Add to Cart')}
+          </ButtonWithIcon>
         </InfoSection>
       </Layout>
     </div>

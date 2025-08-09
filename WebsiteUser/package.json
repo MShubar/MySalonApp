@@ -12,7 +12,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "antd": "^5.26.6",
+    "antd": "^5.26.7",
     "axios": "^1.9.0",
     "azure-maps-control": "^3.6.1",
     "bootstrap": "^5.3.5",
@@ -35,7 +35,9 @@
     "react-i18next": "^15.4.1",
     "react-icons": "^5.5.0",
     "react-leaflet": "^5.0.0",
+    "react-responsive": "^10.0.1",
     "react-router-dom": "^7.5.1",
+    "react-select": "^5.10.2",
     "styled-components": "^6.1.19"
   },
   "devDependencies": {

@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState, useContext } from 'react';
+import useFetch from '../../hooks/useFetch';
 import { API_URL } from '../../config';
+import { UserContext } from '../../context/UserContext'; // Import UserContext
 
-const useTraining = (user, salon) => {
-  const [trainingPrograms, setTrainingPrograms] = useState([]);
-  const [enrolledPrograms, setEnrolledPrograms] = useState([]);
+const useTraining = (salon) => {
+  const { user } = useContext(UserContext); // Access user from UserContext
   const [filters, setFilters] = useState({
     price: '',
     duration: '',
@@ -12,39 +12,34 @@ const useTraining = (user, salon) => {
   });
   const [viewEnrolled, setViewEnrolled] = useState(false);
 
-  // Fetch all training programs
-  useEffect(() => {
-    const fetchPrograms = async () => {
-      try {
-        const query = new URLSearchParams(filters).toString();
-        const res = await axios.get(`${API_URL}/trainings?${query}`);
-        console.log('✅ Fetched trainings:', res.data);
-        setTrainingPrograms(Array.isArray(res.data) ? res.data : []);
-      } catch (err) {
-        console.error('❌ Failed to fetch training programs:', err);
-      }
-    };
-    fetchPrograms();
-  }, [filters]);
+  // Fetch training programs with the filters applied
+  const {
+    data: trainingPrograms = [],
+    loading: loadingTrainingPrograms,
+    error: errorTrainingPrograms,
+    refetch: refetchTrainingPrograms,
+  } = useFetch(
+    `${API_URL}/trainings?${new URLSearchParams(filters).toString()}`,
+    [filters]
+  );
 
-  // Fetch enrollments
-  useEffect(() => {
-    if (user?.id) {
-      axios
-        .get(`/trainings/user/${user.id}`)
-        .then((res) => setEnrolledPrograms(res.data))
-        .catch((err) =>
-          console.error('❌ Failed to fetch user enrollments:', err)
-        );
-    } else if (salon?.id) {
-      axios
-        .get(`/trainings/salon/${salon.id}`)
-        .then((res) => setEnrolledPrograms(res.data))
-        .catch((err) =>
-          console.error('❌ Failed to fetch salon enrollments:', err)
-        );
-    }
-  }, [user, salon]);
+  // Fetch enrolled programs based on the user or salon
+  const {
+    data: enrolledPrograms = [],
+    loading: loadingEnrolledPrograms,
+    error: errorEnrolledPrograms,
+    refetch: refetchEnrolledPrograms,
+  } = useFetch(
+    user?.id
+      ? `${API_URL}/trainings/user/${user.id}` // Fetch for specific user
+      : salon?.id
+      ? `${API_URL}/trainings/salon/${salon.id}` // Fetch for specific salon
+      : null,
+    [user, salon] // Only refetch when user or salon changes
+  );
+
+  const loading = loadingTrainingPrograms || loadingEnrolledPrograms;
+  const error = errorTrainingPrograms || errorEnrolledPrograms;
 
   return {
     trainingPrograms,
@@ -53,6 +48,9 @@ const useTraining = (user, salon) => {
     setFilters,
     viewEnrolled,
     setViewEnrolled,
+    loading,
+    error,
+    retry: refetchTrainingPrograms, // Retry function for refetching data
   };
 };
 

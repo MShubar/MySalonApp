@@ -1,32 +1,33 @@
-import styled from 'styled-components'
-import useCart from '../../functionality/cart/UseCart'
-import { Helmet } from 'react-helmet'
+import styled from 'styled-components';
+import useCart from '../../functionality/cart/UseCart';
+import { Helmet } from 'react-helmet';
+import ButtonWithIcon from '../ButtonWithIcon';
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 2rem auto 5rem auto;
   color: #ddd;
   padding-bottom: 5rem;
-`
+`;
 
 const Heading = styled.h2`
   text-align: center;
   margin-bottom: 2rem;
   color: #222;
   font-weight: 700;
-`
+`;
 
 const EmptyText = styled.p`
   text-align: center;
   font-style: italic;
   color: #6c757d;
-`
+`;
 
 const Grid = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-`
+`;
 
 const GridItem = styled.div`
   flex: 1 1 48%;
@@ -36,7 +37,7 @@ const GridItem = styled.div`
     flex: 1 1 100%;
     max-width: 100%;
   }
-`
+`;
 
 const Card = styled.div`
   background-color: #1f1f1f;
@@ -48,14 +49,14 @@ const Card = styled.div`
   flex-direction: column;
   height: 100%;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-`
+`;
 
 const Image = styled.img`
   height: 180px;
   object-fit: cover;
   width: 100%;
   border-bottom: 1px solid #444;
-`
+`;
 
 const Placeholder = styled.div`
   height: 180px;
@@ -65,27 +66,27 @@ const Placeholder = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
+`;
 
 const CardBody = styled.div`
   padding: 1rem;
   display: flex;
   flex-direction: column;
   flex: 1;
-`
+`;
 
 const Title = styled.h5`
   color: #a3c1f7;
   font-weight: 600;
   margin-bottom: 0.5rem;
-`
+`;
 
 const Description = styled.p`
   font-size: 0.9rem;
   color: #bbb;
   min-height: 48px;
   margin-bottom: 0.5rem;
-`
+`;
 
 const QuantityBadge = styled.span`
   display: inline-block;
@@ -94,7 +95,7 @@ const QuantityBadge = styled.span`
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
   margin-bottom: 0.5rem;
-`
+`;
 
 const AdjustButtons = styled.div`
   display: flex;
@@ -116,30 +117,14 @@ const AdjustButtons = styled.div`
   span {
     margin: 0 0.5rem;
   }
-`
+`;
 
 const Price = styled.div`
   font-size: 1rem;
   font-weight: 600;
   color: #a3c1f7;
   margin-bottom: 0.5rem;
-`
-
-const RemoveButton = styled.button`
-  background: none;
-  border: 1px solid #dc3545;
-  color: #dc3545;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  margin-top: auto;
-  width: 100%;
-
-  &:hover {
-    background-color: #dc3545;
-    color: #fff;
-  }
-`
+`;
 
 const CheckoutBar = styled.div`
   position: fixed;
@@ -154,21 +139,7 @@ const CheckoutBar = styled.div`
   justify-content: space-between;
   align-items: center;
   color: #ddd;
-`
-
-const CheckoutButton = styled.button`
-  background-color: #198754;
-  color: #fff;
-  border: none;
-  padding: 0.75rem 2rem;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  font-weight: 600;
-
-  &:hover {
-    background-color: #157347;
-  }
-`
+`;
 
 const Cart = () => {
   const {
@@ -178,15 +149,15 @@ const Cart = () => {
     increaseQuantity,
     decreaseQuantity,
     removeAllOfItem,
-    goToCheckout
-  } = useCart()
+    goToCheckout,
+  } = useCart();
 
   return (
     <Container>
       <Helmet>
         <title>{t('Cart')}</title>
       </Helmet>
-      <Heading>🛒 {t('Cart')} 🛒</Heading>
+      <Heading>{t('Cart')}</Heading>
 
       {groupedCart.length === 0 ? (
         <EmptyText>{t('Cart is empty')}</EmptyText>
@@ -206,32 +177,33 @@ const Cart = () => {
                   <Description>
                     {item.description || t('No description available')}
                   </Description>
-
-                  <div style={{ minHeight: '80px' }}>
-                    <QuantityBadge>
-                      {t('Quantity')}: {item.quantity}
-                    </QuantityBadge>
-
-                    <AdjustButtons>
-                      <button
-                        onClick={() => decreaseQuantity(item.id, item.type)}
-                      >
-                        -
-                      </button>
-                      <span>{item.quantity}</span>
-                      <button onClick={() => increaseQuantity(item)}>+</button>
-                    </AdjustButtons>
-                  </div>
+                  <ButtonWithIcon
+                    type="adjust"
+                    adjustQty={(delta) => {
+                      if (delta === 1) {
+                        increaseQuantity(item);
+                      } else {
+                        decreaseQuantity(item.id, item.type);
+                      }
+                    }}
+                    quantity={item.quantity}
+                    width="auto"
+                  >
+                    {item.quantity}
+                  </ButtonWithIcon>
 
                   <Price>
-                    {(parseFloat(item.price) * item.quantity).toFixed(2)} BHD
+                    {(parseFloat(item.price) * item.quantity).toFixed(2)}{' '}
+                    {t('BHD')}
                   </Price>
 
-                  <RemoveButton
+                  <ButtonWithIcon
                     onClick={() => removeAllOfItem(item.id, item.type)}
+                    type="cancel"
+                    width="100%"
                   >
-                    🗑️ {t('Remove All')}
-                  </RemoveButton>
+                    {t('Remove All')}
+                  </ButtonWithIcon>
                 </CardBody>
               </Card>
             </GridItem>
@@ -242,15 +214,15 @@ const Cart = () => {
       {groupedCart.length > 0 && (
         <CheckoutBar>
           <div style={{ fontSize: '1.2rem', fontWeight: '600' }}>
-            {t('Total')}: {total.toFixed(2)} BHD
+            {t('Total')}: {total.toFixed(2)} {t('BHD')}
           </div>
-          <CheckoutButton onClick={goToCheckout}>
-            💳 {t('Checkout')}
-          </CheckoutButton>
+          <ButtonWithIcon onClick={goToCheckout} type="book" width="100%">
+            {t('Checkout')}
+          </ButtonWithIcon>
         </CheckoutBar>
       )}
     </Container>
-  )
-}
+  );
+};
 
-export default Cart
+export default Cart;

@@ -1,70 +1,70 @@
-import { useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { useTranslation } from 'react-i18next'
-import { API_URL } from '../../config'
-import { AppContext } from '../../context/AppContext'
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useTranslation } from 'react-i18next';
+import { API_URL } from '../../config';
+import { CartContext } from '../../context/CartContext';
 
 const useCart = () => {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-  const { cart, setCart } = useContext(AppContext)
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { cart, setCart } = useContext(CartContext);
 
   const updateCartStorage = (updated) => {
-    setCart(updated)
-  }
+    setCart(updated);
+  };
 
   const increaseQuantity = (item) => {
-    updateCartStorage([...cart, item])
-  }
+    updateCartStorage([...cart, item]);
+  };
 
   const decreaseQuantity = async (id, type) => {
-    const index = cart.findIndex((i) => i.id === id)
+    const index = cart.findIndex((i) => i.id === id);
     if (index !== -1) {
-      const updated = [...cart]
-      updated.splice(index, 1)
-      updateCartStorage(updated)
+      const updated = [...cart];
+      updated.splice(index, 1);
+      updateCartStorage(updated);
       try {
-        await axios.patch(`${API_URL}/${type}/${id}/increase`)
+        await axios.patch(`${API_URL}/${type}/${id}/increase`);
       } catch (err) {
-        console.error('Failed to restore quantity', err)
+        console.error('Failed to restore quantity', err);
       }
     }
-  }
+  };
 
   const removeAllOfItem = async (id, type) => {
-    const itemsToRemove = cart.filter((item) => item.id === id)
-    const quantityToRestore = itemsToRemove.length
+    const itemsToRemove = cart.filter((item) => item.id === id);
+    const quantityToRestore = itemsToRemove.length;
 
-    const updated = cart.filter((item) => item.id !== id)
-    updateCartStorage(updated)
+    const updated = cart.filter((item) => item.id !== id);
+    updateCartStorage(updated);
 
     try {
       for (let i = 0; i < quantityToRestore; i++) {
-        await axios.patch(`${API_URL}/${type}/${id}/increase`)
+        await axios.patch(`${API_URL}/${type}/${id}/increase`);
       }
     } catch (err) {
-      console.error('Failed to restore quantity for removed item', err)
+      console.error('Failed to restore quantity for removed item', err);
     }
-  }
+  };
 
   const groupedCart = cart.reduce((acc, item) => {
-    const existing = acc.find((i) => i.id === item.id && i.type === item.type)
+    const existing = acc.find((i) => i.id === item.id && i.type === item.type);
     if (existing) {
-      existing.quantity += 1
+      existing.quantity += 1;
     } else {
-      acc.push({ ...item, quantity: 1 })
+      acc.push({ ...item, quantity: 1 });
     }
-    return acc
-  }, [])
+    return acc;
+  }, []);
 
   const total = groupedCart.reduce((sum, item) => {
-    return sum + (parseFloat(item.price) || 0) * item.quantity
-  }, 0)
+    return sum + (parseFloat(item.price) || 0) * item.quantity;
+  }, 0);
 
   const goToCheckout = () => {
-    navigate('/checkout')
-  }
+    navigate('/checkout');
+  };
 
   return {
     t,
@@ -73,8 +73,8 @@ const useCart = () => {
     increaseQuantity,
     decreaseQuantity,
     removeAllOfItem,
-    goToCheckout
-  }
-}
+    goToCheckout,
+  };
+};
 
-export default useCart
+export default useCart;

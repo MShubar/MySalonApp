@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react'
-import useFetch from '../../hooks/useFetch'
-import { API_URL } from '../../config'
+import { useState, useEffect } from 'react';
+import useFetch from '../../hooks/useFetch';
+import { API_URL } from '../../config';
 
 const useBookingDetails = (id, t) => {
-  const [cancelError, setCancelError] = useState(null)
+  const [cancelError, setCancelError] = useState(null);
 
   const {
     data: bookingData,
     loading,
     error,
-    retry
-  } = useFetch(`${API_URL}/bookings/${id}`, [id])
+    retry,
+  } = useFetch(`${API_URL}/bookings/${id}`, [id]);
 
-  const [booking, setBooking] = useState(null)
+  const [booking, setBooking] = useState(null);
 
   useEffect(() => {
     if (bookingData) {
@@ -25,35 +25,35 @@ const useBookingDetails = (id, t) => {
         total: bookingData.total || 0,
         services: (bookingData.service_name || '')
           .split(',')
-          .map((s) => s.trim())
-      })
+          .map((s) => s.trim()),
+      });
     }
-  }, [bookingData, id, t])
+  }, [bookingData, id, t]);
 
   const handleCancelBooking = async () => {
-    setCancelError(null)
+    setCancelError(null);
     try {
       const res = await fetch(`${API_URL}/bookings/${id}/cancel`, {
-        method: 'PATCH'
-      })
-      if (!res.ok) throw new Error(`HTTP error ${res.status}`)
-      const updated = await res.json()
+        method: 'PATCH',
+      });
+      if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+      const updated = await res.json();
       setBooking((prev) => ({
         ...prev,
-        status: updated.status || t('Cancelled')
-      }))
+        status: updated.status || t('Cancelled'),
+      }));
     } catch (err) {
-      console.error('Error cancelling booking:', err)
-      setCancelError(t('Failed to cancel booking.'))
+      console.error('Error cancelling booking:', err);
+      setCancelError(t('Failed to cancel booking.'));
     }
-  }
+  };
 
   const formatDate = (dateStr) =>
     new Date(dateStr).toLocaleDateString('en-GB', {
       day: '2-digit',
       month: 'short',
-      year: 'numeric'
-    })
+      year: 'numeric',
+    });
 
   return {
     booking,
@@ -62,8 +62,8 @@ const useBookingDetails = (id, t) => {
     retry,
     cancelError,
     handleCancelBooking,
-    formatDate
-  }
-}
+    formatDate,
+  };
+};
 
-export default useBookingDetails
+export default useBookingDetails;

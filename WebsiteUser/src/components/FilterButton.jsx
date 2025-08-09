@@ -10,23 +10,19 @@ const FilterButtonStyled = styled.button`
   gap: 8px;
   padding: 8px 16px;
   font-size: 1rem;
-  background-color: #1a1a1a; /* Dark background for better contrast */
-  color: #f0e68c; /* Light color text for contrast */
-  border: 2px solid #f0e68c;
+  background-color: ${({ $active }) => ($active ? '#0d6efd' : '#1a1a1a')};
+  color: ${({ $active }) => ($active ? '#fff' : '#80b3ff')};
+  border: 2px solid ${({ $active }) => ($active ? '#0d6efd' : '#80b3ff')};
   border-radius: 30px;
   transition: all 0.3s ease;
   cursor: pointer;
+  box-shadow: ${({ $active }) =>
+    $active ? '0 0 15px rgba(13, 110, 253, 0.6)' : 'none'};
+  transform: ${({ $active }) => ($active ? 'scale(0.97)' : 'scale(1)')};
 
-  &:hover {
-    background-color: #444; /* Darker background on hover */
-    color: #fff; /* White text on hover */
-    border-color: #fff; /* White border on hover */
-  }
-
-  &:focus {
-    outline: none;
-    border-color: #fff; /* White border on focus */
-    box-shadow: 0 0 10px rgba(240, 230, 140, 0.6);
+  &:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 12px rgba(128, 179, 255, 0.6);
   }
 
   i {
@@ -38,7 +34,11 @@ const FilterButton = ({ showFilters, toggleFilters }) => {
   const { t } = useTranslation();
 
   return (
-    <FilterButtonStyled onClick={toggleFilters} aria-expanded={showFilters}>
+    <FilterButtonStyled
+      onClick={toggleFilters}
+      aria-expanded={showFilters}
+      $active={showFilters}
+    >
       <i className="bi bi-funnel-fill"></i> {t('Filters')}
     </FilterButtonStyled>
   );

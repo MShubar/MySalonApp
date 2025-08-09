@@ -1,11 +1,6 @@
 const AZURE_STORAGE_CONNECTION_STRING =
   process.env.AZURE_STORAGE_CONNECTION_STRING;
 
-console.log(
-  '[DEBUG] AZURE_STORAGE_CONNECTION_STRING loaded:',
-  !!AZURE_STORAGE_CONNECTION_STRING
-);
-
 if (!AZURE_STORAGE_CONNECTION_STRING) {
   throw new Error('Azure Storage connection string is not defined');
 }
@@ -19,8 +14,6 @@ const blobServiceClient = BlobServiceClient.fromConnectionString(
 );
 
 const AZURE_CONTAINER_NAME = process.env.AZURE_CONTAINER_NAME;
-
-console.log('[DEBUG] AZURE_CONTAINER_NAME loaded:', AZURE_CONTAINER_NAME);
 
 if (!AZURE_CONTAINER_NAME) {
   throw new Error('Azure Container name is not defined');

@@ -1,19 +1,23 @@
 import React from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
 import { API_URL } from '../../config';
 import useFetch from '../../hooks/useFetch';
 import ServerError from '../ServerError';
 import NoDataView from '../NoDataView';
+import ButtonWithIcon from '../ButtonWithIcon';
 
+// Dynamic RTL and LTR Styles
 const Container = styled.div`
   max-width: 800px;
   margin: 2rem auto;
   padding: 1rem;
   color: #f0f8ff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  direction: ${(props) => (props.isRTL ? 'rtl' : 'ltr')};
+  text-align: ${(props) => (props.isRTL ? 'right' : 'left')};
 `;
 
 const Card = styled.div`
@@ -33,6 +37,7 @@ const Heading = styled.h2`
 const Text = styled.p`
   margin: 0.5rem 0;
 `;
+
 const Status = styled.span`
   color: ${({ $status }) =>
     $status === 'cancelled'
@@ -84,23 +89,8 @@ const Placeholder = styled.div`
   font-size: 0.8rem;
 `;
 
-const CancelButton = styled.button`
-  background: #dc3545;
-  border: none;
-  color: #fff;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 1rem;
-
-  &:hover {
-    background: #c82333;
-  }
-`;
-
 const OrderDetailsPage = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { id } = useParams();
   const { state } = useLocation();
 
@@ -149,9 +139,11 @@ const OrderDetailsPage = () => {
       year: 'numeric',
     });
 
+  const isRTL = i18n.dir() === 'rtl';
+
   if (loading) {
     return (
-      <Container>
+      <Container isRTL={isRTL}>
         <Text>{t('Loading order details...')}</Text>
       </Container>
     );
@@ -162,7 +154,7 @@ const OrderDetailsPage = () => {
       return <ServerError onRetry={retry} />;
     }
     return (
-      <Container>
+      <Container isRTL={isRTL}>
         <Text style={{ color: '#f44336' }}>
           {t('Failed to load order details.')}
         </Text>
@@ -175,7 +167,7 @@ const OrderDetailsPage = () => {
   }
 
   return (
-    <Container>
+    <Container isRTL={isRTL}>
       <Helmet>
         <title>{`${t('Order')} #${order.id || t('Unknown')} ${t(
           'Details'
@@ -199,11 +191,11 @@ const OrderDetailsPage = () => {
         </Text>
 
         <Text>
-          <strong>{t('Payment Method')}:</strong> {order.payment_method}
+          <strong>{t('Payment Method')}:</strong> {t(order.payment_method)}
         </Text>
 
         <Text>
-          <strong>{t('Delivery Time')}:</strong> {order.delivery_time}
+          <strong>{t('Delivery Time')}:</strong> {t(order.delivery_time)}
         </Text>
 
         <Text>
@@ -211,7 +203,7 @@ const OrderDetailsPage = () => {
         </Text>
 
         <Text style={{ color: '#f0e68c', fontWeight: '600' }}>
-          {t('Total')}: {Number(order.total).toFixed(2)} BHD
+          {t('Total')}: {Number(order.total).toFixed(2)} {t('BHD')}
         </Text>
 
         <h4 style={{ marginTop: '1rem' }}>{t('Items')}:</h4>
@@ -233,7 +225,7 @@ const OrderDetailsPage = () => {
                   {item.quantity || 1}
                   {item.price && (
                     <span style={{ color: '#f0e68c', marginLeft: '8px' }}>
-                      {Number(item.price).toFixed(2)} BHD
+                      {Number(item.price).toFixed(2)} {t('BHD')}
                     </span>
                   )}
                 </div>

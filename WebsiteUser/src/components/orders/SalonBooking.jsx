@@ -88,13 +88,6 @@ const SalonBooking = ({ userId }) => {
           {t('Book Appointment at')} {salon.name}
         </title>
       </Helmet>
-      <Button
-        variant="outline-light"
-        className="mb-3"
-        onClick={() => navigate(-1)}
-      >
-        ← {t('Back')}
-      </Button>
 
       <h2 style={{ color: '#a3c1f7' }}>
         {t('Book Appointment at')} {salon.name}

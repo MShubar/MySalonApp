@@ -14,7 +14,6 @@ function SignupStep2() {
   useEffect(() => {
     axios.get(`${API_URL}/types`).then((res) => setTypes(res.data));
     axios.get(`${API_URL}/services`).then((res) => {
-      console.log('SERVICES RESPONSE:', res.data);
       setServices(res.data);
     });
   }, []);

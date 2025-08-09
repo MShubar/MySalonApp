@@ -3,23 +3,48 @@ import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { API_URL } from '../../config';
+import ButtonWithIcon from '../ButtonWithIcon';
 
 const Wrapper = styled.div`
-  padding: 8rem 1rem 2rem;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100dvh;
+  align-items: stretch;
+  justify-content: center;
+  background: transparent;
+  gap: 50px;
+  flex-direction: row;
+  padding: 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    margin-top: 2rem;
+    gap: 20px;
+  }
+
+  @media (max-width: 600px) {
+    padding: 1rem;
+  }
 `;
 
-const Container = styled.div`
+const Box = styled.div`
   width: 100%;
-  max-width: 500px;
+  max-width: 900px;
   background-color: #1f1f1f;
   padding: 2rem;
   border-radius: 1rem;
   color: #f0f8ff;
   box-shadow: 0 10px 30px rgba(79, 142, 247, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+
+  @media (max-width: 600px) {
+    padding: 1rem;
+    max-width: 100%;
+  }
 `;
 
 const Heading = styled.h2`
@@ -27,6 +52,11 @@ const Heading = styled.h2`
   margin-bottom: 1.5rem;
   color: #4f8ef7;
   font-weight: 700;
+
+  @media (max-width: 600px) {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const FormGroup = styled.div`
@@ -78,23 +108,6 @@ const TextArea = styled.textarea`
   }
 `;
 
-const Button = styled.button`
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #4f8ef7;
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(79, 142, 247, 0.4);
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #3a75d8;
-  }
-`;
-
 const Alert = styled.div`
   background-color: ${(props) =>
     props.type === 'success' ? '#198754' : '#dc3545'};
@@ -107,10 +120,17 @@ const Alert = styled.div`
 
 const MapWrapper = styled.div`
   width: 100%;
-  max-width: 600px;
+  max-width: 900px;
   margin-top: 3rem;
   border-radius: 1rem;
+  background-color: #2b2b2b;
+  padding: 1rem;
+  box-shadow: 0 10px 30px rgba(79, 142, 247, 0.2);
   overflow: hidden;
+
+  @media (max-width: 600px) {
+    margin-top: 2rem;
+  }
 `;
 
 const ContactUs = () => {
@@ -153,7 +173,7 @@ const ContactUs = () => {
       </Helmet>
 
       <Wrapper>
-        <Container>
+        <Box>
           <Heading>{t('Contact Us')}</Heading>
           <form onSubmit={handleSubmit}>
             <FormGroup>
@@ -197,9 +217,11 @@ const ContactUs = () => {
             {status === 'error' && (
               <Alert type="error">{t('Something went wrong')}</Alert>
             )}
-            <Button type="submit">{t('Submit')}</Button>
+            <ButtonWithIcon type="book" width="100%">
+              {t('Submit')}
+            </ButtonWithIcon>
           </form>
-        </Container>
+        </Box>
 
         <MapWrapper>
           <iframe

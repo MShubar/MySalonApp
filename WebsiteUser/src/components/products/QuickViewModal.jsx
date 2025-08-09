@@ -42,6 +42,7 @@ const QuickViewModal = ({ show, onHide, product, onAddToCart }) => {
         >
           <i className="bi bi-cart-plus me-2"></i> {t('Add to Cart')}
         </Button>
+        
       </Modal.Body>
       <Modal.Footer className="bg-dark border-secondary">
         <Button variant="secondary" onClick={onHide}>

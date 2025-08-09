@@ -5,14 +5,17 @@ import PropTypes from 'prop-types';
 import useEditProfile from '../../functionality/auth/UseEditProfile';
 import Cropper from 'react-easy-crop';
 import { Helmet } from 'react-helmet';
+import ButtonWithIcon from '../ButtonWithIcon';
 
 const Wrapper = styled.div`
-  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
   background: transparent;
+  @media (max-width: 600px) {
+    height: 100dvh;
+  }
 `;
 
 const Container = styled.div`
@@ -243,9 +246,14 @@ function EditProfile({ userId }) {
                         onCropComplete={onCropComplete}
                       />
                     </CropWrapper>
-                    <SubmitButton type="button" onClick={showCroppedImage}>
+
+                    <ButtonWithIcon
+                      onClick={showCroppedImage}
+                      type="book"
+                      width="100%"
+                    >
                       {t('Apply Crop')}
-                    </SubmitButton>
+                    </ButtonWithIcon>
                   </>
                 ) : (
                   <>
@@ -264,7 +272,9 @@ function EditProfile({ userId }) {
                 )}
               </FormGroup>
 
-              <SubmitButton type="submit">{t('Save Changes')}</SubmitButton>
+              <ButtonWithIcon type="book" width="100%">
+                {t('Save Changes')}
+              </ButtonWithIcon>
             </form>
           )}
         </Container>

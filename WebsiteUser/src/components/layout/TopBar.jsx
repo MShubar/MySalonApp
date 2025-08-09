@@ -1,8 +1,8 @@
-import React from 'react'
-import { BiArrowBack } from 'react-icons/bi'
-import { FaGlobe } from 'react-icons/fa'
-import styled from 'styled-components'
-import useTopBar from '../../functionality/layout/UseTopbar'
+import React, { useEffect } from 'react';
+import { BiArrowToLeft, BiArrowToRight } from 'react-icons/bi'; // Use BiArrowRightCircle
+import { FaGlobe } from 'react-icons/fa';
+import styled from 'styled-components';
+import useTopBar from '../../functionality/layout/UseTopbar';
 
 const Container = styled.div`
   position: absolute;
@@ -18,7 +18,7 @@ const Container = styled.div`
     flex-direction: column;
     gap: 0.5rem;
   }
-`
+`;
 
 const BackButton = styled.button`
   background: none;
@@ -30,7 +30,7 @@ const BackButton = styled.button`
   &:hover {
     color: #4f8ef7;
   }
-`
+`;
 
 const LangButton = styled.button`
   background: #1f1f1f;
@@ -55,15 +55,25 @@ const LangButton = styled.button`
     font-size: 0.85rem;
     padding: 0.3rem 0.6rem;
   }
-`
+`;
 
 const TopBar = () => {
-  const { goBack, currentLang, toggleLanguage } = useTopBar()
+  const { goBack, currentLang, toggleLanguage } = useTopBar();
+
+  // Update the text direction based on the stored language (RTL or LTR)
+  useEffect(() => {
+    const storedLanguage = localStorage.getItem('language') || 'en';
+    document.body.dir = storedLanguage === 'ar' ? 'rtl' : 'ltr';
+  }, [currentLang]);
 
   return (
     <Container>
       <BackButton onClick={goBack} aria-label="Back">
-        <BiArrowBack size={24} />
+        {currentLang === 'ar' ? (
+          <BiArrowToRight size={24} /> // Right arrow for RTL
+        ) : (
+          <BiArrowToLeft size={24} /> // Left arrow for LTR
+        )}
       </BackButton>
 
       <LangButton onClick={toggleLanguage}>
@@ -71,7 +81,7 @@ const TopBar = () => {
         <FaGlobe />
       </LangButton>
     </Container>
-  )
-}
+  );
+};
 
-export default TopBar
+export default TopBar;

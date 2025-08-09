@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import LoadingSpinner from '../LoadingSpinner';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +10,7 @@ import ServerError from '../ServerError';
 import LoadingView from '../LoadingView';
 import NoDataView from '../NoDataView';
 import ButtonWithIcon from '../ButtonWithIcon';
+import FilterButton from '../FilterButton';
 
 const Container = styled.div`
   color: #ddd;
@@ -68,8 +68,6 @@ const Favorites = ({ userId, userType }) => {
   const [sortBy, setSortBy] = useState('distance');
   const [showFilters, setShowFilters] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState('');
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
 
   const { favorites, loading, error, toggleFavorite, retry } = useFavorites(
     userId,
@@ -98,23 +96,9 @@ const Favorites = ({ userId, userType }) => {
   const filteredFavorites = favorites.filter((product) => {
     const meetsCategory =
       categoryFilter === '' || product.category === categoryFilter;
-    const price = Number(product.price);
-    const meetsMinPrice =
-      minPrice === '' || (!isNaN(price) && price >= Number(minPrice));
-    const meetsMaxPrice =
-      maxPrice === '' || (!isNaN(price) && price <= Number(maxPrice));
+    const meetsRating = product.rating >= 0;
 
-    const meetsRating = product.rating >= minRating;
-    const meetsDistance =
-      product.distance !== null ? product.distance <= maxDistance : false;
-
-    return (
-      meetsCategory &&
-      meetsMinPrice &&
-      meetsMaxPrice &&
-      meetsRating &&
-      meetsDistance
-    );
+    return meetsCategory && meetsRating;
   });
 
   const sortedFavorites = [...filteredFavorites].sort((a, b) => {
@@ -142,13 +126,10 @@ const Favorites = ({ userId, userType }) => {
 
       {/* Filters and Sort Buttons */}
       <div className="d-flex justify-content-between mb-3 align-items-center gap-2 flex-wrap">
-        <button
-          className="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"
-          onClick={() => setShowFilters(!showFilters)}
-          aria-expanded={showFilters}
-        >
-          <i className="bi bi-funnel-fill fs-5"></i> {t('Filters')}
-        </button>
+        <FilterButton
+          showFilters={showFilters}
+          toggleFilters={() => setShowFilters(!showFilters)}
+        />
 
         <button
           className="btn btn-outline-primary btn-sm"
@@ -234,42 +215,6 @@ const Favorites = ({ userId, userType }) => {
               </select>
             </div>
           )}
-
-          <div className="mb-3">
-            <label
-              htmlFor="minPrice"
-              className="form-label"
-              style={{ color: '#ccc' }}
-            >
-              {t('Min Price')}
-            </label>
-            <input
-              id="minPrice"
-              type="number"
-              className="form-control"
-              min={0}
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-            />
-          </div>
-
-          <div className="mb-3">
-            <label
-              htmlFor="maxPrice"
-              className="form-label"
-              style={{ color: '#ccc' }}
-            >
-              {t('Max Price')}
-            </label>
-            <input
-              id="maxPrice"
-              type="number"
-              className="form-control"
-              min={0}
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-            />
-          </div>
         </FilterContainer>
       )}
 
@@ -323,7 +268,7 @@ const Favorites = ({ userId, userType }) => {
                       <div className="mt-1 d-flex flex-wrap gap-2">
                         {salon.services.map((service, i) => (
                           <ServiceBadge key={i} className="badge px-2 py-1">
-                            {service.name}
+                            {t(service.name)}
                           </ServiceBadge>
                         ))}
                       </div>

@@ -1,5 +1,6 @@
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Link } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   MapPin,
@@ -13,7 +14,9 @@ import {
 } from 'lucide-react';
 import useNavbar from '../../functionality/layout/UseNavbar';
 import capitalizeName from '../../utils/capitalizeName';
-const Navbar = ({ setUserType, userType, user }) => {
+import { UserContext } from '../../context/UserContext';
+
+const Navbar = ({ setUserType, userType }) => {
   const {
     t,
     i18n,
@@ -25,13 +28,20 @@ const Navbar = ({ setUserType, userType, user }) => {
     navLinks,
     location,
   } = useNavbar({ userType, setUserType });
+  const savedLanguage = localStorage.getItem('language') || 'en';
+  const isRtl = savedLanguage === 'ar';
+  const { user } = useContext(UserContext);
+
+  // Update the document's text direction on mount
+  useEffect(() => {
+    document.body.dir = isRtl ? 'rtl' : 'ltr';
+  }, [savedLanguage, isRtl]);
 
   const iconMap = {
     '/': MapPin,
     '/bookings': CalendarCheck,
     '/products': ShoppingBag,
     '/packages': Package,
-    '/favorites': Heart,
     '/training': GraduationCap,
   };
 
@@ -54,12 +64,11 @@ const Navbar = ({ setUserType, userType, user }) => {
           <Dropdown align="start">
             <Dropdown.Toggle
               variant="dark"
-              className="p-0 rounded-circle border-0 shadow"
-              style={{ width: 40, height: 40, backgroundColor: '#1f1f1f' }}
               id="user-dropdown-toggle"
               aria-haspopup="true"
               aria-expanded="false"
               aria-label={t('User Account Menu')}
+              as="div"
             >
               <i
                 className="bi bi-person-circle fs-3 text-secondary"
@@ -203,6 +212,7 @@ const Navbar = ({ setUserType, userType, user }) => {
                   <Dropdown.Item
                     key={index}
                     onClick={() => {
+                      localStorage.setItem('userType', type.type_name);
                       setUserType(type.type_name);
                       setCurrentIcon(type.image_url);
                     }}

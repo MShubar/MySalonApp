@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import TopBar from '../layout/TopBar';
 import useSignUp from '../../functionality/auth/UseSignUp';
 import { useForm } from 'react-hook-form';
+import ButtonWithIcon from '../ButtonWithIcon';
 
 const Wrapper = styled.div`
   height: 100dvh;
@@ -58,23 +59,6 @@ const ErrorText = styled.div`
   font-size: 0.85rem;
   margin-top: 0.25rem;
   font-style: italic;
-`;
-
-const SubmitButton = styled.button`
-  width: 100%;
-  padding: 0.7rem;
-  background-color: #4f8ef7;
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(79, 142, 247, 0.4);
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #3a75d8;
-  }
 `;
 
 const FooterText = styled.p`
@@ -166,7 +150,9 @@ const SignUp = () => {
 
             {error && <ErrorText>{error}</ErrorText>}
 
-            <SubmitButton type="submit">{t('Sign Up')}</SubmitButton>
+            <ButtonWithIcon type="signup" width="100%">
+              {t('Sign Up')}
+            </ButtonWithIcon>
           </form>
 
           <FooterText>

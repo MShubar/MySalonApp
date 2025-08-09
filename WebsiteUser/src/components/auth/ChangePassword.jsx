@@ -3,14 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import useChangePassword from '../../functionality/auth/useChangePassword';
 import { Helmet } from 'react-helmet';
+import ButtonWithIcon from '../ButtonWithIcon';
 
 const Wrapper = styled.div`
-  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
   background: transparent;
+  @media (max-width: 600px) {
+    height: 100dvh;
+  }
 `;
 
 const Container = styled.div`
@@ -56,32 +59,6 @@ const Input = styled.input`
 
   &:focus {
     border-color: #4f8ef7;
-  }
-`;
-
-const SubmitButton = styled.button`
-  width: 100%;
-  padding: 0.7rem;
-  background-color: #4f8ef7;
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(79, 142, 247, 0.4);
-  transition: background-color 0.3s ease;
-
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-
-  &:hover {
-    background-color: #3a75d8;
-  }
-
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
   }
 `;
 
@@ -179,9 +156,9 @@ function ChangePassword({ userId }) {
               />
             </FormGroup>
 
-            <SubmitButton type="submit" disabled={loading}>
-              {loading && <Spinner />} {t('Change Password')}
-            </SubmitButton>
+            <ButtonWithIcon type="book" width="100%">
+              {t('Change Password')}
+            </ButtonWithIcon>
           </form>
         </Container>
       </Wrapper>

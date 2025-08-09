@@ -3,12 +3,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { API_URL } from '../../config';
-import { AppContext } from '../../context/AppContext';
+import { UserContext } from '../../context/UserContext'; // Import UserContext
 
-console.log('✅ API_URL:', API_URL);
-
-const useNavbar = ({ userType }) => {
-  const { setUser } = useContext(AppContext);
+const useNavbar = () => {
+  const { user } = useContext(UserContext); // Access user from UserContext
+  const { setUser } = useContext(UserContext);
   const { t, i18n } = useTranslation();
   const [types, setTypes] = useState([]);
   const [currentIcon, setCurrentIcon] = useState(null);
@@ -23,28 +22,26 @@ const useNavbar = ({ userType }) => {
         const data = res.data;
         if (Array.isArray(data)) {
           setTypes(data);
-          const selected = data.find((t) => t.type_name === userType);
+          const selected = data.find((t) => t.type_name === user?.type);
           if (selected) setCurrentIcon(selected.image_url);
-        } else {
-          console.error('Expected array but got:', data);
-          setTypes([]); // fallback to empty array
         }
       })
       .catch((err) => {
-        console.error('Failed to fetch user types:', err);
+        setTypes(new Set());
       });
-  }, [userType]);
+  }, [user?.type]); // Add `user?.type` as a dependency
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'ar' : 'en';
     i18n.changeLanguage(newLang);
     document.body.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+    localStorage.setItem('language', newLang);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    setUser(null);
+    setUser(null); // Now using UserContext's setUser
     navigate('/');
   };
 
@@ -53,11 +50,10 @@ const useNavbar = ({ userType }) => {
     { to: '/bookings', label: 'Bookings & Orders' },
     { to: '/products', label: 'Products' },
     { to: '/packages', label: 'Packages' },
-    { to: '/favorites', label: 'Favorites' },
     { to: '/training', label: 'Training' },
 
-    ...(userType === 'women' || userType === 'men'
-      ? [{ to: '/training', label: 'training' }]
+    ...(user?.type === 'women' || user?.type === 'men'
+      ? [{ to: '/training', label: 'Training' }]
       : []),
   ];
 
@@ -72,6 +68,7 @@ const useNavbar = ({ userType }) => {
     navLinks,
     navigate,
     location,
+    user,
   };
 };
 

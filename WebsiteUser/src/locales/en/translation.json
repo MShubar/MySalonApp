@@ -11,6 +11,7 @@
   "Book": "Book",
   "Sign In": "Sign In",
   "Sign Up": "Sign Up",
+  "priceWithCurrency": "{{price}} BHD",
   "Not a MySalon member?": "Not a MySalon member?",
   "Women": "Women",
   "Men": "Men",
@@ -231,5 +232,12 @@
   "Failed to load product": "Failed to load product",
   "Loading product details...": "Loading product details...",
   "Quick View": "Quick View",
-  "Close": "Close"
+  "Close": "Close",
+  "error": {
+    "title": "Something Went Wrong",
+    "message": "An unexpected error has occurred. Please try again later.",
+    "icon": "bi-emoji-frown",
+    "retryText": "Retry",
+    "contactText": "Contact Support"
+  }
 }

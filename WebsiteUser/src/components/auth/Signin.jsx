@@ -4,7 +4,8 @@ import { Helmet } from 'react-helmet';
 import TopBar from '../layout/TopBar';
 import useSignIn from '../../functionality/auth/UseSignIn';
 import { useForm } from 'react-hook-form';
-import { AppContext } from '../../context/AppContext';
+import { UserContext } from '../../context/UserContext'; // Corrected import
+import ButtonWithIcon from '../ButtonWithIcon';
 
 const Wrapper = styled.div`
   height: 100dvh;
@@ -62,23 +63,6 @@ const ErrorText = styled.div`
   font-style: italic;
 `;
 
-const SubmitButton = styled.button`
-  width: 100%;
-  padding: 0.7rem;
-  background-color: #4f8ef7;
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(79, 142, 247, 0.4);
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #3a75d8;
-  }
-`;
-
 const FooterText = styled.p`
   text-align: center;
   margin-top: 1rem;
@@ -95,7 +79,7 @@ const SignUpLink = styled.a`
 `;
 
 const SignIn = () => {
-  const { setUser } = useContext(AppContext);
+  const { setUser } = useContext(UserContext); // Correct context usage
   const { t, error, handleSignIn } = useSignIn();
 
   const {
@@ -144,7 +128,9 @@ const SignIn = () => {
 
             {error && <ErrorText>{error}</ErrorText>}
 
-            <SubmitButton type="submit">{t('Sign In')}</SubmitButton>
+            <ButtonWithIcon type="signin" width="100%">
+              {t('Sign In')}
+            </ButtonWithIcon>
           </form>
 
           <FooterText>

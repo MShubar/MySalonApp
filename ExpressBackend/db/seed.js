@@ -11,7 +11,7 @@ async function seed() {
     // Users
     const users = [
       { username: 'alice', email: 'alice@example.com', password: 'password' },
-      { username: 'bob', email: 'bob@example.com', password: 'password' }
+      { username: 'bob', email: 'bob@example.com', password: 'password' },
     ];
     const userIds = [];
     for (const u of users) {
@@ -25,8 +25,18 @@ async function seed() {
 
     // Salons
     const salons = [
-      { name: 'Elegant Salon', email: 'elegant@example.com', password: 'password', is_approved: true },
-      { name: 'Style Studio', email: 'style@example.com', password: 'password', is_approved: true }
+      {
+        name: 'Elegant Salon',
+        email: 'elegant@example.com',
+        password: 'password',
+        is_approved: true,
+      },
+      {
+        name: 'Style Studio',
+        email: 'style@example.com',
+        password: 'password',
+        is_approved: true,
+      },
     ];
     const salonIds = [];
     for (const s of salons) {
@@ -40,9 +50,24 @@ async function seed() {
 
     // Products
     const products = [
-      { salonIndex: 0, name: 'Shampoo', description: 'Gentle cleansing shampoo', price: 9.99 },
-      { salonIndex: 0, name: 'Conditioner', description: 'Hydrating conditioner', price: 12.99 },
-      { salonIndex: 1, name: 'Hair Spray', description: 'Extra hold hair spray', price: 7.5 }
+      {
+        salonIndex: 0,
+        name: 'Shampoo',
+        description: 'Gentle cleansing shampoo',
+        price: 9.99,
+      },
+      {
+        salonIndex: 0,
+        name: 'Conditioner',
+        description: 'Hydrating conditioner',
+        price: 12.99,
+      },
+      {
+        salonIndex: 1,
+        name: 'Hair Spray',
+        description: 'Extra hold hair spray',
+        price: 7.5,
+      },
     ];
     for (const p of products) {
       await pool.query(
@@ -50,8 +75,6 @@ async function seed() {
         [salonIds[p.salonIndex], p.name, p.description, p.price]
       );
     }
-
-    console.log('Seeding completed successfully');
   } catch (err) {
     console.error('Seeding failed:', err);
   } finally {

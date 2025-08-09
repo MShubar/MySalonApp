@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { MdCancel, MdShoppingCart, MdVisibility, MdStar } from 'react-icons/md'; // Adding MdStar for the "Save" icon
+import {
+  MdCancel,
+  MdShoppingCart,
+  MdVisibility,
+  MdStar,
+  MdLogin,
+  MdPersonAdd,
+} from 'react-icons/md'; // Importing MdLogin and MdPersonAdd
 
 // Styled button component with dynamic width
 const StyledButton = styled.button`
@@ -8,7 +15,7 @@ const StyledButton = styled.button`
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  padding: 10px 20px;
+  padding: 12px 20px;
   font-size: 1rem;
   border-radius: 12px;
   gap: 10px; /* Space between icon and text */
@@ -19,7 +26,11 @@ const StyledButton = styled.button`
 
   /* Dynamic width based on prop */
   width: ${(props) =>
-    props.width || 'auto'}; /* Default to 'auto' if no width is provided */
+    props.width || '100%'}; /* Full width for mobile-friendly design */
+
+  /* Default button styles */
+  transition: all 0.3s ease; /* Smooth transition for hover and focus effects */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow by default */
 
   /* Button color styles */
   &.cancel {
@@ -27,6 +38,11 @@ const StyledButton = styled.button`
     color: white;
     &:hover {
       background-color: #c62828;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Larger shadow on hover */
+    }
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(227, 30, 36, 0.6); /* Red shadow on focus */
     }
   }
 
@@ -35,6 +51,11 @@ const StyledButton = styled.button`
     color: white;
     &:hover {
       background-color: #388e3c;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(67, 160, 71, 0.6);
     }
   }
 
@@ -43,6 +64,11 @@ const StyledButton = styled.button`
     color: white;
     &:hover {
       background-color: #1565c0;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(25, 118, 210, 0.6);
     }
   }
 
@@ -51,6 +77,11 @@ const StyledButton = styled.button`
     color: white;
     &:hover {
       background-color: #0277bd;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(2, 136, 209, 0.6);
     }
   }
 
@@ -59,6 +90,11 @@ const StyledButton = styled.button`
     color: white;
     &:hover {
       background-color: #388e3c;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(67, 160, 71, 0.6);
     }
   }
 
@@ -67,6 +103,11 @@ const StyledButton = styled.button`
     color: white;
     &:hover {
       background-color: #c62828;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(227, 30, 36, 0.6);
     }
   }
 
@@ -75,17 +116,48 @@ const StyledButton = styled.button`
     color: white;
     &:hover {
       background-color: #388e3c;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(67, 160, 71, 0.6);
     }
   }
 
   &.save {
     background-color: transparent;
-    border: 2px solid #ffeb3b; /* Yellow border */
-    color: #ffeb3b; /* Yellow text color */
+    border: 2px solid #ffeb3b;
+    color: #ffeb3b;
     &:hover {
       background-color: #ffeb3b;
       color: white;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(255, 235, 59, 0.6);
+    }
+  }
+
+  &.signin,
+  &.signup {
+    background-color: #42a5f5;
+    color: white;
+    &:hover {
+      background-color: #1e88e5;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 10px rgba(66, 165, 245, 0.6);
+    }
+  }
+
+  /* Media queries for smaller screens */
+  @media (max-width: 600px) {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    width: 100%; /* Full width on mobile */
   }
 `;
 
@@ -93,13 +165,21 @@ const IconWrapper = styled.div`
   font-size: 1.3rem;
 `;
 
-const ButtonWithIcon = ({ type, onClick, children, width }) => {
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  width: 100%;
+  flex-wrap: wrap;
+`;
+
+const ButtonWithIcon = ({ type, onClick, children, width, adjustQty }) => {
   const renderIcon = () => {
     switch (type) {
       case 'cancel':
         return <MdCancel />;
       case 'book':
-        return <MdShoppingCart />;
+        return;
       case 'view':
         return <MdVisibility />;
       case 'quickview':
@@ -110,12 +190,42 @@ const ButtonWithIcon = ({ type, onClick, children, width }) => {
         return <MdCancel />;
       case 'checkout':
         return <MdShoppingCart />;
-      case 'save': // New case for Save
-        return <MdStar />; // Yellow star icon for Save
+      case 'save':
+        return <MdStar />;
+      case 'signin':
+        return <MdLogin />;
+      case 'signup':
+        return <MdPersonAdd />;
       default:
         return null;
     }
   };
+
+  if (type === 'adjust') {
+    return (
+      <ButtonGroup>
+        <button
+          className="btn btn-outline-secondary btn-sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            adjustQty(-1);
+          }}
+        >
+          –
+        </button>
+        <span className="mx-2">{children}</span>
+        <button
+          className="btn btn-outline-secondary btn-sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            adjustQty(1);
+          }}
+        >
+          +
+        </button>
+      </ButtonGroup>
+    );
+  }
 
   return (
     <StyledButton className={type} onClick={onClick} width={width}>
