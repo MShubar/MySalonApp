@@ -86,16 +86,22 @@ const ResponsiveGrid = styled.div`
   gap: 1rem;
   grid-template-columns: 1fr;
 
-  @media (min-width: 576px) {
+  @media (min-width: 520px) {
     grid-template-columns: repeat(1, 1fr);
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 568px) {
     grid-template-columns: repeat(2, 1fr);
   }
-
   @media (min-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 1600px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (min-width: 1900px) {
+    grid-template-columns: repeat(5, 1fr);
   }
 `;
 
