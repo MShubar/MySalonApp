@@ -1,69 +1,83 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { API_URL } from '../config'
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../config';
 
 function Create() {
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [price, setPrice] = useState('')
-  const [salonId, setSalonId] = useState('')
-  const [quantity, setQuantity] = useState('')
-  const [image, setImage] = useState(null)
-  const [error, setError] = useState('')
-  const navigate = useNavigate()
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [salonId, setSalonId] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [image, setImage] = useState(null);
+  const [salons, setSalons] = useState([]);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  // Fetch salons for dropdown
+  useEffect(() => {
+    const fetchSalons = async () => {
+      try {
+        const res = await fetch(`${API_URL}/salons`);
+        const data = await res.json();
+        if (res.ok) {
+          setSalons(data);
+        } else {
+          setError('Failed to fetch salons.');
+        }
+      } catch (err) {
+        console.error('Error fetching salons:', err);
+        setError('Server error while fetching salons.');
+      }
+    };
+    fetchSalons();
+  }, []);
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0])
-  }
+    setImage(e.target.files[0]);
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (
-      !name.trim() ||
-      !description.trim() ||
-      !price ||
-      !salonId ||
-      !quantity
-    ) {
-      setError('All fields are required.')
-      return
+    if (!name.trim() || !description.trim() || !price || !salonId || !quantity) {
+      setError('All fields are required.');
+      return;
     }
 
-    const formData = new FormData()
-    formData.append('name', name)
-    formData.append('description', description)
-    formData.append('price', price)
-    formData.append('salon_id', salonId)
-    formData.append('quantity', quantity)
-    if (image) formData.append('image', image)
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('price', price);
+    formData.append('salon_id', salonId);
+    formData.append('quantity', quantity);
+    if (image) formData.append('image', image);
 
     try {
       const res = await fetch(`${API_URL}/product`, {
         method: 'POST',
-        body: formData
-      })
+        body: formData,
+      });
 
       if (res.ok) {
         navigate('/getProduct', {
-          state: { success: 'Product added successfully!' }
-        })
-        setName('')
-        setDescription('')
-        setPrice('')
-        setSalonId('')
-        setQuantity('')
-        setImage(null)
-        setError('')
+          state: { success: 'Product added successfully!' },
+        });
+        setName('');
+        setDescription('');
+        setPrice('');
+        setSalonId('');
+        setQuantity('');
+        setImage(null);
+        setError('');
       } else {
-        const errData = await res.json()
-        setError(errData.message || 'Failed to create product.')
+        const errData = await res.json();
+        setError(errData.message || 'Failed to create product.');
       }
     } catch (err) {
-      console.error('Error creating product:', err)
-      setError('Server error. Please try again later.')
+      console.error('Error creating product:', err);
+      setError('Server error. Please try again later.');
     }
-  }
+  };
 
   return (
     <div className="container mt-4">
@@ -99,14 +113,20 @@ function Create() {
           />
         </div>
         <div className="form-group mt-2">
-          <label>Salon ID</label>
-          <input
-            type="number"
+          <label>Salon</label>
+          <select
             className="form-control"
             value={salonId}
             onChange={(e) => setSalonId(e.target.value)}
             required
-          />
+          >
+            <option value="">Select a salon</option>
+            {salons.map((salon) => (
+              <option key={salon.id} value={salon.id}>
+                {salon.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-group mt-2">
           <label>Quantity</label>
@@ -133,7 +153,7 @@ function Create() {
         </button>
       </form>
     </div>
-  )
+  );
 }
 
-export default Create
+export default Create;

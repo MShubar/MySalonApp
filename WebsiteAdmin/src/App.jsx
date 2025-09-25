@@ -35,6 +35,11 @@ import GetProducts from './product/Get'
 import CreateTypes from './types/Create'
 import EditTypes from './types/Edit'
 import GetTypes from './types/Get'
+
+import GetServices from './services/Get'
+import EditServices from './services/Edit'
+import CreateServices from './services/Create'
+
 import NotFound from './components/NotFound'
 
 import './App.css'
@@ -273,6 +278,30 @@ function App() {
               element={
                 <ProtectedRoute isAuthenticated={isAuthenticated}>
                   <EditTypes />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/createService"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <CreateServices />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/getServices"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <GetServices />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/editService/:id"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <EditServices />
                 </ProtectedRoute>
               }
             />

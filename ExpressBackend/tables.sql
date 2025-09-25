@@ -1,68 +1,164 @@
-CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  username VARCHAR(100) NOT NULL,
-  email VARCHAR(150) UNIQUE NOT NULL,
-  password TEXT NOT NULL,
-  avatar_url TEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE TABLE IF NOT EXISTS salons (
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+email VARCHAR(255) UNIQUE NOT NULL,
+password VARCHAR(255) NOT NULL,
+is_approved BOOLEAN DEFAULT FALSE,
+image_url VARCHAR(255),
+rating FLOAT,
+location GEOGRAPHY(POINT, 4326),
+opening_time TIME,
+closing_time TIME
 );
-CREATE TABLE salons (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(150) NOT NULL,
-  email VARCHAR(150) UNIQUE NOT NULL,
-  password TEXT NOT NULL,
-  is_approved BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS services (
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+price NUMERIC,
+duration VARCHAR(50)
 );
-CREATE TABLE admins (
-  id SERIAL PRIMARY KEY,
-  username VARCHAR(100) UNIQUE NOT NULL,
-  password TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS salon_services (
+salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
+service_id INTEGER REFERENCES services(id) ON DELETE CASCADE,
+PRIMARY KEY (salon_id, service_id)
 );
-CREATE TABLE bookings (
-  id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-  salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
-  service VARCHAR(150) NOT NULL,
-  booking_date DATE NOT NULL,
-  booking_time TIME NOT NULL,
-  status VARCHAR(50) DEFAULT 'pending'
+CREATE TABLE IF NOT EXISTS salon_types (
+id SERIAL PRIMARY KEY,
+type_name VARCHAR(255) NOT NULL,
+image_url VARCHAR(255)
 );
-CREATE TABLE favorites (
-  id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-  salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
-  UNIQUE(user_id, salon_id)
+CREATE TABLE IF NOT EXISTS salon_type_map (
+salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
+type_id INTEGER REFERENCES salon_types(id) ON DELETE CASCADE,
+PRIMARY KEY (salon_id, type_id)
 );
-CREATE TABLE products (
-  id SERIAL PRIMARY KEY,
-  salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
-  name VARCHAR(100) NOT NULL,
-  description TEXT,
-  price DECIMAL(10, 2) NOT NULL
+CREATE TABLE IF NOT EXISTS admins (
+id SERIAL PRIMARY KEY,
+username VARCHAR(255) UNIQUE NOT NULL,
+password VARCHAR(255) NOT NULL
 );
-CREATE TABLE packages (
-  id SERIAL PRIMARY KEY,
-  salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
-  title VARCHAR(150) NOT NULL,
-  description TEXT,
-  price DECIMAL(10, 2) NOT NULL
+CREATE TABLE IF NOT EXISTS approvals (
+id SERIAL PRIMARY KEY,
+admin_id INTEGER REFERENCES admins(id),
+salon_id INTEGER REFERENCES salons(id),
+action VARCHAR(50) NOT NULL,
+timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-CREATE TABLE types (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(50) UNIQUE NOT NULL
+CREATE TABLE IF NOT EXISTS users (
+id SERIAL PRIMARY KEY,
+username VARCHAR(255) NOT NULL,
+email VARCHAR(255) UNIQUE NOT NULL,
+password VARCHAR(255) NOT NULL,
+avatar_url VARCHAR(255)
 );
-
-CREATE TABLE salon_type_map (
-  id SERIAL PRIMARY KEY,
-  salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
-  type_id INTEGER REFERENCES types(id) ON DELETE CASCADE,
-  UNIQUE(salon_id, type_id)
+CREATE TABLE IF NOT EXISTS bookings (
+id SERIAL PRIMARY KEY,
+user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
+service TEXT,  -- Comma-separated service IDs
+booking_date DATE NOT NULL,
+booking_time TIME NOT NULL,
+notes TEXT,
+total NUMERIC,
+duration VARCHAR(50),
+status VARCHAR(50) DEFAULT 'pending'
 );
-CREATE TABLE approvals (
-  id SERIAL PRIMARY KEY,
-  admin_id INTEGER REFERENCES admins(id),
-  salon_id INTEGER REFERENCES salons(id),
-  approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS cart_items (
+id SERIAL PRIMARY KEY,
+user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+item_id INTEGER NOT NULL,
+item_type VARCHAR(50) NOT NULL CHECK (item_type IN ('package', 'product')),
+quantity INTEGER DEFAULT 1
+);
+CREATE TABLE IF NOT EXISTS contacts (
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+email VARCHAR(255) NOT NULL,
+comment TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS favorites (
+id SERIAL PRIMARY KEY,
+user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
+UNIQUE (user_id, salon_id)
+);
+CREATE TABLE IF NOT EXISTS orders (
+id SERIAL PRIMARY KEY,
+user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+building_number VARCHAR(50),
+apartment_number VARCHAR(50),
+street VARCHAR(255),
+block VARCHAR(50),
+note TEXT,
+lat NUMERIC,
+lng NUMERIC,
+payment_method VARCHAR(50) NOT NULL,
+total NUMERIC NOT NULL,
+delivery_time VARCHAR(50),
+status VARCHAR(50) DEFAULT 'pending',
+created_at TIMESTAMP NOT NULL
+);
+CREATE TABLE IF NOT EXISTS order_items (
+id SERIAL PRIMARY KEY,
+order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
+item_id INTEGER NOT NULL,
+item_type VARCHAR(50) NOT NULL,
+name VARCHAR(255) NOT NULL,
+price NUMERIC NOT NULL,
+quantity INTEGER DEFAULT 1,
+image_url VARCHAR(255)
+);
+CREATE TABLE IF NOT EXISTS packages (
+id SERIAL PRIMARY KEY,
+title VARCHAR(255) NOT NULL,
+description TEXT,
+price NUMERIC NOT NULL,
+salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
+image_url VARCHAR(255),
+quantity INTEGER DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS products (
+id SERIAL PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+description TEXT,
+price NUMERIC NOT NULL,
+salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
+image_url VARCHAR(255),
+quantity INTEGER
+);
+CREATE TABLE IF NOT EXISTS trainings (
+id SERIAL PRIMARY KEY,
+title VARCHAR(255) NOT NULL,
+description TEXT,
+duration VARCHAR(50),
+price NUMERIC,
+is_live BOOLEAN,
+max_participants INTEGER,
+video_url VARCHAR(255),
+trainer_id INTEGER,
+trailer_video_url VARCHAR(255),
+language VARCHAR(50),
+topics TEXT[],
+course_includes TEXT[],
+rating FLOAT,
+num_times_bought INTEGER,
+requirements TEXT[],
+sections JSONB
+);
+CREATE TABLE IF NOT EXISTS user_training_enrollments (
+id SERIAL PRIMARY KEY,
+training_id INTEGER REFERENCES trainings(id) ON DELETE CASCADE,
+user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+status VARCHAR(50) DEFAULT 'enrolled'
+);
+CREATE TABLE IF NOT EXISTS salon_training_enrollments (
+id SERIAL PRIMARY KEY,
+training_id INTEGER REFERENCES trainings(id) ON DELETE CASCADE,
+salon_id INTEGER REFERENCES salons(id) ON DELETE CASCADE,
+status VARCHAR(50) DEFAULT 'enrolled'
+);
+CREATE TABLE IF NOT EXISTS training_certificates (
+id SERIAL PRIMARY KEY,
+enrollment_id INTEGER NOT NULL,
+recipient_type VARCHAR(50) NOT NULL
 );

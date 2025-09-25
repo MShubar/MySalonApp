@@ -83,6 +83,8 @@ const Sidebar = () => {
       {/* Types */}
       {navItem('Types', <FaTags />, '/getTypes')}
 
+      {navItem('Services', <FaUser />, '/getServices')}
+
       {/* Logout */}
       <div
         className="sidebar-item"
